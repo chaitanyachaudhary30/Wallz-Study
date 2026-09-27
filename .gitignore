@@ -1,5 +1,6 @@
 # Ignore all files in reports/ except specified source files and PDF
-reports/*
-!reports/project_idea.pdf
-!reports/project_idea.tex
-!reports/references.bib
+report/*
+!report/project_idea.pdf
+!report/project_idea.tex
+!report/references.bib
+Multi_Agent_Systems_Project_Guidelines.pdf
