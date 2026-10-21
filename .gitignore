@@ -1,4 +1,63 @@
-# Ignore all files in reports/ except specified source files and PDF
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Testing, Coverage & Linters
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*-checkpoint.ipynb
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Model checkpoints & weights
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.bin
+checkpoints/*
+!checkpoints/.gitkeep
+
+# Experiment logs and run trackers
+experiments/logs/*
+!experiments/logs/.gitkeep
+wandb/
+runs/
+*.log
+
+# Report files & Course guidelines
 report/*
 !report/project_idea.pdf
 !report/project_idea.tex
