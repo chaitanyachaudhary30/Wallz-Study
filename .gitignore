@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-__pycache__/
-*.pyc
-.DS_Store
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -62,10 +57,14 @@ wandb/
 runs/
 *.log
 
-# Report files & Course guidelines
-report/*
-!report/project_idea.pdf
-!report/project_idea.tex
-!report/references.bib
+# Report files & LaTeX build artifacts
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.log
+report/*.out
+report/*.toc
+report/*.synctex.gz
+
+# Course guidelines
 Multi_Agent_Systems_Project_Guidelines.pdf
->>>>>>> 7fe25fa75f9180633afea26710cb27685560d23b
