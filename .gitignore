@@ -1,3 +1,71 @@
+<<<<<<< HEAD
 __pycache__/
 *.pyc
 .DS_Store
+=======
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Testing, Coverage & Linters
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*-checkpoint.ipynb
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Model checkpoints & weights
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.bin
+checkpoints/*
+!checkpoints/.gitkeep
+
+# Experiment logs and run trackers
+experiments/logs/*
+!experiments/logs/.gitkeep
+wandb/
+runs/
+*.log
+
+# Report files & Course guidelines
+report/*
+!report/project_idea.pdf
+!report/project_idea.tex
+!report/references.bib
+Multi_Agent_Systems_Project_Guidelines.pdf
+>>>>>>> 7fe25fa75f9180633afea26710cb27685560d23b

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Modified Wallz — Core Game Engine & Baseline Heuristic (Task 2)
 
 This repository contains the headless Python game engine (`WallzEngine`) and the Tier-1 Spatial Greedy Baseline (`GreedyAgent`) for the project **"Multi-Agent Reinforcement Learning for Adversarial Spatial Decision-Making with Temporal Constraints"**.
@@ -53,3 +54,6 @@ wallz_engine/
 ├── run_match.py          # Automated match runner and test logger
 ├── .gitignore            # Git ignore file
 └── README.md             # Project documentation
+=======
+# FAI_project
+>>>>>>> 7fe25fa75f9180633afea26710cb27685560d23b

@@ -1,0 +1,796 @@
+\documentclass{article}
+
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{natbib}
+
+\providecommand{\keywords}[1]{\vspace{0.5em}\noindent\textbf{Keywords:} #1}
+\providecommand{\And}{\and}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{lmodern}
+\usepackage{float}          % exact float positioning with [H]
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{fancyhdr}       % header
+\usepackage{graphicx}       % graphics
+\graphicspath{{media/}}     % organize your images and other figures under media/ folder
+
+%Header
+\pagestyle{fancy}
+\thispagestyle{empty}
+\rhead{ \textit{ }} 
+
+% Update your Headers here
+\fancyhead[LO]{MARL for Adversarial Spatial Decision-Making}
+
+%% Title
+\title{Multi-Agent Reinforcement Learning for Adversarial Spatial Decision-Making with Temporal Constraints}
+
+\author{
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    Chaitanya Chaudhary \\
+    Dept. of Computer Science \& Engineering \\
+    IIT Gandhinagar \\
+    \texttt{chaitanya.chaudhary@iitgn.ac.in}
+  \end{minipage}%
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    Dhruv Meshram \\
+    Dept. of Computer Science \& Engineering \\
+    IIT Gandhinagar \\
+    \texttt{dhruv.meshram@iitgn.ac.in}
+  \end{minipage}
+  \\[3ex]
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    Abhishek Tagalpallewar \\
+    Dept. of Mechanical Engineering \\
+    IIT Gandhinagar \\
+    \texttt{abhishek.tagalpallewar@iitgn.ac.in}
+  \end{minipage}%
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    Vedant Bondekar \\
+    Dept. of Computer Science \& Engineering \\
+    IIT Gandhinagar \\
+    \texttt{vedant.bondekar@iitgn.ac.in}
+  \end{minipage}
+}
+
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+Multi-agent reinforcement learning (MARL) studies sequential decision-making problems in which multiple learning agents interact within a shared environment, making strategic adaptation central to the learning process. In competitive settings, the behavior of each agent depends not only on the environment but also on the evolving policy of an opposing agent, creating a natural connection between reinforcement learning and game-theoretic decision-making. In this work, we investigate these dynamics using \textbf{Modified Wallz}, a deterministic, sequential, two-player zero-sum environment in which agents simultaneously pursue opposing objectives while modifying the spatial constraints of the board. The environment extends the original wall-based mechanics with reusable walls, a one-time wall-bypassing hop, and temporary cell blocking, introducing resource constraints, temporal dependencies, and dynamically changing action availability. These mechanisms provide a controlled setting for studying how strategic resources and evolving constraints affect multi-agent policy learning. We formulate the environment in terms of agent observations, actions, rewards, and state transitions, and propose to evaluate MARL agents against heuristic and search-based baselines. For smaller configurations, exhaustive game-tree analysis and minimax-based reasoning will be investigated as references for learned behavior and computational feasibility. By varying resource and temporal parameters, we aim to characterize their effects on strategic adaptation, learning performance, and computational complexity, thereby providing insight into multi-agent decision-making under dynamic spatial and resource constraints.
+\end{abstract}
+
+
+% keywords can be removed
+\keywords{First keyword \and Second keyword \and More}
+
+
+\section{Introduction}
+
+Multi-Agent Reinforcement Learning (MARL) considers sequential decision-making problems in which multiple adaptive agents interact within a shared environment. Such settings arise whenever the outcome of an agent's actions depends on the behavior of other decision-makers, making learning fundamentally different from conventional single-agent reinforcement learning. Markov games provide a natural mathematical framework for these settings by allowing multiple agents with interacting or competing objectives to influence a common environment \cite{littman1994markov}. MARL has consequently developed strong connections with game theory, optimization, and reinforcement learning, with applications spanning cooperative, competitive, and mixed-motive environments \cite{busoniu2008comprehensive,zhang2020multiagent}.
+
+A central difficulty in MARL is that agents learn simultaneously. From the perspective of an individual learner, the effective environment can therefore become non-stationary as the policies of other agents change during training \cite{gronauer2022multiagent,zhang2020multiagent}. In addition, reasoning over multiple agents introduces joint action spaces whose size grows with the number of decision-makers, increasing the computational burden of policy search. These issues are particularly relevant in competitive settings, where an agent must learn not only how to maximize its own objective but also how its decisions affect, and are affected by, an adaptive opponent. Consequently, strategic adaptation rather than isolated action optimization becomes an important component of the learning problem.
+
+We investigate these issues using \textbf{Modified Wallz}, a deterministic, sequential, two-player, zero-sum board environment. Each player attempts to reach the opponent's side while moving a pawn and placing walls that restrict movement subject to path-preservation constraints. The modified environment introduces reusable walls, a one-time opportunity to hop over an opponent's wall under defined legal conditions, and temporary cell blocking for a fixed number of future moves. These mechanisms introduce resource constraints and temporal dependencies into a fully observable competitive environment, allowing strategic interaction to be studied while keeping the underlying state and transition structure explicit. A playable prototype of the modified Wallz game is available online for demonstration and experimentation: \url{https://tagalpallewarabhishek.github.io/wallz-custom-game/}.
+
+The resulting environment provides a controlled setting for investigating how adaptive opponents, reusable strategic resources, and dynamically changing spatial constraints influence policy learning. We formulate the environment as a multi-agent sequential decision problem and aim to evaluate MARL agents against heuristic and search-based baselines. For smaller configurations, exhaustive game-tree analysis and minimax reasoning will also be considered to provide references for learned policies and to examine the tractability of exact computation. By varying the resource and temporal parameters, we seek to characterize their effects on strategic behavior, learning performance, and computational complexity. This motivates the formal definitions of the environment, agents, actions, rewards, and state transitions developed in the following sections.
+
+
+\section{Preliminaries}
+\label{sec:preliminaries}
+
+This section establishes the theoretical foundations, standard multi-agent reinforcement learning (MARL) concepts, game-theoretic definitions, and graph notations that underpin the formalization of Modified Wallz and its evaluation baselines.
+
+\subsection{Multi-Agent Reinforcement Learning}
+\label{subsec:prelim_marl}
+
+In reinforcement learning (RL), an autonomous \emph{agent} interacts sequentially with an external \emph{environment} \cite{sutton2018reinforcement}. At each discrete interaction step, the environment is characterized by a \emph{state} $s \in \mathcal{S}$ capturing the current physical and informational configuration of the system. An agent receives an \emph{observation} $o$, which reflects the perceptual information accessible to it; when the domain is fully observable, the observation is identical to the complete state ($o = s$). 
+
+Based on its observation, the agent selects an \emph{action} $a$ from its allowable action set $\mathcal{A}$. The execution of this action causes the environment to transition to a subsequent state $s' \in \mathcal{S}$ and emit a scalar \emph{reward} $R$ providing feedback regarding the agent's performance. The agent's decision-making behavior is governed by a \emph{policy} $\pi$, which specifies a mapping from states to actions, either deterministically ($\pi: \mathcal{S} \rightarrow \mathcal{A}$) or as a probability distribution over actions ($\pi: \mathcal{S} \rightarrow \Delta(\mathcal{A})$).
+
+In \emph{multi-agent} reinforcement learning, multiple agents operate concurrently within a shared environment \cite{busoniu2008comprehensive}. Because state transitions and reward payoffs depend on the joint actions of all participating decision-makers, the effective environment becomes non-stationary from the vantage point of any individual learner as the policies of other agents co-evolve during training \cite{gronauer2022multiagent,zhang2020multiagent}. Consequently, learning in multi-agent settings requires strategic adaptation to opposing policies rather than isolated optimization against a stationary background.
+
+\subsection{Markov Games}
+\label{subsec:prelim_markov_games}
+
+Sequential decision-making with multiple interacting agents is formally described by the framework of \emph{Markov games} (also known as stochastic games), introduced as a multi-agent extension of Markov Decision Processes \cite{littman1994markov}. Formally, an $n$-player discrete-time Markov game is defined by the tuple:
+\begin{equation}
+\big\langle \mathcal{N}, \mathcal{S}, (\mathcal{A}_i)_{i \in \mathcal{N}}, T, (R_i)_{i \in \mathcal{N}}, \gamma \big\rangle,
+\end{equation}
+where:
+\begin{itemize}
+    \item $\mathcal{N} = \{1, \dots, n\}$ is the finite set of interacting agents.
+    \item $\mathcal{S}$ is the set of all valid environment states.
+    \item $\mathcal{A}_i$ denotes the action space of agent $i$, with $\mathcal{A}_i(s) \subseteq \mathcal{A}_i$ designating the state-dependent legal action subset in state $s \in \mathcal{S}$.
+    \item $T$ specifies the transition dynamics mapping the current state and joint actions to the subsequent state.
+    \item $R_i : \mathcal{S} \times \mathcal{A} \times \mathcal{S} \rightarrow \mathbb{R}$ is the reward function quantifying the payoff of agent $i$.
+    \item $\gamma \in [0, 1]$ is the discount factor for future returns.
+\end{itemize}
+While general Markov games may involve joint actions, the Modified Wallz instance considered in this work is turn-based: at each decision step, only the currently active player selects and executes a legal action, and the resulting transition is therefore determined by the current state and that active player's action.
+
+In competitive multi-agent environments, agents pursue opposing objectives. In two-player interactions ($|\mathcal{N}| = 2$), the game is \emph{zero-sum} when payoffs satisfy $R_1(s, a, s') + R_2(s, a, s') = 0$ for all transitions, signifying strictly conflicting interests.
+
+\subsection{Sequential Zero-Sum Games}
+\label{subsec:prelim_sequential_games}
+
+A sequential (or turn-based extensive-form) game structures decision-making through alternating turns rather than simultaneous action execution. At each discrete time step $t \in \mathbb{N}_0$, an active turn indicator $z_t \in \mathcal{N}$ uniquely designates the active player, while all non-active players remain passive. 
+
+The environment exhibits \emph{deterministic transitions} if, given the current state $s_t$ and the active agent's legal action $a_t \in \mathcal{A}_{z_t}(s_t)$, the successor state $s_{t+1}$ is uniquely determined by a deterministic transition function $s_{t+1} = T(s_t, a_t)$. A game has perfect information when every player has complete, unoccluded access to the current environment state, with no hidden state variables or stochastic chance events. A sequential two-player zero-sum game of perfect information is strictly adversarial: any strategic advantage secured by one player corresponds identically to an equivalent deficit for the opposing adversary.
+
+\subsection{Minimax and Backward Induction}
+\label{subsec:prelim_minimax}
+
+Two-player zero-sum games of perfect information are governed by the classical minimax theorem of game theory. Under minimax reasoning, each player assumes that the adversary will execute the optimal counter-strategy to minimize the player's return. The maximizing agent selects the action satisfying:
+\begin{equation}
+V_1^*(s) = \max_{\pi_1} \min_{\pi_2} \mathbb{E}_{\pi_1, \pi_2}[R_1 \mid s] = \min_{\pi_2} \max_{\pi_1} \mathbb{E}_{\pi_1, \pi_2}[R_1 \mid s].
+\end{equation}
+For finite extensive-form games without cycles, \emph{backward induction} provides an exact algorithm to determine subgame-perfect Nash equilibria by recursively propagating value evaluations from the terminal leaf nodes of the game tree back to the initial root state. 
+
+When exhaustive tree traversal is computationally intractable due to combinatorial state growth, \emph{depth-limited minimax search} evaluates paths up to a specified lookahead horizon $D$, truncating further expansion and estimating non-terminal state values using a domain-specific heuristic evaluation function. To reduce computational complexity, \emph{Alpha-Beta pruning} dynamically maintains branch bounds $[\alpha, \beta]$ to eliminate provably suboptimal subtrees without altering the resulting minimax decision.
+
+\subsection{Grid and Shortest-Path Representation}
+\label{subsec:prelim_grid_paths}
+
+Discrete board games defined over spatial cells are naturally modeled as topological graphs $G = (V, E)$. The vertex set $V$ corresponds to the collection of grid cells $C$, and the undirected edge set $E \subseteq V \times V$ represents allowable orthogonal transitions between neighboring cells $(u, v)$ satisfying $\|u - v\|_1 = 1$.
+
+Static or temporary obstacles modify the connectivity of this graph by removing edges from $E$ (such as wall placements that obstruct cell boundaries) or temporarily removing vertices from $V$ (such as blocked cells). This induces an active traversable subgraph $G_t = (V_t, E_t)$ at time step $t$. The geodesic distance $d(u, v; G_t)$ denotes the minimum number of edge traversals required to connect cell $u$ to cell $v$ within $G_t$, computable in polynomial time via standard graph traversal algorithms (e.g., Breadth-First Search). A configuration satisfies path preservation if $d(p_i, G_i; G_t) < \infty$ for all players $i \in \mathcal{N}$, guaranteeing that a legal path to the goal region always remains open.
+
+\subsection{Summary of Notation}
+\label{subsec:prelim_notation}
+
+Table~\ref{tab:notation} provides a concise summary of the primary mathematical symbols used repeatedly throughout this paper.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of primary mathematical notation.}
+\label{tab:notation}
+\begin{tabular}{lp{10.5cm}}
+\toprule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+$N$ & Board dimension ($N \times N$ discrete grid) \\
+$C$ & Set of all valid board cells, $C = \{(x, y) \in \mathbb{Z}^2 \mid 1 \le x, y \le N\}$ \\
+$i, -i$ & Active player index $i \in \{1, 2\}$ and opposing player index $-i = 3 - i$ \\
+$p_i$ & Current pawn position of player $i$, $p_i = (x_i, y_i) \in C$ \\
+$G_i$ & Designated goal region for player $i$, $G_i \subset C$ \\
+$\mathcal{W}$ & Universe of all legally specifiable wall placements on the grid \\
+$W_t, W_{i,t}$ & Set of all active walls at step $t$, and subset placed by player $i$ ($W_t = W_{1,t} \cup W_{2,t}$) \\
+$m_i$ & Remaining unused wall inventory for player $i$ ($m_i \in \{0, 1, \dots, M\}$, with $M = 10$) \\
+$r_i$ & Pointer to player $i$'s currently replaceable (most recently placed) wall ($r_i \in W_{i,t} \cup \{\varnothing\}$) \\
+$h_i$ & Binary hop availability flag for player $i$ ($h_i \in \{0, 1\}$) \\
+$\tau_t$ & Temporary-block duration mapping, $\tau_t : C \rightarrow \{0, 1, \dots, K\}$ \\
+$K$ & Predefined fixed duration parameter for temporary cell blocking \\
+$z_t$ & Turn indicator identifying the active player at time step $t$ ($z_t \in \{1, 2\}$) \\
+$T$ & Deterministic state transition function defined over legal state-action pairs \\
+$R_i$ & Zero-sum scalar reward function for player $i$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Problem Formulation}
+\label{sec:problem_formulation}
+
+\subsection{Game Definition}
+\label{subsec:game_definition}
+
+We formalize \textbf{Modified Wallz} as a discrete-time, two-player, sequential zero-sum Markov game of perfect information with deterministic transitions:
+\begin{equation}
+\mathcal{G} = \big\langle \mathcal{N}, \mathcal{S}, (\mathcal{A}_i)_{i \in \mathcal{N}}, T, (R_i)_{i \in \mathcal{N}} \big\rangle,
+\end{equation}
+where:
+\begin{itemize}
+    \item $\mathcal{N} = \{1, 2\}$ denotes the set of players. For an active player $i \in \mathcal{N}$, the opposing player is denoted by $-i = 3 - i$.
+    \item $\mathcal{S}$ is the finite set of valid, fully observable environment states.
+    \item $\mathcal{A}_i$ denotes the action space available to player $i$, with $\mathcal{A}_i(s) \subseteq \mathcal{A}_i$ representing the state-dependent legal action subset in state $s \in \mathcal{S}$.
+    \item $T : \big\{ (s, a) \;\big|\; s \in \mathcal{S}, \; a \in \mathcal{A}_{z(s)}(s) \big\} \rightarrow \mathcal{S}$ is the deterministic state transition function defined over legal state-action pairs, where $z(s) \in \mathcal{N}$ denotes the active player in state $s$.
+    \item $R_i : \mathcal{S} \times \mathcal{A}_i \times \mathcal{S} \rightarrow \mathbb{R}$ is the reward function for player $i$, satisfying the zero-sum condition $R_1(s, a, s') + R_2(s, a, s') = 0$ for all transitions.
+\end{itemize}
+The game proceeds sequentially by strict turn alternation: at each discrete time step $t \in \mathbb{N}_0$, exactly one player $z_t \in \mathcal{N}$ selects an action from their legal action set $\mathcal{A}_{z_t}(s_t)$, while the other player remains inactive. The environment is fully observable, deterministic, and possesses no private information or stochastic transitions.
+
+\subsection{Board and Player State}
+\label{subsec:board_player_state}
+
+The game board is modeled as an $N \times N$ discrete grid, where $N \in \mathbb{N}_{\ge 3}$ is a configurable dimension parameter. The set of valid grid cells is defined as:
+\begin{equation}
+C = \big\{ (x, y) \in \mathbb{Z}^2 \;\big|\; 1 \le x, y \le N \big\},
+\end{equation}
+where $c = (x, y) \in C$ indexes cell coordinates with $x$ denoting the horizontal column and $y$ denoting the vertical row.
+
+Each player $i \in \mathcal{N}$ controls a single pawn occupying a position:
+\begin{equation}
+p_i = (x_i, y_i) \in C.
+\end{equation}
+The pawns occupy distinct cells at all valid states, enforcing the mutual exclusion invariant $p_1 \ne p_2$. 
+
+Players begin at designated initial coordinates situated on opposing sides of the board. The goal region for player $i$ is denoted by a non-empty subset $G_i \subset C$. Without loss of generality, in a standard orientation:
+\begin{equation}
+G_1 = \big\{ (x, y) \in C \;\big|\; y = N \big\}, \quad G_2 = \big\{ (x, y) \in C \;\big|\; y = 1 \big\}.
+\end{equation}
+Player $i$ achieves victory when their pawn enters any cell within $G_i$. The turn indicator variable is denoted by $z_t \in \mathcal{N}$, identifying which agent is active at time step $t$.
+
+\subsection{Wall Representation}
+\label{subsec:wall_representation}
+
+Walls represent static structural obstructions placed along the internal edges separating adjacent cells, thereby inhibiting orthogonal pawn traversal. Let $\mathcal{W}$ denote the finite universe of all possible wall placements on the $N \times N$ grid. Each wall placement $w \in \mathcal{W}$ is formally defined as:
+\begin{equation}
+w = (c_{\text{wall}}, o),
+\end{equation}
+where $c_{\text{wall}}$ denotes the reference grid location of the wall boundary and $o \in \{\text{H}, \text{V}\}$ specifies horizontal or vertical orientation. While standard implementations define walls spanning two adjacent cell edges, the specific edge-indexing convention is abstracted into $\mathcal{W}$ without affecting the mathematical formulation.
+
+At any time step $t$, the set of all active walls currently present on the board is denoted by $W_t \subset \mathcal{W}$. The total wall configuration is partitioned into the disjoint subsets of walls erected by each player:
+\begin{equation}
+W_t = W_{1,t} \cup W_{2,t}, \quad \text{with } W_{1,t} \cap W_{2,t} = \emptyset,
+\end{equation}
+where $W_{i,t}$ denotes the set of active walls placed by player $i$. To ensure physical validity, no two walls in $W_t$ may overlap or intersect.
+
+Crucially, wall placements must adhere to the fundamental path-preservation constraint of Wallz. Let $\operatorname{Adj}(C, W_t, \tau_t)$ denote the undirected connectivity graph over board cells induced by walls $W_t$ and temporary obstructions. We define the path-validity predicate:
+\begin{equation}
+\operatorname{PathExists}(s, i) \in \{0, 1\},
+\end{equation}
+which evaluates to $1$ if and only if there exists at least one unblocked sequence of adjacent traversable cells in $\operatorname{Adj}(C, W_t, \tau_t)$ connecting player $i$'s current position $p_i$ to some goal cell $g \in G_i$. A wall placement or modification is strictly legal only if it preserves paths for \emph{both} players:
+\begin{equation}
+\operatorname{PathExists}(s', 1) = 1 \quad \text{and} \quad \operatorname{PathExists}(s', 2) = 1.
+\end{equation}
+Thus, no action may completely trap or isolate either agent from their respective target region.
+
+\subsection{Reusable Wall State}
+\label{subsec:reusable_wall_state}
+
+The first modification introduces reusable walls under a restricted replacement policy. Each player begins the game with an initial inventory of $M = 10$ walls. The remaining unused wall inventory for player $i$ at time $t$ is denoted by:
+\begin{equation}
+m_i \in \{0, 1, \dots, M\}.
+\end{equation}
+Unlike unconstrained wall repositioning, reusability is strictly constrained by recency:
+\begin{quote}
+\emph{Only the most recently placed wall belonging to a player can be repositioned.}
+\end{quote}
+To track this capability, we associate with each player $i \in \mathcal{N}$ a replaceable wall state variable:
+\begin{equation}
+r_i \in W_{i,t} \cup \{\varnothing\},
+\end{equation}
+where $r_i = \varnothing$ indicates that player $i$ has not yet placed any wall (or currently has no active replaceable wall), while $r_i = w \in W_{i,t}$ uniquely identifies the single wall most recently placed by player $i$. Walls placed earlier than the most recent one become permanent fixtures for the remainder of the match.
+
+This mechanic defines two distinct wall-related action categories:
+\begin{enumerate}
+    \item \textbf{New Wall Placement:} An action placing a previously unused wall $w \in \mathcal{W} \setminus W_t$. This action is permissible only when $m_i > 0$, consumes one inventory unit ($m_i' = m_i - 1$), adds $w$ to $W_{i,t}$, and designates $r_i' = w$.
+    \item \textbf{Wall Replacement (Repositioning):} An action that removes the player's active replaceable wall $r_i$ from the board and simultaneously places a new legal wall $w' \in \mathcal{W} \setminus (W_t \setminus \{r_i\})$. This action is available only if $r_i \ne \varnothing$. Under this rule, repositioning reuses the existing wall and therefore does not consume an additional wall from the player's finite inventory ($m_i' = m_i$), while updating the replaceable wall identifier to $r_i' = w'$.
+\end{enumerate}
+
+\subsection{One-Time Hop State}
+\label{subsec:hop_state}
+
+The second modification grants each player a single, non-recoverable opportunity per game to hop over an intervening opponent's wall. This resource is represented for each player $i \in \mathcal{N}$ by a binary variable:
+\begin{equation}
+h_i \in \{0, 1\},
+\end{equation}
+where:
+\begin{itemize}
+    \item $h_i = 1$ denotes that player $i$'s hop action is unused and currently available,
+    \item $h_i = 0$ denotes that player $i$'s hop has already been consumed and is unavailable for the remainder of the game.
+\end{itemize}
+Both players initialize with $h_i = 1$. The hop action, denoted $a^{\text{hop}}(c')$, enables a pawn to bypass an opponent's wall to reach a destination cell $c' \in C$. Its execution is governed by a domain-specific hop legality predicate:
+\begin{equation}
+\operatorname{LegalHop}(s_t, i, c') \in \{0, 1\},
+\end{equation}
+which evaluates to $1$ if and only if:
+\begin{enumerate}
+    \item player $i$'s hop resource is unused ($h_i = 1$),
+    \item the hop bypasses an opponent's wall,
+    \item the destination cell $c'$ is a valid board cell ($c' \in C$),
+    \item the destination cell is not temporarily blocked ($\tau_t(c') = 0$), and
+    \item the move satisfies the game's defined geometric and legal hop conditions.
+\end{enumerate}
+
+The state transition for the hop resource follows an irreversible step function:
+\begin{equation}
+h_i' = \begin{cases}
+0 & \text{if player } i \text{ executes } a^{\text{hop}}(c'), \\
+h_i & \text{otherwise}.
+\end{cases}
+\end{equation}
+Once $h_i = 0$, player $i$ cannot execute hop actions for the remainder of the game.
+
+\subsection{Temporary Blocked Cells}
+\label{subsec:temporary_blocked_cells}
+
+The third modification permits players to temporarily block grid cells, rendering them impassable for pawn traversal over a fixed temporal horizon. Unlike walls, which reside on cell boundaries, temporary blocks apply directly to the vertices (cells) of the grid graph.
+
+The configuration of temporary blocks is formalized by a duration mapping:
+\begin{equation}
+\tau_t : C \rightarrow \{0, 1, \dots, K\},
+\end{equation}
+where $C$ is the set of all board cells, and $K \in \mathbb{N}_{\ge 1}$ is a predefined fixed duration parameter representing the lifespan of a temporary block. For each cell $c \in C$:
+\begin{itemize}
+    \item $\tau_t(c) = 0$ signifies that cell $c$ is currently unblocked and passable.
+    \item $\tau_t(c) = k > 0$ signifies that cell $c$ is temporarily blocked and remains impassable for $k$ remaining state transitions.
+\end{itemize}
+
+The duration unit is defined strictly in terms of discrete state transitions (actions). If a cell $c^*$ is blocked by an action at time step $t$, it remains unavailable for movement during the next $K$ subsequent state transitions ($t+1, \dots, t+K$), and automatically reverts to available status ($\tau_{t+K+1}(c^*) = 0$) following the $K$-th subsequent transition. Since exactly one player acts at each time step, each state transition corresponds to one player action. When a cell-blocking action is executed targeting cell $c^* \in C$, its duration is initialized to $\tau_{t+1}(c^*) = K$, while all other cell durations decay by 1 at each transition:
+\begin{equation}
+\label{eq:temporary_block_decay}
+\tau_{t+1}(c) = \begin{cases}
+K & \text{if } c = c^* \text{ (newly blocked by action } a_t), \\
+\max\big(0, \, \tau_t(c) - 1\big) & \text{for all } c \in C \setminus \{c^*\}.
+\end{cases}
+\end{equation}
+For any action that does not initiate a cell block, the duration of every cell $c \in C$ decrements monotonically: $\tau_{t+1}(c) = \max\big(0, \tau_t(c) - 1\big)$.
+
+As an explicit rule of the environment, temporary cell blocking must preserve at least one valid path from each player's current position to that player's goal:
+\begin{equation}
+\operatorname{PathExists}(s_{t+1}, j) = 1, \quad \forall j \in \{1, 2\}.
+\end{equation}
+This requirement makes temporary blocking consistent with the path-preservation principle established for permanent walls and prevents the environment from generating unreachable goal states. Furthermore, temporary blocking actions are legally valid only on cells that are currently unoccupied ($c^* \notin \{p_1, p_2\}$) and currently unblocked ($\tau_t(c^*) = 0$).
+
+\subsection{Complete State Representation}
+\label{subsec:complete_state}
+
+Synthesizing the individual components, the complete environment state at time step $t$ is fully characterized by the tuple:
+\begin{equation}
+s_t = \big( p_1, p_2, W_{1,t}, W_{2,t}, m_1, m_2, r_1, r_2, h_1, h_2, \tau_t, z_t \big) \in \mathcal{S}.
+\end{equation}
+The constituents of $s_t$ are defined as follows:
+\begin{itemize}
+    \item $p_1, p_2 \in C$: current pawn positions of Player 1 and Player 2.
+    \item $W_{1,t}, W_{2,t} \subset \mathcal{W}$: active wall sets placed by Player 1 and Player 2, defining the active wall configuration $W_t = W_{1,t} \cup W_{2,t}$.
+    \item $m_1, m_2 \in \{0, 1, \dots, M\}$: remaining wall inventory counts for each player, where $M = 10$.
+    \item $r_1 \in W_{1,t} \cup \{\varnothing\}, \, r_2 \in W_{2,t} \cup \{\varnothing\}$: identity of the single replaceable wall for each player.
+    \item $h_1, h_2 \in \{0, 1\}$: binary hop availability flags.
+    \item $\tau_t \in \{0, 1, \dots, K\}^{|C|}$: vector of remaining blocking durations across all cells.
+    \item $z_t \in \mathcal{N}$: active player index controlling the transition at step $t$.
+\end{itemize}
+
+For any fixed board dimension $N$ and duration parameter $K$, the state space $\mathcal{S}$ is strictly finite. The state $s_t$ encodes the complete history of all strategic resources, temporal decay counters, and physical configurations necessary to determine future valid moves. Hence, the environment satisfies the Markov property:
+\begin{equation}
+\mathbb{P}(s_{t+1} \mid s_t, a_t, s_{t-1}, a_{t-1}, \dots, s_0, a_0) = \mathbb{P}(s_{t+1} \mid s_t, a_t).
+\end{equation}
+Because the environment is fully deterministic, the transition distribution collapses to a deterministic Dirac delta centered on the transition mapping $s_{t+1} = T(s_t, a_t)$.
+
+\subsection{Action Space}
+\label{subsec:action_space}
+
+At step $t$, the active agent $i = z_t$ chooses an action from a state-dependent legal action set $\mathcal{A}_i(s_t) \subseteq \mathcal{A}_i$. The total action space $\mathcal{A}_i$ comprises five distinct action categories:
+\begin{equation}
+\mathcal{A}_i = \mathcal{A}^{\text{move}} \cup \mathcal{A}^{\text{place}} \cup \mathcal{A}^{\text{replace}} \cup \mathcal{A}^{\text{hop}} \cup \mathcal{A}^{\text{block}}.
+\end{equation}
+The legal choices within each category in state $s_t$ are constrained as follows:
+\begin{enumerate}
+    \item \textbf{Pawn Movement ($a^{\text{move}}(c') \in \mathcal{A}^{\text{move}}$):} The pawn moves from $p_i$ to an orthogonally adjacent cell $c' \in C$. The move is legal if no wall in $W_t$ intersects the traversal edge, the target cell is not temporarily blocked ($\tau_t(c') = 0$), and $c'$ is not occupied by the opposing player's pawn ($c' \ne p_{-i}$).
+    \item \textbf{Wall Placement ($a^{\text{place}}(w) \in \mathcal{A}^{\text{place}}$):} The player selects a wall $w \in \mathcal{W} \setminus W_t$. This is legal if and only if $m_i > 0$, $w$ does not intersect any existing wall in $W_t$, and path preservation holds: $\operatorname{PathExists}(s_t \oplus w, j) = 1$ for all $j \in \mathcal{N}$, where $s_t \oplus w$ denotes the tentative state with $w$ added.
+    \item \textbf{Wall Replacement ($a^{\text{replace}}(w') \in \mathcal{A}^{\text{replace}}$):} Available if and only if $r_i \ne \varnothing$. The player repositions $r_i$ to a new location $w' \in \mathcal{W} \setminus (W_t \setminus \{r_i\})$. The action is legal if $w'$ does not intersect any wall in $W_t \setminus \{r_i\}$ and path preservation is satisfied: $\operatorname{PathExists}((s_t \ominus r_i) \oplus w', j) = 1$ for all $j \in \mathcal{N}$.
+    \item \textbf{One-Time Hop ($a^{\text{hop}}(c') \in \mathcal{A}^{\text{hop}}$):} Available if and only if $\operatorname{LegalHop}(s_t, i, c') = 1$.
+    \item \textbf{Temporary Cell Blocking ($a^{\text{block}}(c) \in \mathcal{A}^{\text{block}}$):} The player blocks cell $c \in C$. This action is legal if $\tau_t(c) = 0$, $c \notin \{p_1, p_2\}$, and the temporary obstruction preserves reachable paths: $\operatorname{PathExists}(s_t \oplus_{\tau} c, j) = 1$ for all $j \in \mathcal{N}$.
+\end{enumerate}
+Action availability is dynamic: the state-dependent action set $\mathcal{A}_i(s_t)$ contracts as inventory is depleted ($m_i = 0$), the hop is consumed ($h_i = 0$), or cells and wall locations become obstructed.
+
+\subsection{State Transition Function}
+\label{subsec:state_transition}
+
+The deterministic transition function is defined strictly over legal state-action pairs:
+\begin{equation}
+T : \big\{ (s, a) \;\big|\; s \in \mathcal{S}, \; a \in \mathcal{A}_{z(s)}(s) \big\} \rightarrow \mathcal{S},
+\end{equation}
+where $z(s) \in \mathcal{N}$ identifies the active player in state $s$, ensuring that only actions from that player's state-dependent legal action set $\mathcal{A}_{z(s)}(s)$ can be executed. The transition mapping uniquely determines the subsequent state $s_{t+1} = T(s_t, a_t)$.
+
+Let $i = z_t$ be the active player and $-i = 3 - i$ be the opponent. For all non-blocking actions, remaining temporary block durations decay according to $\tau_{t+1}(c) = \max\big(0, \tau_t(c) - 1\big)$, while for temporary blocking actions, durations update according to Equation~\eqref{eq:temporary_block_decay}. The active turn toggles to $z_{t+1} = -i$, unless a terminal state is reached. The component-wise updates for each action category are:
+\begin{itemize}
+    \item If $a_t = a^{\text{move}}(c')$:
+    \begin{equation}
+    p_i' = c', \quad p_{-i}' = p_{-i}, \quad W_{j}' = W_{j}, \quad m_j' = m_j, \quad r_j' = r_j, \quad h_j' = h_j \quad (\forall j \in \mathcal{N}).
+    \end{equation}
+    
+    \item If $a_t = a^{\text{place}}(w)$:
+    \begin{align}
+    W_i' &= W_i \cup \{w\}, \quad W_{-i}' = W_{-i}, \quad m_i' = m_i - 1, \quad m_{-i}' = m_{-i}, \\
+    r_i' &= w, \quad r_{-i}' = r_{-i}, \quad p_j' = p_j, \quad h_j' = h_j \quad (\forall j \in \mathcal{N}).
+    \end{align}
+    
+    \item If $a_t = a^{\text{replace}}(w')$:
+    \begin{align}
+    W_i' &= (W_i \setminus \{r_i\}) \cup \{w'\}, \quad W_{-i}' = W_{-i}, \quad m_j' = m_j \quad (\forall j \in \mathcal{N}), \\
+    r_i' &= w', \quad r_{-i}' = r_{-i}, \quad p_j' = p_j, \quad h_j' = h_j \quad (\forall j \in \mathcal{N}).
+    \end{align}
+    
+    \item If $a_t = a^{\text{hop}}(c')$:
+    \begin{equation}
+    p_i' = c', \quad p_{-i}' = p_{-i}, \quad h_i' = 0, \quad h_{-i}' = h_{-i}, \quad W_j' = W_j, \quad m_j' = m_j, \quad r_j' = r_j \quad (\forall j \in \mathcal{N}).
+    \end{equation}
+    
+    \item If $a_t = a^{\text{block}}(c^*)$:
+    \begin{equation}
+    \tau_{t+1}(c^*) = K, \quad \tau_{t+1}(c) = \max\big(0, \, \tau_t(c) - 1\big) \; (\forall c \ne c^*),
+    \end{equation}
+    with all pawn positions, wall sets, inventories, replaceable wall pointers, and hop resources remaining invariant.
+\end{itemize}
+
+\subsection{Terminal States and Winning Condition}
+\label{subsec:terminal_states}
+
+The game terminates immediately when either player successfully advances their pawn into their designated goal region. The set of terminal states is defined as:
+\begin{equation}
+\mathcal{S}_{\text{terminal}} = \big\{ s \in \mathcal{S} \;\big|\; p_1 \in G_1 \;\lor\; p_2 \in G_2 \big\}.
+\end{equation}
+Because turn alternation is strictly sequential and players begin in non-terminal states, exactly one player achieves the winning condition on their active turn. The winner of the game is determined unambiguously by:
+\begin{equation}
+\operatorname{Winner}(s) = \begin{cases}
+1 & \text{if } p_1 \in G_1, \\
+2 & \text{if } p_2 \in G_2.
+\end{cases}
+\end{equation}
+The action validation constraints and deterministic transition function $T$ guarantee that illegal configurations---such as overlapping pawns, intersecting walls, or invalid topologies violating $\operatorname{PathExists}$---are unreachable from any legal initial configuration.
+
+Episode truncation, repetition handling, and maximum training horizon, if required for reinforcement-learning experiments, will be specified separately in the experimental setup.
+
+\subsection{Reward Function}
+\label{subsec:reward_function}
+
+Modified Wallz is a strictly competitive zero-sum game:
+\begin{equation}
+R_1(s, a, s') + R_2(s, a, s') = 0, \quad \forall (s, a, s') \in \mathcal{S} \times \mathcal{A} \times \mathcal{S}.
+\end{equation}
+We formulate the base game objective using canonical sparse terminal rewards:
+\begin{equation}
+R_i(s, a, s') = \begin{cases}
++1 & \text{if } s' \in \mathcal{S}_{\text{terminal}} \text{ and } \operatorname{Winner}(s') = i, \\
+-1 & \text{if } s' \in \mathcal{S}_{\text{terminal}} \text{ and } \operatorname{Winner}(s') = -i, \\
+0 & \text{if } s' \notin \mathcal{S}_{\text{terminal}}.
+\end{cases}
+\end{equation}
+This formulation directly reflects the underlying win/loss objective of the zero-sum game. Potential intermediate reward shaping (such as potential-based distance-to-goal heuristics) may be applied during reinforcement learning experimentation to mitigate credit assignment challenges, but remains strictly separated from the formal mathematical specification of the underlying game.
+
+\subsection{Observation Model}
+\label{subsec:observation_model}
+
+The game exhibits perfect information and complete observability. Each player observes the identical, complete environment state:
+\begin{equation}
+o_i(s_t) = s_t, \quad \forall i \in \mathcal{N}.
+\end{equation}
+At every decision step, both agents have instantaneous, unoccluded access to:
+\begin{itemize}
+    \item the exact coordinate locations of both pawns ($p_1, p_2$),
+    \item the complete active wall configuration ($W_{1,t}, W_{2,t}$),
+    \item the remaining wall inventories ($m_1, m_2$),
+    \item the replaceable wall identities ($r_1, r_2$),
+    \item the binary hop resource status ($h_1, h_2$),
+    \item the spatial duration profile of all temporary blocked cells ($\tau_t$), and
+    \item the current turn indicator ($z_t$).
+\end{itemize}
+The absence of hidden variables or partial observability confirms that Modified Wallz is a fully observable Markov game. The modifications systematically enrich the state space beyond classical Wallz by incorporating temporal decay ($\tau_t$), discrete resource counters ($m_i, h_i$), and history-dependent wall replacement pointers ($r_i$). These elements induce deep temporal and spatial coupling, wherein present actions dynamically alter the availability of future tactical actions for both agents.
+
+\section{Proposed Solutions}
+\label{sec:proposed_solutions}
+
+To establish rigorous benchmarks for evaluating multi-agent reinforcement learning (MARL) policies in subsequent stages of this work, we propose a hierarchy of non-learning reference methods. Because Modified Wallz is a deterministic, sequential, zero-sum game of perfect information, it lends itself to classical heuristic evaluation, depth-bounded adversarial search, and exact game-tree analysis. These baselines are designed to provide interpretable, structured reference points across varying degrees of computational complexity and lookahead depth. In this section, we formulate the proposed non-learning baselines and outline the planned protocol for comparative evaluation.
+
+\subsection{Heuristic Baseline}
+\label{subsec:heuristic_baseline}
+
+We propose a deterministic, greedy heuristic agent whose policy is guided by topological distance metrics over the traversable grid graph. Let $d_i(s)$ denote the length of the shortest unblocked path from player $i$'s current pawn position $p_i$ to its target goal set $G_i$ in state $s \in \mathcal{S}$, computed over the cell adjacency structure induced by the active walls and currently unexpired blocked cells ($\tau_t(c) > 0$). When no valid path exists or if the player is trapped, $d_i(s) = \infty$; however, the path-preservation constraint $\operatorname{PathExists}(s, i) = 1$ ensures that $d_i(s) < \infty$ for all legal states.
+
+We define the relative spatial progress heuristic for player $i$ as:
+\begin{equation}
+H_i(s) = d_{-i}(s) - d_i(s),
+\end{equation}
+where $-i = 3 - i$ denotes the opposing player. The value $H_i(s)$ captures the net path advantage of player $i$: positive values indicate that player $i$ is closer to victory than its opponent, whereas negative values reflect an opponent lead.
+
+For any decision step with active player $i = z(s)$, the proposed heuristic agent will evaluate all candidate legal actions $a \in \mathcal{A}_i(s)$ by inspecting the immediate successor state $s' = T(s, a)$. The planned action-selection policy is formalized as:
+\begin{equation}
+a^* = \arg\max_{a \in \mathcal{A}_i(s)} H_i\big(T(s, a)\big),
+\end{equation}
+with ties broken deterministically according to a predefined priority ordering over action categories. 
+
+Crucially, this evaluation will encompass all five legal action categories defined in Section~\ref{subsec:action_space}:
+\begin{itemize}
+    \item \textbf{Pawn movement ($a^{\text{move}}$):} Directly decreases $d_i(s')$ by advancing the pawn along an orthogonal trajectory toward $G_i$.
+    \item \textbf{Wall placement ($a^{\text{place}}$):} Introduces structural barriers that can lengthen the opponent's shortest path $d_{-i}(s')$, while strictly maintaining $d_i(s') < \infty$.
+    \item \textbf{Wall replacement ($a^{\text{replace}}$):} Repositions the active wall $r_i$ to reconfigure spatial obstructions, permitting dynamic adjustments to $d_{-i}(s')$ without depleting inventory $m_i$.
+    \item \textbf{One-time hop ($a^{\text{hop}}$):} Bypasses an intervening opponent wall to achieve an immediate reduction in $d_i(s')$, permanently setting $h_i' = 0$.
+    \item \textbf{Temporary cell blocking ($a^{\text{block}}$):} Imposes a transient obstruction on cell $c^*$, temporarily forcing the opponent onto a longer detour and increasing $d_{-i}(s')$.
+\end{itemize}
+This heuristic agent is intended to serve as a fast, computationally inexpensive, and intuitive first-order baseline against which more sophisticated decision-making architectures can be compared.
+
+\subsection{Search-Based Baseline}
+\label{subsec:search_baseline}
+
+While the greedy heuristic baseline considers only immediate successor states, competitive decision-making often demands multi-step adversarial anticipation. Because Modified Wallz is deterministic and strictly zero-sum, minimax search over the game tree provides a principled framework for evaluating future counteractions.
+
+We propose a depth-limited minimax agent with heuristic leaf evaluation. Let $d \in \mathbb{N}_0$ denote the remaining search depth, and let $D \in \mathbb{N}_{\ge 1}$ be the maximum lookahead depth parameter. The minimax value function $V_i(s, d)$ for player $i$ in state $s$ is defined recursively as:
+\begin{equation}
+V_i(s, d) = \begin{cases}
+U_i(s), & \text{if } s \in \mathcal{S}_{\text{terminal}} \text{ or } d = 0, \\
+\max\limits_{a \in \mathcal{A}_i(s)} V_i\big(T(s, a), \, d - 1\big), & \text{if } z(s) = i, \\
+\min\limits_{a \in \mathcal{A}_{-i}(s)} V_i\big(T(s, a), \, d - 1\big), & \text{if } z(s) = -i,
+\end{cases}
+\end{equation}
+where $U_i(s)$ is the static evaluation function at terminal states or search horizons:
+\begin{equation}
+U_i(s) = \begin{cases}
++\infty, & \text{if } s \in \mathcal{S}_{\text{terminal}} \text{ and } \operatorname{Winner}(s) = i, \\
+-\infty, & \text{if } s \in \mathcal{S}_{\text{terminal}} \text{ and } \operatorname{Winner}(s) = -i, \\
+H_i(s), & \text{if } s \notin \mathcal{S}_{\text{terminal}} \text{ and } d = 0.
+\end{cases}
+\end{equation}
+At any decision state $s$ with active player $i = z(s)$, the proposed agent selects the action maximizing the backed-up minimax value over a lookahead horizon of $D$:
+\begin{equation}
+a^* = \arg\max_{a \in \mathcal{A}_i(s)} V_i\big(T(s, a), \, D - 1\big).
+\end{equation}
+
+During search, the agent will explore branching paths across all five legal action categories. To mitigate the combinatorial growth of the game tree, we plan to implement \textbf{Alpha-Beta pruning}. Alpha-Beta pruning maintains running bounds $[\alpha, \beta]$ representing the minimum score the maximizing player is assured of and the maximum score the minimizing player can limit the opponent to, respectively. By pruning branches that cannot influence the final root decision, Alpha-Beta search achieves substantial reductions in explored nodes while guaranteeing mathematical equivalence to the full minimax value. The lookahead depth $D$ will be treated as an experimental parameter to be selected during subsequent benchmarking based on computational budget constraints.
+
+\subsection{Exact Game Analysis for Small Configurations}
+\label{subsec:exact_analysis}
+
+For sufficiently small board dimensions and restricted resource budgets, it becomes computationally feasible to construct the complete reachable game tree. In such configurations, exact backward induction can determine the true game-theoretic value of every reachable state under optimal play.
+
+Because Modified Wallz possesses a finite state space $\mathcal{S}$, deterministic transitions $T$, sequential turn structure, and perfect information, the optimal value $V_i^*(s)$ satisfies the unbounded minimax fixed-point formulation:
+\begin{equation}
+V_i^*(s) = \begin{cases}
+R_i(s), & \text{if } s \in \mathcal{S}_{\text{terminal}}, \\
+\max\limits_{a \in \mathcal{A}_i(s)} V_i^*\big(T(s, a)\big), & \text{if } z(s) = i, \\
+\min\limits_{a \in \mathcal{A}_{-i}(s)} V_i^*\big(T(s, a)\big), & \text{if } z(s) = -i.
+\end{cases}
+\end{equation}
+Here, $R_i(s) \in \{+1, -1\}$ denotes the terminal win/loss outcome.
+
+We propose an exact game-tree solver using retrograde analysis and exhaustive minimax traversal to serve as an absolute \textbf{ground-truth reference}. This solver will enable direct, rigorous verification of:
+\begin{enumerate}
+    \item the degree of suboptimality in heuristic-based decisions,
+    \item the convergence properties and approximation accuracy of depth-limited search as depth $D$ increases, and
+    \item the policy fidelity of learned reinforcement learning agents against true game-theoretic equilibria.
+\end{enumerate}
+
+However, the state space of Modified Wallz expands rapidly due to the combined combinatorial configurations of:
+\begin{itemize}
+    \item pawn coordinate pairs $(p_1, p_2) \in C^2$,
+    \item active wall combinations $W_t \subset \mathcal{W}$,
+    \item remaining inventory counters $(m_1, m_2) \in \{0, \dots, M\}^2$,
+    \item replaceable wall identifiers $(r_1, r_2)$,
+    \item binary hop availability flags $(h_1, h_2) \in \{0, 1\}^2$,
+    \item discrete countdown vectors for temporary blocked cells $\tau_t \in \{0, \dots, K\}^{|C|}$, and
+    \item turn alternating variables $z_t \in \{1, 2\}$.
+\end{itemize}
+Consequently, exact game-tree computation will be restricted to miniature configurations (such as reduced grid sizes $N$ and bounded wall inventories) that are verified to be computationally tractable during the implementation phase.
+
+\subsection{Planned Baseline Evaluation}
+\label{subsec:comparison_protocol}
+
+The proposed reference methods establish an explicit evaluation ladder with three distinct tiers of reasoning capability:
+\begin{enumerate}
+    \item \textbf{Heuristic Agent (Tier 1):} Immediate, myopic spatial reasoning based solely on shortest-path differential $H_i(s')$.
+    \item \textbf{Search-Based Agent (Tier 2):} Multi-step adversarial reasoning via depth-limited minimax with Alpha-Beta pruning, projecting game dynamics up to horizon $D$.
+    \item \textbf{Exact Solver (Tier 3):} Provably optimal game-theoretic reference via complete backward induction on computationally tractable sub-configurations.
+\end{enumerate}
+
+These baseline agents will subsequently be evaluated against one another and against trained MARL policies under identical environment dynamics, legal-action constraints, and path-preservation rules. The planned evaluation protocol will measure:
+\begin{itemize}
+    \item \textbf{Competitive Outcome:} Win/loss outcomes across alternating starting positions to account for first-player advantage.
+    \item \textbf{Trajectory Efficiency:} Average game length (measured in elapsed state transitions until goal attainment).
+    \item \textbf{Computational Burden:} Wall-clock time, node evaluations, and memory footprint per decision step.
+    \item \textbf{Policy Fidelity:} Frequency of agreement between agent action selections and optimal minimax actions in configurations where exact ground-truth solutions are available.
+\end{itemize}
+
+Furthermore, the evaluation framework is planned to systematically vary experimental parameters, including grid dimension $N$, temporary blocking duration $K$, and the selective enablement of individual modifications (reusable walls, one-time hops, and temporary blocks). This parameter ablation will isolate how each distinct mechanism affects computational complexity, search depth sensitivity, and tactical diversity. 
+
+This multi-tiered evaluation foundation directly prepares the ground for formulating and benchmarking the multi-agent reinforcement learning methodology to be developed in subsequent stages of this project.
+
+\subsection{MARL Methodology}
+\label{subsec:marl_methodology}
+
+This subsection formulates the proposed learning approach for Modified Wallz as a two-agent, turn-based, zero-sum Markov game, building directly upon the formal game specification established in Section~\ref{sec:problem_formulation}.
+
+\subsubsection{MARL Formulation}
+\label{subsubsec:marl_formulation}
+
+The learning environment is formulated as an interaction between two competing agents with strictly opposing objectives. Rather than reformulating the underlying game dynamics, the MARL setup directly adopts the formal specification from Section~\ref{sec:problem_formulation}. In particular:
+\begin{itemize}
+    \item Both agents have complete access to the current environment state.
+    \item Only the currently active player $z_t \in \{1, 2\}$ selects and executes an action at each discrete timestep $t$.
+    \item The environment deterministically transitions to the successor state $s_{t+1} = T(s_t, a_t)$.
+    \item Players strictly alternate decision-making turns.
+    \item The learning objective for each agent is to maximize its expected game outcome against an adaptive opponent.
+\end{itemize}
+In accordance with the underlying environment model, the learning framework maintains perfect information, deterministic transitions, alternating turns, and a strictly zero-sum terminal objective, without introducing simultaneous moves, partial observability, environmental stochasticity, or draw outcomes.
+
+\subsubsection{Observation Representation}
+\label{subsubsec:obs_representation}
+
+Consistent with the perfect-information nature of Modified Wallz and the observation model defined in Section~\ref{subsec:observation_model}, each agent receives the complete environment state as its observation:
+\begin{equation}
+o_i(s_t) = s_t.
+\end{equation}
+As formally defined in Section~\ref{subsec:complete_state}, the complete state vector $s_t = (p_1, p_2, W_{1,t}, W_{2,t}, m_1, m_2, r_1, r_2, h_1, h_2, \tau_t, z_t)$ encapsulates both the physical board configuration and the strategic resources available to the two players. Here, $W_{1,t}$ and $W_{2,t}$ denote the active walls placed by Players~1 and~2, respectively, with $W_t = W_{1,t} \cup W_{2,t}$ representing the complete active wall configuration. The observation vector thus incorporates:
+\begin{itemize}
+    \item both pawn positions $p_1, p_2 \in C$;
+    \item the active wall sets $W_{1,t}$ and $W_{2,t}$, including their respective ownership and orientations;
+    \item the remaining unused wall inventories $(m_1, m_2)$;
+    \item the identifiers of each player's most recently placed (repositionable) wall $(r_1, r_2)$;
+    \item the binary hop availability flags $(h_1, h_2)$;
+    \item the temporary blocked-cell countdown mapping $\tau_t$; and
+    \item the active turn indicator $z_t \in \{1, 2\}$.
+\end{itemize}
+Providing the full state representation ensures that the learned policy operates with complete transparency over all physical, temporal, and inventory constraints governing the game.
+
+\subsubsection{Action Representation and Legal-Action Masking}
+\label{subsubsec:action_masking}
+
+Modified Wallz features a state-dependent discrete action space, as the set of legally permissible actions $\mathcal{A}_i(s_t)$ varies substantially across different board configurations. At any decision state, the five action categories defined in Section~\ref{subsec:action_space} are:
+\begin{enumerate}
+    \item standard pawn movement: $\mathcal{A}_{\text{move}}(s_t, i)$;
+    \item wall placement: $\mathcal{A}_{\text{wall}}(s_t, i)$;
+    \item replacement of the player's most recently placed wall: $\mathcal{A}_{\text{replace}}(s_t, i)$;
+    \item execution of the one-time hop: $\mathcal{A}_{\text{hop}}(s_t, i)$; and
+    \item temporary cell blocking: $\mathcal{A}_{\text{block}}(s_t, i)$.
+\end{enumerate}
+
+For the MARL implementation, we propose a fixed discrete action encoding that spans all representable action instances in the game universe, paired with an exact legal-action mask. Formally, for any candidate action $a$ in the discrete action universe, the mask $M(s_t, a)$ is defined as:
+\begin{equation}
+M(s_t, a) =
+\begin{cases}
+1, & \text{if } a \in \mathcal{A}_i(s_t), \\
+0, & \text{if } a \notin \mathcal{A}_i(s_t).
+\end{cases}
+\end{equation}
+Under this masking scheme, only actions satisfying $M(s_t, a) = 1$ may be selected by the agent. By explicitly constraining the policy or value-selection operator to the masked subset of valid actions, the learning algorithm ignores invalid actions entirely during decision-making, rather than requiring the agent to learn via negative penalties that illegal moves are impermissible. This formulation is particularly advantageous for Modified Wallz, where legality constraints---including pawn adjacency, wall overlaps, path-preservation requirements, recency-based wall replacement, hop conditions, and temporary block validity---depend intimately on the current board state.
+
+\subsubsection{Reward Design}
+\label{subsubsec:reward_design}
+
+The reward function directly follows the formal sparse zero-sum specification defined in Section~\ref{subsec:reward_function}:
+\begin{equation}
+R_i(s_t, a_t, s_{t+1}) =
+\begin{cases}
++1, & \text{if player } i \text{ wins}, \\
+-1, & \text{if player } i \text{ loses}, \\
+0, & \text{otherwise}.
+\end{cases}
+\end{equation}
+The reward signal is intentionally kept sparse and strictly aligned with the true game objective of reaching the goal region. At this stage, no reward shaping is introduced; specifically, intermediate distance-based rewards, penalties for wall expenditure, or handcrafted heuristic incentives are omitted. This sparse reward formulation ensures that the learning agent is encouraged to discover emergent strategic behaviors and tactical trade-offs directly from the fundamental game objective, avoiding biases toward manually engineered preferences.
+
+\subsubsection{Self-Play Training}
+\label{subsubsec:self_play}
+
+We propose self-play as the primary training paradigm for the learning agents. Rather than training exclusively against fixed heuristic policies or static opponents, the agents will repeatedly play Modified Wallz against policies generated from the same learning process. An interaction trajectory is conceptually represented as a sequence of alternating decision epochs:
+\begin{equation}
+s_0 \xrightarrow{a_0} s_1 \xrightarrow{a_1} s_2 \xrightarrow{a_2} \cdots \xrightarrow{a_{T-1}} s_T,
+\end{equation}
+where each transition advances the board state deterministically and alternates the active player index $z_t$. An episode terminates at step $T$ when a pawn reaches its designated goal region, emitting the terminal sparse rewards.
+
+The purpose of self-play is to provide an evolving curriculum wherein each agent is exposed to progressively stronger, co-adapting counter-strategies. As training progresses, the opposing policy provides an adaptive challenge, driving the discovery of sophisticated offensive paths, timely wall placements, counter-blocking maneuvers, and tactical hop usage.
+
+\subsubsection{Value-Based Learning Approach}
+\label{subsubsec:value_based_approach}
+
+For the initial MARL implementation, we propose a DQN-style value-based learning approach augmented with legal-action masking. In this framework, a parameterized state-action value function is learned:
+\begin{equation}
+Q_\theta(s, a),
+\end{equation}
+where $\theta$ denotes the learnable parameters of the function approximator. At each decision state $s_t$, the active agent selects the legal action that maximizes the estimated value:
+\begin{equation}
+a_t^* = \arg\max_{a \in \mathcal{A}_i(s_t)} Q_\theta(s_t, a).
+\end{equation}
+The legal-action mask ensures that this maximization is evaluated strictly over the set of legally valid actions $\mathcal{A}_i(s_t)$, setting the effective value of illegal actions to $-\infty$ during selection.
+
+This value-based formulation is chosen for several reasons:
+\begin{itemize}
+    \item the environment operates with discrete, alternating turns;
+    \item the action space, while state-dependent, is discrete;
+    \item state transitions are fully deterministic;
+    \item the environment exhibits full observability of the complete game state;
+    \item the game has a well-defined zero-sum terminal objective;
+    \item value-based methods are comparatively straightforward to implement, stabilize, and interpret; and
+    \item learned state-action values $Q_\theta(s, a)$ provide a transparent basis for comparison against the value estimates and action choices of the heuristic and minimax baselines.
+\end{itemize}
+We do not assert that this value-based formulation is theoretically optimal for the game. Consistent with the current planning and ideation phase, specific architectural dimensions, hyperparameter configurations, replay-buffer mechanisms, target-network update schedules, exploration strategies, and training durations are not predefined; these operational choices will be finalized during the implementation phase based on the concrete action-space representation and available computational resources.
+
+\subsection{Planned MARL Evaluation}
+\label{subsec:planned_marl_eval}
+
+Following implementation, the trained MARL policies will be evaluated through a structured experimental framework designed to benchmark competitive capability, strategic quality, and sensitivity to environmental parameters.
+
+\subsubsection{Comparison Against Baselines}
+\label{subsubsec:eval_baselines}
+
+The performance of the learned MARL agents will be directly evaluated against the baseline agents established in Sections~\ref{subsec:heuristic_baseline}--\ref{subsec:exact_analysis}:
+\begin{align*}
+\text{MARL} &\quad\text{vs}\quad \text{Heuristic Baseline}, \\
+\text{MARL} &\quad\text{vs}\quad \text{Minimax Baseline (varying depth } D\text{)},
+\end{align*}
+and, on computationally tractable miniature configurations:
+\begin{align*}
+\text{MARL} &\quad\text{vs}\quad \text{Exact Game-Tree Solver}.
+\end{align*}
+These comparative match-ups will determine whether the learned policy discovers effective competitive strategies, and how its tactical decisions compare with handcrafted spatial heuristics, multi-step tree search, and provably optimal game-theoretic play. In accordance with the prospective nature of this report, no specific outcome or performance superiority is predicted prior to empirical execution.
+
+\subsubsection{Exact-Game Policy Comparison}
+\label{subsubsec:exact_policy_comparison}
+
+For miniature board configurations where backward induction and exhaustive game-tree analysis remain computationally tractable, the decision policy learned by the MARL agent will be compared directly against the provably optimal actions derived from the exact solver. We define the policy-agreement metric conceptually as:
+\begin{equation}
+\text{Agreement} = \frac{\text{number of states where MARL selects an optimal action}}{\text{number of evaluated states}}.
+\end{equation}
+In game states where multiple actions yield identical game-theoretic values under the exact minimax solution, an action chosen by the MARL policy will be considered in agreement whenever it belongs to the set of optimal actions. This metric will quantify the degree of equilibrium fidelity achieved by the learned policy on small problem instances.
+
+\subsubsection{Ablation Study}
+\label{subsubsec:ablation_study}
+
+To isolate the individual and combined strategic effects of the three novel mechanics introduced in Modified Wallz, we plan an ablation study across five distinct environment configurations:
+\begin{enumerate}
+    \item \textbf{Original Wallz:} standard pawn movements and wall placements with non-reusable walls;
+    \item \textbf{Wallz with Reusable Walls:} incorporating the repositioning mechanism for the most recently placed wall;
+    \item \textbf{Wallz with One-Time Hop:} enabling a single wall-hop maneuver per player under legal conditions;
+    \item \textbf{Wallz with Temporary Blocked Cells:} introducing the $K$-step cell-blocking mechanism; and
+    \item \textbf{Full Modified Wallz:} the complete environment incorporating all three mechanics concurrently.
+\end{enumerate}
+This ablation protocol will systematically examine how each individual mechanism alters policy behavior, tactical complexity, and learned defensive versus offensive trade-offs.
+
+\subsubsection{Parameter Variation}
+\label{subsubsec:parameter_variation}
+
+The planned experimental campaign will systematically vary the primary environmental parameters:
+\begin{align*}
+N &= \text{board dimension ($N \times N$ discrete grid)}, \\
+K &= \text{temporary block duration (number of elapsed state transitions)}.
+\end{align*}
+Varying these parameters will enable investigation into how increasing spatial complexity and temporal constraint horizons affect:
+\begin{itemize}
+    \item sample efficiency and learning stability during training;
+    \item competitive game outcomes against baselines;
+    \item average trajectory length and game duration;
+    \item computational and memory requirements per training epoch; and
+    \item qualitative policy adaptations (e.g., preference for spatial trapping versus rapid advancement).
+\end{itemize}
+Concrete numerical choices for $N$, $K$, and the total training budget will be selected during implementation based on empirical computational feasibility.
+
+\subsubsection{Evaluation Metrics}
+\label{subsubsec:eval_metrics}
+
+To maintain consistency with the baseline evaluation protocol in Section~\ref{subsec:comparison_protocol}, the MARL evaluation will employ the following core metrics:
+\begin{itemize}
+    \item \textbf{Competitive Performance:} Win/loss rate across evaluation matches, evaluated symmetrically with alternating starting players to eliminate first-mover bias.
+    \item \textbf{Trajectory Efficiency:} Average game length, measured by the total number of elapsed state transitions until goal attainment.
+    \item \textbf{Computational and Training Cost:} Wall-clock training duration, inference and decision-making time per turn, and peak memory utilization.
+    \item \textbf{Policy Quality:} Frequency of agreement between MARL action selections and exact optimal actions on configurations where ground-truth solutions are available.
+\end{itemize}
+These standardized metrics will provide a comprehensive, multi-dimensional assessment of learned agent capability without introducing undefined or unmodeled outcomes.
+
+\section{Contribution}
+\label{sec:contribution}
+
+The individual contributions of the team members to this project report are summarized in Table~\ref{tab:contributions}.
+
+\begin{table}[H]
+\centering
+\caption{Team member contribution allocation.}
+\label{tab:contributions}
+\begin{tabular}{lp{10.5cm}}
+\toprule
+\textbf{Member} & \textbf{Contribution} \\
+\midrule
+Vedant Bondekar & Game design and modification; report writing. \\
+Dhruv Meshram & Report writing; ideation and brainstorming. \\
+Abhishek Tagalpallewar & Game design and modification; custom game making. \\
+Chaitanya Chaudhary & Game design and modification; literature review. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%Bibliography
+\bibliographystyle{unsrt}  
+\bibliography{references}  
+
+
+\end{document}
