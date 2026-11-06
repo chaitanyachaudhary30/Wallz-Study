@@ -133,9 +133,25 @@ def make_agent(spec, player_id, config, solutions=None, match_seed=0):
         identity['params'] = {'states': len(sol.graph.keys), 'model': 'position game'}
         return ExactAgent(player_id, sol), identity
     if name == 'dqn':
-        raise AgentUnavailable(
-            "DQN agent missing: agents/dqn/{encoding,network,trainer,self_play}.py are empty "
-            "scaffolds, so no state encoder, action-id map or checkpoint format exists to load.")
+        path = params.get('path')
+        if not path:
+            raise AgentUnavailable("DQN agent spec requires 'path' parameter, e.g. 'dqn:path=checkpoints/run1/model.pt'")
+        try:
+            from agents.dqn.agent import load_checkpoint
+        except ImportError as e:
+            raise AgentUnavailable(f"DQN dependencies not available: {e}")
+        try:
+            agent = load_checkpoint(
+                checkpoint_path=path,
+                player_id=player_id,
+                expected_board_size=config.board_size,
+                expected_rules=config.rules,
+            )
+        except Exception as e:
+            raise AgentUnavailable(f"Failed to load DQN checkpoint from {path}: {e}")
+        identity['codec_version'] = agent.codec_version
+        identity['obs_version'] = agent.obs_version
+        return agent, identity
     raise ValueError(f"Unknown agent spec {spec!r}")
 
 

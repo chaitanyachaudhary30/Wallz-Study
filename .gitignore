@@ -1,63 +1,33 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / cache files
 __pycache__/
 *.py[cod]
-*$py.class
 
-# Distribution / packaging
+# Distribution & build
 build/
 dist/
 *.egg-info/
-.eggs/
 
 # Virtual Environments
 .venv/
 venv/
-ENV/
-env/
 
-# Testing, Coverage & Linters
+# Testing & Linters
 .pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
-.mypy_cache/
-.ruff_cache/
 
-# Jupyter Notebooks
-.ipynb_checkpoints
-*-checkpoint.ipynb
-
-# Environment variables & secrets
-.env
-.env.*
-!.env.example
-
-# IDE & OS files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-Thumbs.db
-
-# Model checkpoints & weights
-*.pt
-*.pth
-*.ckpt
-*.onnx
-*.bin
+# Model checkpoints & weights (exempt release models)
 checkpoints/*
 !checkpoints/.gitkeep
+!checkpoints/release/
+!checkpoints/release/**
+*.pt
+!checkpoints/release/*.pt
 
-# Experiment logs and run trackers
+# Logs & run outputs
 experiments/logs/*
 !experiments/logs/.gitkeep
-wandb/
-runs/
 *.log
 
-# Report files & LaTeX build artifacts
+# Report LaTeX build artifacts
 report/*.aux
 report/*.bbl
 report/*.blg
@@ -68,3 +38,16 @@ report/*.synctex.gz
 
 # Course guidelines
 Multi_Agent_Systems_Project_Guidelines.pdf
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# AI agent & tooling artifacts
+.agents/
+.claude/
+skills-lock.json

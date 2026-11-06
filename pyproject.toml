@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modified_wallz"
+version = "0.2.0"
+description = "Multi-Agent Reinforcement Learning for Adversarial Spatial Decision-Making with Temporal Constraints"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Modified Wallz Team" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dqn = [
+    "numpy>=1.24",
+    "torch>=2.0",
+]
+dev = [
+    "hypothesis>=6.0",
+    "pytest>=7.0",
+]
+
+[tool.setuptools]
+py-modules = ["wallz_engine", "greedy_agent"]
+packages = ["modified_wallz", "agents", "agents.dqn", "evaluation"]
+
+[tool.setuptools.package-dir]
+modified_wallz = "src/modified_wallz"
+agents = "agents"
+"agents.dqn" = "agents/dqn"
+evaluation = "evaluation"
