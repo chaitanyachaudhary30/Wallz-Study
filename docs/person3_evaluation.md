@@ -196,9 +196,12 @@ python scripts/run_experiments.py export-demo m.json --out m_demo.json
 # exact solves (all 8 A/B/C cells) and agent agreement
 python scripts/run_experiments.py solve -N 3 -K 1 -M 0 --abc all --out experiments/results/person3_pilot/solve_N3_K1_M0.json
 python scripts/run_experiments.py solve -N 3 -K 1 -M 1 --abc all --out experiments/results/person3_pilot/solve_N3_K1_M1.json
-python scripts/run_experiments.py solve -N 4 -K 1 -M 0 --abc all --max-seconds 600 --out experiments/results/person3_pilot/solve_N4_K1_M0.json
+python scripts/run_experiments.py solve -N 4 -K 1 -M 0 --abc all --out experiments/results/person3_pilot/solve_N4_K1_M0.json
+python scripts/run_experiments.py solve -N 4 -K 1 -M 1 --abc all --max-states 400000 --max-seconds 900 --out experiments/results/person3_pilot/solve_N4_K1_M1_capped.json
 python scripts/run_experiments.py agreement -N 3 -K 1 -M 0 --agents greedy minimax:depth=2 \
        --out experiments/results/person3_pilot/agreement_N3_K1_M0.json
+python scripts/run_experiments.py agreement -N 3 -K 1 -M 1 --agents greedy minimax:depth=2 \
+       --out experiments/results/person3_pilot/agreement_N3_K1_M1.json
 
 # paired 2^3 match ablation (writes experiments/logs/<name>/matches.jsonl + <out-dir>/summary.json)
 python scripts/run_experiments.py ablation --x minimax:depth=2 --y greedy -N 5 -K 3 -M 10 \
@@ -211,7 +214,91 @@ python scripts/run_experiments.py verify-replay experiments/logs/ablation_N5_min
 
 ## 6. Pilot results
 
-RESULTS_PLACEHOLDER
+All files in `experiments/results/person3_pilot/` were produced from commit `7e2d6da` with a clean tree (recorded in each file's `source`), by the commands in §5. Exact solves use K = 1. "Value" is from the side to move at the root (player 0).
+
+### 6.1 Exact solves (reachable canonical positions)
+
+| Cell | N=3, M=0 | root | N=3, M=1 | root | N=4, M=0 | root | N=4, M=1 (cap 400k) | root |
+| :--- | ---: | :--- | ---: | :--- | ---: | :--- | ---: | :--- |
+| A0B0C0 | 45 | WIN in 3 | 1,341 | WIN in 7 | 176 | LOSS in 6 | 27,860 | LOSS in 10 |
+| A0B0C1 | 642 | WIN in 5 | 16,696 | WIN in 9 | 4,512 | LOSS in 8 | capped | UNKNOWN |
+| A0B1C0 | 186 | LOSS in 2 | 5,730 | LOSS in 4 | 712 | WIN in 3 | 114,488 | WIN in 5 |
+| A0B1C1 | 2,592 | LOSS in 4 | 68,292 | LOSS in 6 | 18,080 | WIN in 5 | capped | UNKNOWN |
+| A1B0C0 | 45 | WIN in 3 | 3,861 | DRAW | 176 | LOSS in 6 | 98,504 | DRAW |
+| A1B0C1 | 642 | WIN in 5 | 46,886 | DRAW | 4,512 | LOSS in 8 | capped | UNKNOWN |
+| A1B1C0 | 186 | LOSS in 2 | 16,554 | DRAW | 712 | WIN in 3 | capped | UNKNOWN |
+| A1B1C1 | 2,592 | LOSS in 4 | 192,072 | DRAW | 18,080 | WIN in 5 | capped | UNKNOWN |
+
+The largest complete solve is N=3, M=1 with all mechanics: 192,072 positions and 1,335,672 edges, solved in 165 s. N=4, M=1 is the measured feasibility limit. Every cell with C on, and also A1B1C0, exceeded 400k positions. Those cells report UNKNOWN, and their partial WIN/LOSS labels are sound. Their only DRAW labels are the no-legal-action terminals. With M = 0, rule A has nothing to act on, so A0 and A1 cells are identical, which serves as a built-in sanity check.
+
+Factorial effects (exact, no sampling error) on log10(positions), mean branching and draw fraction:
+
+| Effect | N=3 M=1 log10 states | N=3 M=1 branching | N=3 M=1 draw fraction | N=4 M=0 log10 states | N=4 M=0 branching |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| A | +0.45 | +2.24 | +0.25 | 0 | 0 |
+| B | +0.62 | +0.46 | −0.23 | +0.61 | +0.91 |
+| C | +1.08 | +1.88 | +0.04 | +1.41 | +6.33 |
+| AB | 0.00 | +0.01 | −0.13 | 0 | 0 |
+| AC | −0.01 | −0.19 | +0.01 | 0 | 0 |
+| BC | −0.01 | −0.03 | −0.02 | 0.00 | −0.03 |
+| ABC | 0.00 | 0.00 | −0.01 | 0 | 0 |
+
+**Reading.**
+- State counts are almost exactly multiplicative across mechanics: the interactions on the log scale are about 0. C multiplies the state space by about 12× (N=3) or 26× (N=4), B by about 4×, and A by about 3× (M=1).
+- Game *values*, by contrast, show strong interactions. On N=3, M=1, A turns every cell into a draw. Without A, B flips the root from a first-player win to a loss; with A on, B no longer changes the root value.
+- The AB interaction on the draw fraction (−0.13) is the same pattern measured over all positions.
+
+### 6.2 Agent vs. exact optimal actions (N=3, K=1; 300 sampled non-terminal positions per cell, or all if fewer)
+
+The table gives the share of positions where the agent's move preserves the exact value (any optimal move is accepted):
+
+| Cell | greedy M=0 | minimax d2 M=0 | greedy M=1 | minimax d2 M=1 |
+| :--- | ---: | ---: | ---: | ---: |
+| A0B0C0 | 0.88 | 1.00 | 0.91 | 0.98 |
+| A0B0C1 | 0.76 | 0.99 | 0.91 | 0.95 |
+| A0B1C0 | 0.95 | 1.00 | 0.95 | 0.99 |
+| A0B1C1 | 0.89 | 1.00 | 0.93 | 0.97 |
+| A1B0C0 | 0.88 | 1.00 | 0.93 | 0.98 |
+| A1B0C1 | 0.76 | 0.99 | 0.89 | 0.97 |
+| A1B1C0 | 0.95 | 1.00 | 0.93 | 0.99 |
+| A1B1C1 | 0.89 | 1.00 | 0.90 | 0.99 |
+
+Greedy is weakest in exact-DRAW positions (0.38–0.91 per cell). Its rank-optimality in LOSS positions, i.e. delaying a forced loss, ranges from 0.59 to 1.00. Depth-2 minimax keeps the value in at least 0.95 of positions. But with A and B on at M=1 it is rank-optimal in only 0.88–0.90: it keeps winning positions won without always taking the fastest win. Per-status rates and Wilson intervals are in `agreement_*.json`.
+
+### 6.3 Match ablation (N=5, K=3, M=10, minimax depth 2 vs greedy)
+
+The design is paired. There are 10 opening seeds, each 2 random pawn plies. Each seed is played with both seatings in all 8 cells, giving 160 matches (20 per cell). Matches use a 200-ply cap and no time limit. All 160 replays re-verified. Outcomes were 140 goal wins, 13 repetition draws, 7 no-legal-action draws, 0 truncations and 0 forfeits. A first run made before the review fixes gave identical outcomes.
+
+| Cell | minimax W-L-D | win rate (95% Wilson) | mean plies | legal actions / ply |
+| :--- | :---: | :---: | ---: | ---: |
+| A0B0C0 | 13-5-2 | 0.65 (0.43–0.82) | 31.2 | 13.4 |
+| A0B0C1 | 12-5-3 | 0.60 (0.39–0.78) | 36.0 | 23.0 |
+| A0B1C0 | 11-7-2 | 0.55 (0.34–0.74) | 26.4 | 16.5 |
+| A0B1C1 | 9-10-1 | 0.45 (0.26–0.66) | 28.8 | 27.1 |
+| A1B0C0 | 9-9-2 | 0.45 (0.26–0.66) | 41.5 | 18.6 |
+| A1B0C1 | 10-8-2 | 0.50 (0.30–0.70) | 44.9 | 28.9 |
+| A1B1C0 | 13-2-5 | 0.65 (0.43–0.82) | 37.3 | 18.4 |
+| A1B1C1 | 10-7-3 | 0.50 (0.30–0.70) | 36.8 | 32.2 |
+
+Factorial effects with paired-bootstrap 95% intervals over opening seeds:
+
+| Effect | minimax goal-win rate | game length (plies) | legal actions / ply |
+| :--- | :---: | :---: | :---: |
+| A | −0.04 (−0.26, 0.19) | **+9.5 (5.5, 13.3)** | **+4.5 (2.6, 6.1)** |
+| B | −0.01 (−0.15, 0.13) | **−6.1 (−13.2, −0.6)** | +2.6 (−1.7, 7.6) |
+| C | −0.06 (−0.19, 0.08) | **+2.5 (0.3, 4.5)** | **+11.1 (9.4, 12.9)** |
+| AB | **+0.11 (0.03, 0.20)** | −0.1 (−3.7, 3.6) | −1.0 (−2.4, 0.2) |
+| AC | +0.01 (−0.04, 0.06) | −1.1 (−5.0, 2.2) | +1.0 (−0.5, 2.5) |
+| BC | −0.06 (−0.15, 0.03) | −1.6 (−4.3, 1.6) | +1.1 (−0.5, 2.6) |
+| ABC | −0.04 (−0.21, 0.11) | −0.3 (−2.2, 2.4) | +0.6 (−0.5, 1.8) |
+
+**Reading.**
+- Depth-2 minimax is not clearly stronger than greedy on 5×5: with 10 seeds, no main effect on win rate is distinguishable from zero.
+- The single AB interval that excludes zero is one of seven tests, so treat it as a hypothesis for the full run, not a finding.
+- The mechanics clearly change game *dynamics*: C mainly widens the action space, A lengthens games, and B shortens them.
+- Decision times are recorded in `summary.json` but not interpreted here: they were measured while a solver job shared the machine, so they depend on load.
+
+These are pilots. A full study needs more seeds (the proposal suggested 500 matches per pairing), deeper minimax and the settings the team agrees on.
 
 ---
 

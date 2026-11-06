@@ -1,0 +1,701 @@
+{
+  "schema_version": 1,
+  "match_id": "N5_A1B1C1_K3_M10__minimax:depth=2__vs__greedy__open2s3__cap200",
+  "source": {
+    "commit": "7e2d6dae5a4a2eb1d79e763d4933acfc065dd484",
+    "dirty": false
+  },
+  "config": {
+    "board_size": 5,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "p0": "minimax:depth=2",
+    "p1": "greedy",
+    "max_plies": 200,
+    "opening_plies": 2,
+    "opening_seed": 3,
+    "move_time_limit": null,
+    "record_replay": true
+  },
+  "config_label": "N5_A1B1C1_K3_M10",
+  "agents": {
+    "0": {
+      "spec": "minimax:depth=2",
+      "name": "minimax",
+      "params": {
+        "depth": 2,
+        "time_limit": null
+      }
+    },
+    "1": {
+      "spec": "greedy",
+      "name": "greedy",
+      "params": {}
+    }
+  },
+  "opening": {
+    "seed": 3,
+    "plies": 2,
+    "actions": [
+      [
+        "MOVE",
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        "MOVE",
+        [
+          4,
+          3
+        ]
+      ]
+    ]
+  },
+  "initial_state_id": "b1447ced1caa4588",
+  "outcome": {
+    "category": "goal",
+    "winner": 1,
+    "loser": 0,
+    "detail": "goal"
+  },
+  "length_plies": 40,
+  "final_state_id": "e0e687b206b3e25d",
+  "decision_seconds": {
+    "0": {
+      "n": 19,
+      "mean": 0.2347583315629316,
+      "max": 0.6970116999000311,
+      "total": 4.4604082996957
+    },
+    "1": {
+      "n": 19,
+      "mean": 0.012855752622463593,
+      "max": 0.02915359998587519,
+      "total": 0.24425929982680827
+    }
+  },
+  "mean_legal_actions": {
+    "0": 22.57894736842105,
+    "1": 27.789473684210527
+  },
+  "mean_nodes_expanded": {
+    "0": 138.8421052631579,
+    "1": null
+  },
+  "replay": [
+    {
+      "ply": 1,
+      "player": 0,
+      "source": "opening",
+      "action": [
+        "MOVE",
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "ply": 2,
+      "player": 1,
+      "source": "opening",
+      "action": [
+        "MOVE",
+        [
+          4,
+          3
+        ]
+      ]
+    },
+    {
+      "ply": 3,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "HOP",
+        [
+          2,
+          1
+        ]
+      ],
+      "legal_count": 60,
+      "decision_seconds": 0.53188,
+      "state_id": "751de415f88e8da4"
+    },
+    {
+      "ply": 4,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "HOP",
+        [
+          2,
+          3
+        ]
+      ],
+      "legal_count": 60,
+      "decision_seconds": 0.021114,
+      "state_id": "5917c6713d4317fa"
+    },
+    {
+      "ply": 5,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          1
+        ]
+      ],
+      "legal_count": 59,
+      "decision_seconds": 0.303774,
+      "state_id": "25eb08acd7805c4a"
+    },
+    {
+      "ply": 6,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          0,
+          "H"
+        ]
+      ],
+      "legal_count": 59,
+      "decision_seconds": 0.011867,
+      "state_id": "62a5ef46d6ff205e"
+    },
+    {
+      "ply": 7,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          2
+        ]
+      ],
+      "legal_count": 55,
+      "decision_seconds": 0.417606,
+      "state_id": "c5062cd74a138ba3"
+    },
+    {
+      "ply": 8,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          2,
+          "H"
+        ]
+      ],
+      "legal_count": 87,
+      "decision_seconds": 0.019081,
+      "state_id": "922e9f2fc47dc6e7"
+    },
+    {
+      "ply": 9,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          1,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 50,
+      "decision_seconds": 0.59389,
+      "state_id": "e7548ef121963f6e"
+    },
+    {
+      "ply": 10,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          3,
+          "V"
+        ]
+      ],
+      "legal_count": 70,
+      "decision_seconds": 0.025576,
+      "state_id": "e13b97470495074e"
+    },
+    {
+      "ply": 11,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "BLOCK",
+        [
+          2,
+          2
+        ]
+      ],
+      "legal_count": 64,
+      "decision_seconds": 0.697012,
+      "state_id": "0d50f2e1c3801cda"
+    },
+    {
+      "ply": 12,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          3
+        ]
+      ],
+      "legal_count": 48,
+      "decision_seconds": 0.025775,
+      "state_id": "3aba735c7f9d382a"
+    },
+    {
+      "ply": 13,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          1,
+          1,
+          "H"
+        ]
+      ],
+      "legal_count": 37,
+      "decision_seconds": 0.537157,
+      "state_id": "8fee66c067a26495"
+    },
+    {
+      "ply": 14,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          3
+        ]
+      ],
+      "legal_count": 40,
+      "decision_seconds": 0.020954,
+      "state_id": "b57c39e51f199ef4"
+    },
+    {
+      "ply": 15,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          2
+        ]
+      ],
+      "legal_count": 35,
+      "decision_seconds": 0.4347,
+      "state_id": "741ec16e18171d28"
+    },
+    {
+      "ply": 16,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          1,
+          2,
+          "V"
+        ]
+      ],
+      "legal_count": 49,
+      "decision_seconds": 0.029154,
+      "state_id": "e880aff782620536"
+    },
+    {
+      "ply": 17,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          1,
+          0,
+          "V"
+        ]
+      ],
+      "legal_count": 28,
+      "decision_seconds": 0.522109,
+      "state_id": "3bd4b3730031c5c2"
+    },
+    {
+      "ply": 18,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          3
+        ]
+      ],
+      "legal_count": 30,
+      "decision_seconds": 0.02465,
+      "state_id": "532d87e00d972468"
+    },
+    {
+      "ply": 19,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          1,
+          "V"
+        ]
+      ],
+      "legal_count": 18,
+      "decision_seconds": 0.211015,
+      "state_id": "ee88b0dc56a59a9f"
+    },
+    {
+      "ply": 20,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          2
+        ]
+      ],
+      "legal_count": 25,
+      "decision_seconds": 0.02166,
+      "state_id": "da672f2c39f7edfe"
+    },
+    {
+      "ply": 21,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          1,
+          "H"
+        ]
+      ],
+      "legal_count": 11,
+      "decision_seconds": 0.117189,
+      "state_id": "3f49cddfbf4f83a0"
+    },
+    {
+      "ply": 22,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 18,
+      "decision_seconds": 0.012562,
+      "state_id": "125113bc2c0e3033"
+    },
+    {
+      "ply": 23,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "REPLACE",
+        [
+          0,
+          1,
+          "V"
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.036742,
+      "state_id": "28f3fdd996a85038"
+    },
+    {
+      "ply": 24,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "REPLACE",
+        [
+          0,
+          2,
+          "H"
+        ]
+      ],
+      "legal_count": 15,
+      "decision_seconds": 0.010748,
+      "state_id": "598787148d811b33"
+    },
+    {
+      "ply": 25,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "V"
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.048156,
+      "state_id": "ef762a0815f4d5d7"
+    },
+    {
+      "ply": 26,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "BLOCK",
+        [
+          0,
+          1
+        ]
+      ],
+      "legal_count": 13,
+      "decision_seconds": 0.008438,
+      "state_id": "d43ffaaa571c606b"
+    },
+    {
+      "ply": 27,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          1
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.001375,
+      "state_id": "3f0e13d148c4c2b2"
+    },
+    {
+      "ply": 28,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001558,
+      "state_id": "eac596ed2637fa76"
+    },
+    {
+      "ply": 29,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          1
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.001735,
+      "state_id": "394ed8c913c1e2fb"
+    },
+    {
+      "ply": 30,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002661,
+      "state_id": "c101758fab7d0687"
+    },
+    {
+      "ply": 31,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          0
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.001575,
+      "state_id": "5de8b5515ff93754"
+    },
+    {
+      "ply": 32,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001409,
+      "state_id": "8a94155afd65a9d7"
+    },
+    {
+      "ply": 33,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          0
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.001173,
+      "state_id": "40e04993017f507e"
+    },
+    {
+      "ply": 34,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002689,
+      "state_id": "077741725dc03e1d"
+    },
+    {
+      "ply": 35,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          0
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.001596,
+      "state_id": "7cce19ce8f6dff00"
+    },
+    {
+      "ply": 36,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002654,
+      "state_id": "a98b19c8d4cb433f"
+    },
+    {
+      "ply": 37,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          0,
+          0
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.001178,
+      "state_id": "b760b007d11fff42"
+    },
+    {
+      "ply": 38,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001029,
+      "state_id": "f4367a5bd585acfc"
+    },
+    {
+      "ply": 39,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          0,
+          1
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000547,
+      "state_id": "0bfe1ba655dcd402"
+    },
+    {
+      "ply": 40,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          0,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.00068,
+      "state_id": "e0e687b206b3e25d"
+    }
+  ]
+}
