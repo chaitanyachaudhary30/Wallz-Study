@@ -1,0 +1,583 @@
+{
+  "format": "wallz-custom-game/executeAITurn-actions",
+  "match_id": "N9_A0B0C1_K3_M10__greedy__vs__greedy__open0s0__cap200",
+  "source": {
+    "commit": "7e2d6dae5a4a2eb1d79e763d4933acfc065dd484",
+    "dirty": false
+  },
+  "outcome": {
+    "category": "goal",
+    "winner": 0,
+    "loser": 1,
+    "detail": "goal"
+  },
+  "demo_compatible": true,
+  "incompatibilities": [],
+  "events": [
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 4,
+      "y": 7,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 4,
+      "y": 1,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 3,
+      "gy": 7,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 3,
+      "gy": 6,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 5,
+      "gy": 7,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 4,
+      "gy": 7,
+      "orientation": "V"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 1,
+      "gy": 7,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 1,
+      "gy": 6,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 7,
+      "gy": 7,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 0,
+      "gy": 5,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 3,
+      "y": 7,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 2,
+      "gy": 5,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 4,
+      "gy": 5,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 5,
+      "gy": 4,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 6,
+      "gy": 5,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 7,
+      "gy": 4,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 3,
+      "gy": 4,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 1,
+      "gy": 3,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 1,
+      "gy": 4,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "BLOCK",
+      "x": 0,
+      "y": 3
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 3,
+      "gy": 2,
+      "orientation": "H"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 3,
+      "gy": 3,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "WALL",
+      "gx": 2,
+      "gy": 1,
+      "orientation": "V"
+    },
+    {
+      "player": 2,
+      "type": "WALL",
+      "gx": 0,
+      "gy": 2,
+      "orientation": "H"
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 7,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 4,
+      "y": 2,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "BLOCK",
+      "x": 5,
+      "y": 3
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 4,
+      "y": 1,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 1,
+      "y": 7,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 4,
+      "y": 2,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 0,
+      "y": 7,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 5,
+      "y": 2,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 0,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 5,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 1,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 5,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 4,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 3,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 3,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 4,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 5,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 1,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 6,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 0,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 7,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 0,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 8,
+      "y": 6,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 1,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 8,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 7,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 3,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 6,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 4,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 5,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 3,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 4,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 3,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 1,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 0,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 1,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 0,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 0,
+      "y": 5,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 0,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 0,
+      "y": 4,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 1,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 0,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 1,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 2,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 3,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 1,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 2,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 2,
+      "y": 0,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 1,
+      "isWallHop": false
+    },
+    {
+      "player": 2,
+      "type": "MOVE",
+      "x": 1,
+      "y": 0,
+      "isWallHop": false
+    },
+    {
+      "player": 1,
+      "type": "MOVE",
+      "x": 2,
+      "y": 0,
+      "isWallHop": false
+    }
+  ]
+}

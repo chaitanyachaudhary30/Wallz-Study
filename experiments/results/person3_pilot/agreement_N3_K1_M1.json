@@ -1,0 +1,728 @@
+{
+  "source": {
+    "commit": "7e2d6dae5a4a2eb1d79e763d4933acfc065dd484",
+    "dirty": false
+  },
+  "rows": [
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 1024,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9066666666666666,
+          "value_optimal_ci95": [
+            0.8684138011961098,
+            0.9346362090723985
+          ],
+          "rank_optimal_rate": 0.8733333333333333
+        },
+        "WIN": {
+          "n": 168,
+          "value_optimal_rate": 0.9345238095238095,
+          "value_optimal_ci95": [
+            0.886570162667767,
+            0.9630494870561649
+          ],
+          "rank_optimal_rate": 0.9047619047619048
+        },
+        "LOSS": {
+          "n": 87,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.957711004649852,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9425287356321839
+        },
+        "DRAW": {
+          "n": 45,
+          "value_optimal_rate": 0.6222222222222222,
+          "value_optimal_ci95": [
+            0.4762967000646754,
+            0.7489211470165014
+          ],
+          "rank_optimal_rate": 0.6222222222222222
+        }
+      },
+      "seconds": 0.05
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 1024,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9833333333333333,
+          "value_optimal_ci95": [
+            0.9615840563782944,
+            0.9928606279572277
+          ],
+          "rank_optimal_rate": 0.97
+        },
+        "WIN": {
+          "n": 168,
+          "value_optimal_rate": 0.9821428571428571,
+          "value_optimal_ci95": [
+            0.9488198608200019,
+            0.9939087916134018
+          ],
+          "rank_optimal_rate": 0.9642857142857143
+        },
+        "LOSS": {
+          "n": 87,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.957711004649852,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9885057471264368
+        },
+        "DRAW": {
+          "n": 45,
+          "value_optimal_rate": 0.9555555555555556,
+          "value_optimal_ci95": [
+            0.8517222081611939,
+            0.9877261309595557
+          ],
+          "rank_optimal_rate": 0.9555555555555556
+        }
+      },
+      "seconds": 0.1
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 15317,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.91,
+          "value_optimal_ci95": [
+            0.8722221947968226,
+            0.9374101926050341
+          ],
+          "rank_optimal_rate": 0.8566666666666667
+        },
+        "WIN": {
+          "n": 182,
+          "value_optimal_rate": 0.9340659340659341,
+          "value_optimal_ci95": [
+            0.888301994277689,
+            0.9618844010180899
+          ],
+          "rank_optimal_rate": 0.9065934065934066
+        },
+        "LOSS": {
+          "n": 73,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.950006246616416,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.8493150684931506
+        },
+        "DRAW": {
+          "n": 45,
+          "value_optimal_rate": 0.6666666666666666,
+          "value_optimal_ci95": [
+            0.520702168092554,
+            0.7864130779272324
+          ],
+          "rank_optimal_rate": 0.6666666666666666
+        }
+      },
+      "seconds": 0.06
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 15317,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.95,
+          "value_optimal_ci95": [
+            0.9191522802928904,
+            0.9694686327091473
+          ],
+          "rank_optimal_rate": 0.9366666666666666
+        },
+        "WIN": {
+          "n": 182,
+          "value_optimal_rate": 0.967032967032967,
+          "value_optimal_ci95": [
+            0.9299522869069994,
+            0.9848052270188385
+          ],
+          "rank_optimal_rate": 0.9560439560439561
+        },
+        "LOSS": {
+          "n": 73,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.950006246616416,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.9726027397260274
+        },
+        "DRAW": {
+          "n": 45,
+          "value_optimal_rate": 0.8,
+          "value_optimal_ci95": [
+            0.6617674868607056,
+            0.8910399559749099
+          ],
+          "rank_optimal_rate": 0.8
+        }
+      },
+      "seconds": 0.18
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 4130,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9533333333333334,
+          "value_optimal_ci95": [
+            0.9232019646862172,
+            0.9720013254491692
+          ],
+          "rank_optimal_rate": 0.8533333333333334
+        },
+        "WIN": {
+          "n": 208,
+          "value_optimal_rate": 0.9567307692307693,
+          "value_optimal_ci95": [
+            0.9198247599927778,
+            0.977071789126942
+          ],
+          "rank_optimal_rate": 0.9326923076923077
+        },
+        "LOSS": {
+          "n": 84,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9562667346678565,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.7023809523809523
+        },
+        "DRAW": {
+          "n": 8,
+          "value_optimal_rate": 0.375,
+          "value_optimal_ci95": [
+            0.13684175946152105,
+            0.6942621454161981
+          ],
+          "rank_optimal_rate": 0.375
+        }
+      },
+      "seconds": 0.05
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 4130,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9866666666666667,
+          "value_optimal_ci95": [
+            0.9662239391535502,
+            0.9948031223153205
+          ],
+          "rank_optimal_rate": 0.9766666666666667
+        },
+        "WIN": {
+          "n": 208,
+          "value_optimal_rate": 0.9855769230769231,
+          "value_optimal_ci95": [
+            0.9584596153049922,
+            0.9950830316538677
+          ],
+          "rank_optimal_rate": 0.9711538461538461
+        },
+        "LOSS": {
+          "n": 84,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9562667346678565,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 8,
+          "value_optimal_rate": 0.875,
+          "value_optimal_ci95": [
+            0.5291051942301386,
+            0.9775830911367038
+          ],
+          "rank_optimal_rate": 0.875
+        }
+      },
+      "seconds": 0.12
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 61648,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.93,
+          "value_optimal_ci95": [
+            0.8953632441625534,
+            0.953763406039394
+          ],
+          "rank_optimal_rate": 0.84
+        },
+        "WIN": {
+          "n": 205,
+          "value_optimal_rate": 0.9414634146341463,
+          "value_optimal_ci95": [
+            0.9004842487745098,
+            0.9662013157873398
+          ],
+          "rank_optimal_rate": 0.9024390243902439
+        },
+        "LOSS": {
+          "n": 78,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9530605462258804,
+            1.0
+          ],
+          "rank_optimal_rate": 0.7564102564102564
+        },
+        "DRAW": {
+          "n": 17,
+          "value_optimal_rate": 0.47058823529411764,
+          "value_optimal_ci95": [
+            0.26164801196088106,
+            0.6903710268845051
+          ],
+          "rank_optimal_rate": 0.47058823529411764
+        }
+      },
+      "seconds": 0.07
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 61648,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9733333333333334,
+          "value_optimal_ci95": [
+            0.9482704597024538,
+            0.9864270932330232
+          ],
+          "rank_optimal_rate": 0.9566666666666667
+        },
+        "WIN": {
+          "n": 205,
+          "value_optimal_rate": 0.975609756097561,
+          "value_optimal_ci95": [
+            0.9441838938283685,
+            0.9895381232410275
+          ],
+          "rank_optimal_rate": 0.9560975609756097
+        },
+        "LOSS": {
+          "n": 78,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9530605462258804,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9871794871794872
+        },
+        "DRAW": {
+          "n": 17,
+          "value_optimal_rate": 0.8235294117647058,
+          "value_optimal_ci95": [
+            0.5897007098262422,
+            0.9380898628745101
+          ],
+          "rank_optimal_rate": 0.8235294117647058
+        }
+      },
+      "seconds": 0.18
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3001,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9333333333333333,
+          "value_optimal_ci95": [
+            0.8992762041322797,
+            0.9564328232030161
+          ],
+          "rank_optimal_rate": 0.9333333333333333
+        },
+        "WIN": {
+          "n": 80,
+          "value_optimal_rate": 0.975,
+          "value_optimal_ci95": [
+            0.9133539994467789,
+            0.9931172511018748
+          ],
+          "rank_optimal_rate": 0.975
+        },
+        "LOSS": {
+          "n": 21,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8453561767357979,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 199,
+          "value_optimal_rate": 0.9095477386934674,
+          "value_optimal_ci95": [
+            0.8615635160726901,
+            0.9420191809677593
+          ],
+          "rank_optimal_rate": 0.9095477386934674
+        }
+      },
+      "seconds": 0.08
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3001,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.98,
+          "value_optimal_ci95": [
+            0.9570598132699448,
+            0.9908024939322289
+          ],
+          "rank_optimal_rate": 0.98
+        },
+        "WIN": {
+          "n": 80,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.954180263735425,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 21,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8453561767357979,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 199,
+          "value_optimal_rate": 0.9698492462311558,
+          "value_optimal_ci95": [
+            0.9357915585120299,
+            0.9861100632460317
+          ],
+          "rank_optimal_rate": 0.9698492462311558
+        }
+      },
+      "seconds": 0.3
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 43434,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8933333333333333,
+          "value_optimal_ci95": [
+            0.8532958822657974,
+            0.9234246194693172
+          ],
+          "rank_optimal_rate": 0.8933333333333333
+        },
+        "WIN": {
+          "n": 114,
+          "value_optimal_rate": 0.868421052631579,
+          "value_optimal_ci95": [
+            0.7942070686004767,
+            0.9186142101330097
+          ],
+          "rank_optimal_rate": 0.868421052631579
+        },
+        "LOSS": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 169,
+          "value_optimal_rate": 0.8994082840236687,
+          "value_optimal_ci95": [
+            0.8448180562374072,
+            0.9362439103261979
+          ],
+          "rank_optimal_rate": 0.8994082840236687
+        }
+      },
+      "seconds": 0.1
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 43434,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.97,
+          "value_optimal_ci95": [
+            0.943976849008093,
+            0.9841383267940355
+          ],
+          "rank_optimal_rate": 0.97
+        },
+        "WIN": {
+          "n": 114,
+          "value_optimal_rate": 0.9385964912280702,
+          "value_optimal_ci95": [
+            0.8786556596714639,
+            0.9699411007255436
+          ],
+          "rank_optimal_rate": 0.9385964912280702
+        },
+        "LOSS": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 169,
+          "value_optimal_rate": 0.9881656804733728,
+          "value_optimal_ci95": [
+            0.957882643850041,
+            0.9967486486165875
+          ],
+          "rank_optimal_rate": 0.9881656804733728
+        }
+      },
+      "seconds": 0.44
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 12020,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9266666666666666,
+          "value_optimal_ci95": [
+            0.8914679042010732,
+            0.9510763688675256
+          ],
+          "rank_optimal_rate": 0.7866666666666666
+        },
+        "WIN": {
+          "n": 166,
+          "value_optimal_rate": 0.963855421686747,
+          "value_optimal_ci95": [
+            0.9233957449417393,
+            0.9833314644109753
+          ],
+          "rank_optimal_rate": 0.8674698795180723
+        },
+        "LOSS": {
+          "n": 67,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9457719757882374,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.6119402985074627
+        },
+        "DRAW": {
+          "n": 67,
+          "value_optimal_rate": 0.7611940298507462,
+          "value_optimal_ci95": [
+            0.6467400924582429,
+            0.8473198948938214
+          ],
+          "rank_optimal_rate": 0.7611940298507462
+        }
+      },
+      "seconds": 0.07
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 12020,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9866666666666667,
+          "value_optimal_ci95": [
+            0.9662239391535502,
+            0.9948031223153205
+          ],
+          "rank_optimal_rate": 0.8766666666666667
+        },
+        "WIN": {
+          "n": 166,
+          "value_optimal_rate": 0.9879518072289156,
+          "value_optimal_ci95": [
+            0.9571401435082885,
+            0.9966897780185928
+          ],
+          "rank_optimal_rate": 0.8855421686746988
+        },
+        "LOSS": {
+          "n": 67,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9457719757882374,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.7611940298507462
+        },
+        "DRAW": {
+          "n": 67,
+          "value_optimal_rate": 0.9701492537313433,
+          "value_optimal_ci95": [
+            0.8975324995811698,
+            0.991775477652546
+          ],
+          "rank_optimal_rate": 0.9701492537313433
+        }
+      },
+      "seconds": 0.29
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 173912,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9033333333333333,
+          "value_optimal_ci95": [
+            0.8646174890590971,
+            0.9318501440760628
+          ],
+          "rank_optimal_rate": 0.7766666666666666
+        },
+        "WIN": {
+          "n": 169,
+          "value_optimal_rate": 0.9526627218934911,
+          "value_optimal_ci95": [
+            0.9093821731173413,
+            0.9758213889880776
+          ],
+          "rank_optimal_rate": 0.8698224852071006
+        },
+        "LOSS": {
+          "n": 69,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9472609058559944,
+            1.0
+          ],
+          "rank_optimal_rate": 0.6521739130434783
+        },
+        "DRAW": {
+          "n": 62,
+          "value_optimal_rate": 0.6612903225806451,
+          "value_optimal_ci95": [
+            0.5371746717131097,
+            0.7665846536981803
+          ],
+          "rank_optimal_rate": 0.6612903225806451
+        }
+      },
+      "seconds": 0.09
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 173912,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9866666666666667,
+          "value_optimal_ci95": [
+            0.9662239391535502,
+            0.9948031223153205
+          ],
+          "rank_optimal_rate": 0.9
+        },
+        "WIN": {
+          "n": 169,
+          "value_optimal_rate": 0.9763313609467456,
+          "value_optimal_ci95": [
+            0.9407304472483962,
+            0.9907582684311624
+          ],
+          "rank_optimal_rate": 0.893491124260355
+        },
+        "LOSS": {
+          "n": 69,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9472609058559944,
+            1.0
+          ],
+          "rank_optimal_rate": 0.8260869565217391
+        },
+        "DRAW": {
+          "n": 62,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9416539087749995,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "seconds": 0.41
+    }
+  ]
+}

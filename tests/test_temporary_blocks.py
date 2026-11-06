@@ -9,15 +9,20 @@ class TestTemporaryBlocks(unittest.TestCase):
         # Player 0 blocks cell (2, 2)
         engine.apply_action(('BLOCK', (2, 2)), update_clock=False)
         self.assertFalse(engine.block_available[0])
-        # Remaining turns decrements by 1 immediately after turn
-        self.assertEqual(engine.blocked_cells[(2, 2)], 2)
+        # Timer starts at K: the cell is impassable for the next K plies
+        self.assertEqual(engine.blocked_cells[(2, 2)], 3)
 
         # Player 1 takes a move
         engine.apply_action(('MOVE', (3, 2)), update_clock=False)
-        self.assertEqual(engine.blocked_cells[(2, 2)], 1)
+        self.assertEqual(engine.blocked_cells[(2, 2)], 2)
 
-        # Player 0 takes a move -> timer expires and block is removed
+        # Player 0 takes a move
         engine.apply_action(('MOVE', (1, 2)), update_clock=False)
+        self.assertEqual(engine.blocked_cells[(2, 2)], 1)
+        self.assertNotIn(('MOVE', (2, 2)), engine.get_legal_actions(1))
+
+        # Third ply after placement -> timer expires and block is removed
+        engine.apply_action(('MOVE', (3, 1)), update_clock=False)
         self.assertNotIn((2, 2), engine.blocked_cells)
 
     def test_block_path_preservation(self):

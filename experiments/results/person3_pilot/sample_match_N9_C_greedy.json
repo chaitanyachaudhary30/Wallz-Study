@@ -1,0 +1,1311 @@
+{
+  "schema_version": 1,
+  "match_id": "N9_A0B0C1_K3_M10__greedy__vs__greedy__open0s0__cap200",
+  "source": {
+    "commit": "7e2d6dae5a4a2eb1d79e763d4933acfc065dd484",
+    "dirty": false
+  },
+  "config": {
+    "board_size": 9,
+    "rules": {
+      "A": false,
+      "B": false,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "p0": "greedy",
+    "p1": "greedy",
+    "max_plies": 200,
+    "opening_plies": 0,
+    "opening_seed": 0,
+    "move_time_limit": null,
+    "record_replay": true
+  },
+  "config_label": "N9_A0B0C1_K3_M10",
+  "agents": {
+    "0": {
+      "spec": "greedy",
+      "name": "greedy",
+      "params": {}
+    },
+    "1": {
+      "spec": "greedy",
+      "name": "greedy",
+      "params": {}
+    }
+  },
+  "opening": {
+    "seed": 0,
+    "plies": 0,
+    "actions": []
+  },
+  "initial_state_id": "4f6f3c3ef8041df8",
+  "outcome": {
+    "category": "goal",
+    "winner": 0,
+    "loser": 1,
+    "detail": "goal"
+  },
+  "length_plies": 81,
+  "final_state_id": "fd75dd078d604a3e",
+  "decision_seconds": {
+    "0": {
+      "n": 41,
+      "mean": 0.11503959268547322,
+      "max": 0.49001760000828654,
+      "total": 4.716623300104402
+    },
+    "1": {
+      "n": 40,
+      "mean": 0.10675778499571606,
+      "max": 0.4428092000307515,
+      "total": 4.270311399828643
+    }
+  },
+  "mean_legal_actions": {
+    "0": 52.951219512195124,
+    "1": 48.075
+  },
+  "mean_nodes_expanded": {
+    "0": null,
+    "1": null
+  },
+  "replay": [
+    {
+      "ply": 1,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          4
+        ]
+      ],
+      "legal_count": 210,
+      "decision_seconds": 0.315366,
+      "state_id": "b9690845fbd5f572"
+    },
+    {
+      "ply": 2,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          7,
+          4
+        ]
+      ],
+      "legal_count": 210,
+      "decision_seconds": 0.312602,
+      "state_id": "83b34c7470497ba4"
+    },
+    {
+      "ply": 3,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 211,
+      "decision_seconds": 0.345426,
+      "state_id": "c2d66492f3f28a8c"
+    },
+    {
+      "ply": 4,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          1,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 207,
+      "decision_seconds": 0.357415,
+      "state_id": "ad3025786f0ed5d9"
+    },
+    {
+      "ply": 5,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          5,
+          "H"
+        ]
+      ],
+      "legal_count": 201,
+      "decision_seconds": 0.327866,
+      "state_id": "28ab3e2a7f3b8031"
+    },
+    {
+      "ply": 6,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          4,
+          "V"
+        ]
+      ],
+      "legal_count": 200,
+      "decision_seconds": 0.352296,
+      "state_id": "d5898b1774abda94"
+    },
+    {
+      "ply": 7,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          1,
+          "H"
+        ]
+      ],
+      "legal_count": 191,
+      "decision_seconds": 0.329879,
+      "state_id": "60a3dc4338c1d70a"
+    },
+    {
+      "ply": 8,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          1,
+          1,
+          "H"
+        ]
+      ],
+      "legal_count": 191,
+      "decision_seconds": 0.439533,
+      "state_id": "40d1faa789e2e252"
+    },
+    {
+      "ply": 9,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          0,
+          7,
+          "H"
+        ]
+      ],
+      "legal_count": 180,
+      "decision_seconds": 0.299229,
+      "state_id": "23d62415fe2a7c2e"
+    },
+    {
+      "ply": 10,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          2,
+          0,
+          "H"
+        ]
+      ],
+      "legal_count": 180,
+      "decision_seconds": 0.345976,
+      "state_id": "28ca4a9f13bb30b4"
+    },
+    {
+      "ply": 11,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          3
+        ]
+      ],
+      "legal_count": 171,
+      "decision_seconds": 0.355213,
+      "state_id": "c4420342e47908a0"
+    },
+    {
+      "ply": 12,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          2,
+          2,
+          "H"
+        ]
+      ],
+      "legal_count": 175,
+      "decision_seconds": 0.442809,
+      "state_id": "ea9015aeb3249457"
+    },
+    {
+      "ply": 13,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          2,
+          4,
+          "H"
+        ]
+      ],
+      "legal_count": 167,
+      "decision_seconds": 0.388217,
+      "state_id": "cd663e1952c6b8be"
+    },
+    {
+      "ply": 14,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          5,
+          "H"
+        ]
+      ],
+      "legal_count": 164,
+      "decision_seconds": 0.43564,
+      "state_id": "343c117f615355c2"
+    },
+    {
+      "ply": 15,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          2,
+          6,
+          "H"
+        ]
+      ],
+      "legal_count": 158,
+      "decision_seconds": 0.490018,
+      "state_id": "7946b04f231586f9"
+    },
+    {
+      "ply": 16,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          7,
+          "H"
+        ]
+      ],
+      "legal_count": 153,
+      "decision_seconds": 0.431378,
+      "state_id": "02174f939b741556"
+    },
+    {
+      "ply": 17,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 141,
+      "decision_seconds": 0.42071,
+      "state_id": "3f1bd1fd651ed1fd"
+    },
+    {
+      "ply": 18,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          4,
+          1,
+          "H"
+        ]
+      ],
+      "legal_count": 137,
+      "decision_seconds": 0.398801,
+      "state_id": "faab41212db4dad8"
+    },
+    {
+      "ply": 19,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          3,
+          1,
+          "H"
+        ]
+      ],
+      "legal_count": 131,
+      "decision_seconds": 0.37282,
+      "state_id": "d4c28137427edb32"
+    },
+    {
+      "ply": 20,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "BLOCK",
+        [
+          5,
+          0
+        ]
+      ],
+      "legal_count": 126,
+      "decision_seconds": 0.314935,
+      "state_id": "ec541ed083ba9923"
+    },
+    {
+      "ply": 21,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          5,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 118,
+      "decision_seconds": 0.292256,
+      "state_id": "ece6da68b4a25f60"
+    },
+    {
+      "ply": 22,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          4,
+          3,
+          "H"
+        ]
+      ],
+      "legal_count": 62,
+      "decision_seconds": 0.236287,
+      "state_id": "bccbcf72e59b2197"
+    },
+    {
+      "ply": 23,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          6,
+          2,
+          "V"
+        ]
+      ],
+      "legal_count": 108,
+      "decision_seconds": 0.309168,
+      "state_id": "cf9be8d64696849f"
+    },
+    {
+      "ply": 24,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "WALL",
+        [
+          5,
+          0,
+          "H"
+        ]
+      ],
+      "legal_count": 57,
+      "decision_seconds": 0.142304,
+      "state_id": "7c988e8b0f3e6522"
+    },
+    {
+      "ply": 25,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          2
+        ]
+      ],
+      "legal_count": 60,
+      "decision_seconds": 0.225741,
+      "state_id": "f08e99da8f929af8"
+    },
+    {
+      "ply": 26,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          6,
+          4
+        ]
+      ],
+      "legal_count": 4,
+      "decision_seconds": 0.00486,
+      "state_id": "e3a9b1d1031c5fe9"
+    },
+    {
+      "ply": 27,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "BLOCK",
+        [
+          5,
+          5
+        ]
+      ],
+      "legal_count": 61,
+      "decision_seconds": 0.176137,
+      "state_id": "4c80d93a0ef381c8"
+    },
+    {
+      "ply": 28,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          7,
+          4
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.004827,
+      "state_id": "c3eaa034fd19f2a1"
+    },
+    {
+      "ply": 29,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002959,
+      "state_id": "1e9489f38a389865"
+    },
+    {
+      "ply": 30,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          6,
+          4
+        ]
+      ],
+      "legal_count": 4,
+      "decision_seconds": 0.006427,
+      "state_id": "954afff5626f4398"
+    },
+    {
+      "ply": 31,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          1,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.003318,
+      "state_id": "3c2cea306a7d8ee7"
+    },
+    {
+      "ply": 32,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          6,
+          5
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002483,
+      "state_id": "51d4b2f1be60df75"
+    },
+    {
+      "ply": 33,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          0
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.00246,
+      "state_id": "d4607d6ccdf2391b"
+    },
+    {
+      "ply": 34,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          5
+        ]
+      ],
+      "legal_count": 4,
+      "decision_seconds": 0.003889,
+      "state_id": "e1523353895afcdf"
+    },
+    {
+      "ply": 35,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.00281,
+      "state_id": "2e6d8a413422a54c"
+    },
+    {
+      "ply": 36,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          5
+        ]
+      ],
+      "legal_count": 4,
+      "decision_seconds": 0.003313,
+      "state_id": "b64f51523bf23998"
+    },
+    {
+      "ply": 37,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001619,
+      "state_id": "69af0a563b44d2b5"
+    },
+    {
+      "ply": 38,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          4
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002443,
+      "state_id": "7cd2a94538e5ea43"
+    },
+    {
+      "ply": 39,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          3
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001644,
+      "state_id": "f9770c984d5fc6dd"
+    },
+    {
+      "ply": 40,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          3
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001651,
+      "state_id": "bbfa9f0afd161e4e"
+    },
+    {
+      "ply": 41,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          4
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001672,
+      "state_id": "5d54bf9d44cee684"
+    },
+    {
+      "ply": 42,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.00284,
+      "state_id": "6ce6d3a7b78e1910"
+    },
+    {
+      "ply": 43,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          5
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002904,
+      "state_id": "8917317330b15004"
+    },
+    {
+      "ply": 44,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001662,
+      "state_id": "1bc9e709487351a1"
+    },
+    {
+      "ply": 45,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          6
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002476,
+      "state_id": "bc410ca7f4e2b031"
+    },
+    {
+      "ply": 46,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001627,
+      "state_id": "35fc143b528b0599"
+    },
+    {
+      "ply": 47,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          7
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002383,
+      "state_id": "72edc677f18fa1af"
+    },
+    {
+      "ply": 48,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          0
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.003143,
+      "state_id": "d2f16c2a72c56728"
+    },
+    {
+      "ply": 49,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          2,
+          8
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002607,
+      "state_id": "9f25ef49ecab5e3f"
+    },
+    {
+      "ply": 50,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001618,
+      "state_id": "e2d38a0531f2d16c"
+    },
+    {
+      "ply": 51,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          8
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002456,
+      "state_id": "964662b4ec6164b5"
+    },
+    {
+      "ply": 52,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001618,
+      "state_id": "704e2426c57f2de9"
+    },
+    {
+      "ply": 53,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          7
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001642,
+      "state_id": "d3f6351c80be446e"
+    },
+    {
+      "ply": 54,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          3
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001636,
+      "state_id": "6aaa31723766c209"
+    },
+    {
+      "ply": 55,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          6
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001928,
+      "state_id": "b0a5d0f5726c68ae"
+    },
+    {
+      "ply": 56,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          4
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.00183,
+      "state_id": "b8556e3c4197fdee"
+    },
+    {
+      "ply": 57,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          5
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001604,
+      "state_id": "0a63a0d7f25ba914"
+    },
+    {
+      "ply": 58,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          3
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000785,
+      "state_id": "696fbef23fc9844e"
+    },
+    {
+      "ply": 59,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          4
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001573,
+      "state_id": "491c9cf75156fd8f"
+    },
+    {
+      "ply": 60,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          2
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000784,
+      "state_id": "4a854413b0863d06"
+    },
+    {
+      "ply": 61,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          3
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001523,
+      "state_id": "3141a70224c16935"
+    },
+    {
+      "ply": 62,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          1
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000748,
+      "state_id": "ed1cf1bba74695aa"
+    },
+    {
+      "ply": 63,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001489,
+      "state_id": "af5ec106d93ce018"
+    },
+    {
+      "ply": 64,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          0
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.00071,
+      "state_id": "bbdc05d468310c4c"
+    },
+    {
+      "ply": 65,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.00141,
+      "state_id": "fa91546356f63d29"
+    },
+    {
+      "ply": 66,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          0
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000803,
+      "state_id": "12afdb6b56ef3d56"
+    },
+    {
+      "ply": 67,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          3,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.00553,
+      "state_id": "b058ff988ec78dff"
+    },
+    {
+      "ply": 68,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001413,
+      "state_id": "d96eb568cd1bc371"
+    },
+    {
+      "ply": 69,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          4,
+          0
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001397,
+      "state_id": "0ae7796d0da44462"
+    },
+    {
+      "ply": 70,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          1
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000696,
+      "state_id": "54ab7b9fe6776bef"
+    },
+    {
+      "ply": 71,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          0
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.002071,
+      "state_id": "8a6ff2da8b675ca9"
+    },
+    {
+      "ply": 72,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          2
+        ]
+      ],
+      "legal_count": 1,
+      "decision_seconds": 0.000657,
+      "state_id": "4b2e42b95ba92d96"
+    },
+    {
+      "ply": 73,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001316,
+      "state_id": "a477ba6bfa865f35"
+    },
+    {
+      "ply": 74,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          6,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.001291,
+      "state_id": "47ed4231e5ab370c"
+    },
+    {
+      "ply": 75,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          5,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002613,
+      "state_id": "4e59421c36753f6e"
+    },
+    {
+      "ply": 76,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          7,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002029,
+      "state_id": "105a866c13ea2a69"
+    },
+    {
+      "ply": 77,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          6,
+          2
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.00501,
+      "state_id": "b03d0faea3ca3ad4"
+    },
+    {
+      "ply": 78,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          8,
+          2
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002141,
+      "state_id": "6bd2feb0bd91579c"
+    },
+    {
+      "ply": 79,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          7,
+          2
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.008697,
+      "state_id": "3a21396fc6f3f1b9"
+    },
+    {
+      "ply": 80,
+      "player": 1,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          8,
+          1
+        ]
+      ],
+      "legal_count": 2,
+      "decision_seconds": 0.002408,
+      "state_id": "b51a9dd0f40c31af"
+    },
+    {
+      "ply": 81,
+      "player": 0,
+      "source": "agent",
+      "action": [
+        "MOVE",
+        [
+          8,
+          2
+        ]
+      ],
+      "legal_count": 3,
+      "decision_seconds": 0.001466,
+      "state_id": "fd75dd078d604a3e"
+    }
+  ]
+}
