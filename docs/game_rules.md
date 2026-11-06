@@ -27,7 +27,7 @@ Modified Wallz is a deterministic, sequential, two-player zero-sum adversarial g
 ### 3. Modification A: Reusable Walls (`WALL`, `REPLACE`)
 - Walls are 2-cell barriers placed horizontally (`'H'`) or vertically (`'V'`).
 - Walls cannot overlap with existing walls or intersect through another wall's center.
-- **Initial Inventory**: Each player starts with a finite inventory of $M = 10$ walls ($m_i = 10$).
+- **Initial Inventory**: Each player starts with a finite inventory of $M = 10$ walls ($m_i = 10$); configurable as `rules['M']` (tiny-board solving uses $M \le 1$).
 - **New Wall Placement (`WALL`)**:
   - Permissible only when $m_i > 0$.
   - Consumes 1 wall from inventory ($m_i' = m_i - 1$).
@@ -44,14 +44,15 @@ Modified Wallz is a deterministic, sequential, two-player zero-sum adversarial g
 - A single-use ability per player.
 - Moves the pawn 2 cells orthogonally (jumping over walls and/or adjacent pawns).
 - Cannot land on an opponent pawn or a blocked cell.
+- Must leave the hopping pawn with a path to its goal row (path-preservation invariant).
 - Permanently consumed upon execution (`hop_available[player] = False`).
 
 ### 5. Modification C: Temporary Cell Block (`BLOCK`)
 - A single-use ability per player.
 - Temporarily blocks a chosen cell for $K$ turns (default $K = 3$ plies).
 - Cannot block an occupied pawn cell or an already blocked cell.
-- Must preserve at least one valid path to the goal for both players.
-- The block timer decrements by 1 each turn. Upon reaching 0, the cell is unblocked.
+- Must preserve at least one valid path to the goal for both players. Path checks (walls, repositioning, blocks) treat all currently active blocks as impassable, including one that expires on this ply.
+- The cell is impassable for exactly the next $K$ plies after the blocking ply (proposal: $\tau_{t+1}(c^*) = K$, every other timer decays by 1 per ply). With $K = 3$ the block covers the opponent's next move, the blocker's next move and the opponent's following move.
 - Permanently consumed upon execution (`block_available[player] = False`).
 
 ---
@@ -61,4 +62,5 @@ Modified Wallz is a deterministic, sequential, two-player zero-sum adversarial g
 1. **Goal Reach**: The first pawn to reach its target goal row immediately wins the game.
 2. **Clock Depletion**: A player whose clock runs out (`time_remaining <= 0.0s`) immediately loses.
 3. **5-Fold Repetition Draw**: If an identical full game state (pawn positions, active walls, wall inventories, latest wall pointers, block timers, ability availability, and active turn indicator) occurs 5 times, the match terminates in a draw.
-4. **Step Limit Truncation**: A match truncates as a draw if turn count reaches $T_{\max} = 200$.
+4. **No Legal Action Draw**: If the side to move has no legal action in a non-terminal position, the game is a draw (team decision, 6 Nov 2026).
+5. **Step Limit Truncation**: Matches are cut off at $T_{\max} = 200$ plies. The evaluation tools report this as *truncated*, separately from rule draws, because a cap is not a proven draw (see `docs/person3_evaluation.md`).

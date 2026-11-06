@@ -6,6 +6,7 @@ class TestTerminalStates(unittest.TestCase):
         engine = WallzEngine(board_size=5)
         # Player 0 moves directly to goal row 4
         engine.pawns[0] = (3, 2)
+        engine.pawns[1] = (4, 0)  # keep the target cell unoccupied
         engine.apply_action(('MOVE', (4, 2)), update_clock=False)
         self.assertEqual(engine.winner, 0)
 

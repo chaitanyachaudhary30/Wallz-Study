@@ -12,10 +12,13 @@ class WallzEngine:
             'A': True,   # Reusable walls (only the most recently placed wall can be repositioned)
             'B': True,   # One-time hop
             'C': True,   # Temporary cell block
-            'K': 3       # Block duration in plies
+            'K': 3,      # Block duration: cell stays impassable for the next K plies
+            'M': 10      # Initial wall inventory per player
         }
         if rules:
             self.rules.update(rules)
+        if self.rules['K'] < 1:
+            raise ValueError("Block duration K must be >= 1.")
             
         self.reset()
 
@@ -42,6 +45,8 @@ class WallzEngine:
         new_engine.turn_count = self.turn_count
         new_engine.winner = self.winner
         new_engine.is_draw = self.is_draw
+        new_engine.terminal_reason = self.terminal_reason
+        new_engine.max_walls = self.max_walls
         new_engine.state_history = dict(self.state_history)
         return new_engine
 
@@ -50,8 +55,8 @@ class WallzEngine:
         self.pawns = {0: (0, mid), 1: (self.board_size - 1, mid)}
         self.goals = {0: self.board_size - 1, 1: 0}
         
-        # Walls & Inventory: 10 walls per player; only latest wall is repositionable
-        self.max_walls = 10
+        # Walls & Inventory: M walls per player (rules["M"]); only latest wall is repositionable
+        self.max_walls = self.rules['M']
         self.wall_inventory = {0: self.max_walls, 1: self.max_walls}
         self.latest_wall = {0: None, 1: None}
         self.walls = {0: [], 1: []}
@@ -69,7 +74,9 @@ class WallzEngine:
         self.turn_count = 0
         self.winner = None
         self.is_draw = False
-        
+        # 'goal', 'timeout', 'repetition' or 'no_legal_actions' once the game is over
+        self.terminal_reason = None
+
         # History tracking for N-fold repetition draw rule
         self.state_history = {}
         self._record_state_history()
@@ -102,8 +109,48 @@ class WallzEngine:
         key = self._get_state_hashable_key()
         self.state_history[key] = self.state_history.get(key, 0) + 1
         # 5-fold repetition draw rule
-        if self.state_history[key] >= 5:
+        if self.state_history[key] >= 5 and not self.is_terminal():
             self.is_draw = True
+            self.terminal_reason = 'repetition'
+
+    def is_terminal(self):
+        return self.winner is not None or self.is_draw
+
+    def restore_state_key(self, key):
+        """
+        Loads a position produced by _get_state_hashable_key() with a fresh history
+        (count 1 for this position) and turn counter 0. The key holds everything that
+        affects future legal play; board size and rules come from this engine. Clocks
+        are left untouched because positions are clock-free.
+        """
+        (p0, p1, walls_p0, walls_p1, inv0, inv1, latest0, latest1,
+         hop0, hop1, blk_av0, blk_av1, blocks, current_player) = key
+        n = self.board_size
+        cells = [p0, p1] + [cell for cell, _ in blocks]
+        if not all(0 <= r < n and 0 <= c < n for r, c in cells) or not all(
+                0 <= r < n - 1 and 0 <= c < n - 1 for r, c, _ in walls_p0 + walls_p1):
+            raise ValueError(f"State key does not fit a {n}x{n} board.")
+        self.pawns = {0: p0, 1: p1}
+        self.walls = {0: list(walls_p0), 1: list(walls_p1)}
+        self.wall_inventory = {0: inv0, 1: inv1}
+        self.latest_wall = {0: latest0, 1: latest1}
+        self.hop_available = {0: hop0, 1: hop1}
+        self.block_available = {0: blk_av0, 1: blk_av1}
+        self.blocked_cells = dict(blocks)
+        self.current_player = current_player
+        self.turn_count = 0
+        self.winner = None
+        self.is_draw = False
+        self.terminal_reason = None
+        for p in (0, 1):
+            if self.pawns[p][0] == self.goals[p]:
+                self.winner = p
+                self.terminal_reason = 'goal'
+        if self.winner is None and not self.has_legal_action(current_player):
+            self.is_draw = True
+            self.terminal_reason = 'no_legal_actions'
+        self.state_history = {key: 1}
+        return self
 
     def get_state(self):
         return {
@@ -118,7 +165,8 @@ class WallzEngine:
             'turn_count': self.turn_count,
             'time_remaining': copy.deepcopy(self.time_remaining),
             'is_draw': self.is_draw,
-            'winner': self.winner
+            'winner': self.winner,
+            'terminal_reason': self.terminal_reason
         }
 
     def update_clock(self):
@@ -131,6 +179,7 @@ class WallzEngine:
         if self.time_remaining[self.current_player] <= 0:
             self.time_remaining[self.current_player] = 0
             self.winner = 1 - self.current_player # Opponent wins on time
+            self.terminal_reason = 'timeout'
 
     def _get_all_active_walls(self):
         return set(self.walls[0] + self.walls[1])
@@ -173,24 +222,20 @@ class WallzEngine:
     def get_legal_actions(self, player=None):
         if player is None:
             player = self.current_player
+        if self.is_terminal():
+            return []
         actions = []
         r, c = self.pawns[player]
-        
+
         # 1. Standard Moves
         for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nr, nc = r + dr, c + dc
-            if 0 <= nr < self.board_size and 0 <= nc < self.board_size:
-                if not self._is_wall_blocking((r, c), (nr, nc)) and (nr, nc) not in self.blocked_cells:
-                    if (nr, nc) != self.pawns[1 - player]:
-                        actions.append(('MOVE', (nr, nc)))
-                        
+            if self._is_valid_move(player, (r + dr, c + dc)):
+                actions.append(('MOVE', (r + dr, c + dc)))
+
         # 2. One-time Hop
-        if self.rules['B'] and self.hop_available[player]:
-            for dr, dc in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
-                nr, nc = r + dr, c + dc
-                if 0 <= nr < self.board_size and 0 <= nc < self.board_size:
-                    if (nr, nc) not in self.blocked_cells and (nr, nc) != self.pawns[1 - player]:
-                        actions.append(('HOP', (nr, nc)))
+        for dr, dc in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
+            if self._is_valid_hop(player, (r + dr, c + dc)):
+                actions.append(('HOP', (r + dr, c + dc)))
 
         # 3. New Wall Placement (consumes 1 wall from inventory)
         if self.wall_inventory[player] > 0:
@@ -216,6 +261,69 @@ class WallzEngine:
                         actions.append(('BLOCK', (br, bc)))
 
         return actions
+
+    def has_legal_action(self, player=None):
+        """Early-exit check for at least one legal action (cheap when a pawn move exists)."""
+        if player is None:
+            player = self.current_player
+        if self.is_terminal():
+            return False
+        r, c = self.pawns[player]
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            if self._is_valid_move(player, (r + dr, c + dc)):
+                return True
+        for dr, dc in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
+            if self._is_valid_hop(player, (r + dr, c + dc)):
+                return True
+        n = self.board_size
+        if self.wall_inventory[player] > 0:
+            for wr in range(n - 1):
+                for wc in range(n - 1):
+                    for orient in ('H', 'V'):
+                        if self._is_valid_wall_placement(player, wr, wc, orient):
+                            return True
+        if self.rules['A'] and self.latest_wall[player] is not None:
+            for wr in range(n - 1):
+                for wc in range(n - 1):
+                    for orient in ('H', 'V'):
+                        if self._is_valid_wall_replacement(player, (wr, wc, orient)):
+                            return True
+        if self.rules['C'] and self.block_available[player]:
+            for br in range(n):
+                for bc in range(n):
+                    if self._is_valid_cell_block(br, bc):
+                        return True
+        return False
+
+    def _is_valid_move(self, player, cell):
+        r, c = self.pawns[player]
+        nr, nc = cell
+        if abs(nr - r) + abs(nc - c) != 1:
+            return False
+        if not (0 <= nr < self.board_size and 0 <= nc < self.board_size):
+            return False
+        if self._is_wall_blocking((r, c), (nr, nc)) or cell in self.blocked_cells:
+            return False
+        return cell != self.pawns[1 - player]
+
+    def _is_valid_hop(self, player, cell):
+        """2-cell orthogonal jump over anything; must land on a free cell and keep a goal path."""
+        if not (self.rules['B'] and self.hop_available[player]):
+            return False
+        r, c = self.pawns[player]
+        nr, nc = cell
+        if (abs(nr - r), abs(nc - c)) not in ((2, 0), (0, 2)):
+            return False
+        if not (0 <= nr < self.board_size and 0 <= nc < self.board_size):
+            return False
+        if cell in self.blocked_cells or cell == self.pawns[1 - player]:
+            return False
+        # Path preservation: a hop must not strand the pawn in a sealed pocket
+        old = self.pawns[player]
+        self.pawns[player] = cell
+        valid = self.is_path_open(player)
+        self.pawns[player] = old
+        return valid
 
     def _is_valid_wall_placement(self, player, r, c, orient):
         if self.wall_inventory[player] <= 0:
@@ -306,6 +414,8 @@ class WallzEngine:
         return True
 
     def apply_action(self, action, update_clock=True):
+        if self.is_terminal():
+            raise ValueError("Game is already over; no further actions may be applied.")
         if update_clock:
             self.update_clock()
             if self.winner is not None:
@@ -315,8 +425,12 @@ class WallzEngine:
         act_type, act_val = action
         
         if act_type == 'MOVE':
+            if not self._is_valid_move(player, act_val):
+                raise ValueError(f"Illegal move to {act_val}.")
             self.pawns[player] = act_val
         elif act_type == 'HOP':
+            if not self._is_valid_hop(player, act_val):
+                raise ValueError(f"Illegal hop to {act_val}.")
             self.pawns[player] = act_val
             self.hop_available[player] = False
         elif act_type == 'WALL':
@@ -351,16 +465,21 @@ class WallzEngine:
             self.latest_wall[player] = new_w
             # wall_inventory[player] remains unchanged
         elif act_type == 'BLOCK':
+            if not (self.rules['C'] and self.block_available[player]):
+                raise ValueError(f"Player {player} has no cell block available.")
             if not self._is_valid_cell_block(act_val[0], act_val[1]):
                 raise ValueError(f"Illegal cell block at {act_val}: path preservation violated.")
-            self.blocked_cells[act_val] = self.rules['K']
             self.block_available[player] = False
+        else:
+            raise ValueError(f"Unknown action type {act_type!r}.")
 
         # Win condition check
         if self.pawns[player][0] == self.goals[player]:
             self.winner = player
+            self.terminal_reason = 'goal'
 
-        # Decrement block timers
+        # Decrement existing block timers; a block placed this ply starts at K, so the
+        # cell is impassable for exactly the next K plies (proposal eq. temporary_block_decay)
         to_remove = []
         for cell in self.blocked_cells:
             self.blocked_cells[cell] -= 1
@@ -368,12 +487,19 @@ class WallzEngine:
                 to_remove.append(cell)
         for cell in to_remove:
             del self.blocked_cells[cell]
+        if act_type == 'BLOCK':
+            self.blocked_cells[act_val] = self.rules['K']
 
         # Turn transition
         self.current_player = 1 - self.current_player
         self.turn_count += 1
         if update_clock:
             self.last_turn_timestamp = time.time()
+
+        # Team rule: a non-terminal position with no legal action for the side to move is a draw
+        if self.winner is None and not self.has_legal_action(self.current_player):
+            self.is_draw = True
+            self.terminal_reason = 'no_legal_actions'
 
         # Check repetition rule
         self._record_state_history()

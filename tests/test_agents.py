@@ -110,10 +110,10 @@ class TestMinimaxAgent(unittest.TestCase):
 
     def test_agent_never_returns_illegal_action(self):
         """Agent must always select an action strictly present in get_legal_actions()."""
-        agent = MinimaxAgent(player_id=0, depth=1)
+        agents = {0: MinimaxAgent(player_id=0, depth=1), 1: MinimaxAgent(player_id=1, depth=1)}
         for _ in range(5):
             legal_actions = self.engine5.get_legal_actions(self.engine5.current_player)
-            action = agent.select_action(self.engine5)
+            action = agents[self.engine5.current_player].select_action(self.engine5)
             self.assertIn(action, legal_actions)
             self.engine5.apply_action(action, update_clock=False)
 

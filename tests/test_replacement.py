@@ -69,7 +69,7 @@ class TestReplacement(unittest.TestCase):
             wr = i // 2
             wc = (i % 2) * 3
             self.engine.apply_action(('WALL', (wr, wc, 'H')), update_clock=False)
-            self.engine.apply_action(('MOVE', (8 - (i % 2), 4)), update_clock=False)
+            self.engine.apply_action(('MOVE', (7 + (i % 2), 4)), update_clock=False)
 
         self.assertEqual(self.engine.wall_inventory[0], 0)
         self.assertEqual(len(self.engine.walls[0]), 10)

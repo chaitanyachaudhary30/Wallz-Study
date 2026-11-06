@@ -1,6 +1,6 @@
 # Modified Wallz — Multi-Agent System & AI Decision Baselines
 
-[![Tests](https://img.shields.io/badge/tests-41%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen.svg)]()
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)]()
 [![Course](https://img.shields.io/badge/CS329-Foundations%20of%20AI-orange.svg)]()
 
@@ -44,10 +44,12 @@ The game is played on an $N \times N$ discrete grid (default $N = 9$):
 | **Tier-1 Greedy Baseline** | `agents/greedy.py` / `greedy_agent.py` | **Implemented & Tested** | 5-tier lexicographical spatial decision-making |
 | **Tier-2 Minimax Agent** | `agents/minimax.py` | **Implemented & Tested** | Alpha-Beta pruning, report leaf eval, move ordering, timeout fallback |
 | **Match Runner CLI** | `run_match.py` / `scripts/run_match.py` | **Implemented & Tested** | Headless simulation, turn latency, node/cutoff telemetry |
-| **Unit Test Suite** | `tests/` | **Implemented & Tested** | 41/41 unit tests passing |
+| **Logged Match Runner & Replays** | `evaluation/match_runner.py` / `scripts/run_experiments.py` | **Implemented & Tested** | JSONL logs, outcome taxonomy, paired openings, replay verification, demo export |
+| **State Graph & Retrograde Solver** | `evaluation/state_graph.py` / `evaluation/retrograde.py` | **Implemented & Tested** | Engine-driven enumeration with caps, exact ranks, all optimal actions, UNKNOWN on caps |
+| **Unit Test Suite** | `tests/` | **Implemented & Tested** | 96/96 unit tests passing |
 | **Tier-3 Exact Solver** | `agents/exact_solver.py` | **Implemented & Tested** | Retrograde queue propagation, cycle/draw resolution, tiny board solver |
 | **MARL DQN Self-Play** | `agents/dqn/` | *Scaffolded (Unimplemented)* | Assigned to other team members |
-| **Ablation Matrix** | `evaluation/ablation.py` | *Scaffolded (Unimplemented)* | Assigned to other team members |
+| **Ablation Matrix** | `evaluation/ablation.py` / `evaluation/metrics.py` | **Implemented & Piloted** | 2³ factorial effects, paired bootstrap, agent-vs-exact agreement |
 
 ---
 
@@ -159,6 +161,19 @@ python3 run_match.py --p0 greedy --p1 greedy
 | **9×9** | Greedy (P0) vs Greedy (P1) | *Truncated (Draw)* | 200 | 25.10s | — | — |
 
 Minimax successfully navigates complex spatial trade-offs and dynamic wall recyclings, systematically defeating the Greedy baseline without getting trapped in repetitive draw cycles.
+
+---
+
+## 📏 Evaluation Tools (Person 3)
+
+Logged matches, exact tiny-board solving, A/B/C ablations and replay export are documented in
+[docs/person3_evaluation.md](docs/person3_evaluation.md), including the exact game model, result schemas and pilot results.
+
+```bash
+python scripts/run_experiments.py match --p0 minimax:depth=2 --p1 greedy -N 5 --abc 111 --out m.json
+python scripts/run_experiments.py solve -N 3 -K 1 -M 0 --abc all
+python scripts/run_experiments.py ablation --x minimax:depth=2 --y greedy -N 5 --seeds 10 --out-dir experiments/results/my_ablation
+```
 
 ---
 
