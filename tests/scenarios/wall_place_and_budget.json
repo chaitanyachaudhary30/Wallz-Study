@@ -1,0 +1,38 @@
+{
+  "name": "wall_place_and_budget",
+  "title": "Wall Placement & Inventory Budget",
+  "description": "Each wall placed consumes 1 unit of inventory. Once inventory reaches 0, further wall placements are forbidden.",
+  "config": {
+    "board_size": 5,
+    "A": false,
+    "B": false,
+    "C": false,
+    "M": 1
+  },
+  "start": "initial",
+  "script": [
+    ["WALL", [0, 0, "H"]],
+    ["MOVE", [3, 2]]
+  ],
+  "expect": [
+    {
+      "after_ply": 0,
+      "inventory": [1, 1]
+    },
+    {
+      "after_ply": 1,
+      "inventory": [0, 1],
+      "latest": [[0, 0, "H"], null]
+    },
+    {
+      "after_ply": 2,
+      "to_move": 0,
+      "illegal": ["WALL", [1, 1, "H"]],
+      "error_contains": "no walls remaining"
+    }
+  ],
+  "final": {
+    "terminal_reason": null,
+    "winner": null
+  }
+}

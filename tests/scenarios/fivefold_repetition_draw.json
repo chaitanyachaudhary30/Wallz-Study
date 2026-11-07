@@ -1,0 +1,42 @@
+{
+  "name": "fivefold_repetition_draw",
+  "title": "Five-Fold Repetition Draw",
+  "description": "If the exact canonical board and piece position occurs five times in a game, the match immediately terminates in a draw.",
+  "config": {
+    "board_size": 5,
+    "A": false,
+    "B": false,
+    "C": false,
+    "M": 0
+  },
+  "start": "initial",
+  "script": [
+    ["MOVE", [0, 1]],
+    ["MOVE", [4, 1]],
+    ["MOVE", [0, 2]],
+    ["MOVE", [4, 2]],
+    ["MOVE", [0, 1]],
+    ["MOVE", [4, 1]],
+    ["MOVE", [0, 2]],
+    ["MOVE", [4, 2]],
+    ["MOVE", [0, 1]],
+    ["MOVE", [4, 1]],
+    ["MOVE", [0, 2]],
+    ["MOVE", [4, 2]],
+    ["MOVE", [0, 1]],
+    ["MOVE", [4, 1]],
+    ["MOVE", [0, 2]],
+    ["MOVE", [4, 2]]
+  ],
+  "expect": [
+    {
+      "after_ply": 16,
+      "terminal_reason": "repetition",
+      "winner": null
+    }
+  ],
+  "final": {
+    "terminal_reason": "repetition",
+    "winner": null
+  }
+}

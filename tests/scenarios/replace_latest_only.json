@@ -1,0 +1,38 @@
+{
+  "name": "replace_latest_only",
+  "title": "Reposition Latest Wall Only (Rule A)",
+  "description": "Under Rule A, a player may reposition their most recently placed wall. Older walls remain permanently fixed, and repositioning does not alter wall inventory.",
+  "config": {
+    "board_size": 5,
+    "A": true,
+    "B": false,
+    "C": false,
+    "M": 5
+  },
+  "start": "initial",
+  "script": [
+    ["WALL", [0, 0, "H"]],
+    ["MOVE", [3, 2]],
+    ["WALL", [1, 1, "H"]],
+    ["MOVE", [3, 1]],
+    ["REPLACE", [1, 2, "H"]]
+  ],
+  "expect": [
+    {
+      "after_ply": 4,
+      "to_move": 0,
+      "inventory": [3, 5],
+      "illegal": ["REPLACE", [[0, 0, "H"], [0, 2, "H"]]],
+      "error_contains": "only latest wall"
+    },
+    {
+      "after_ply": 5,
+      "inventory": [3, 5],
+      "latest": [[1, 2, "H"], null]
+    }
+  ],
+  "final": {
+    "terminal_reason": null,
+    "winner": null
+  }
+}

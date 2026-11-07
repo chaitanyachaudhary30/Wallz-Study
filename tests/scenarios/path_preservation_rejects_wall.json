@@ -1,0 +1,29 @@
+{
+  "name": "path_preservation_rejects_wall",
+  "title": "Path Preservation Rule",
+  "description": "Neither player may place a wall that completely seals off either pawn from reaching its goal row.",
+  "config": {
+    "board_size": 3,
+    "A": false,
+    "B": false,
+    "C": false,
+    "M": 5
+  },
+  "start": "initial",
+  "script": [
+    ["WALL", [0, 0, "H"]],
+    ["MOVE", [2, 0]]
+  ],
+  "expect": [
+    {
+      "after_ply": 2,
+      "to_move": 0,
+      "illegal": ["WALL", [0, 1, "H"]],
+      "error_contains": "Illegal wall placement"
+    }
+  ],
+  "final": {
+    "terminal_reason": null,
+    "winner": null
+  }
+}

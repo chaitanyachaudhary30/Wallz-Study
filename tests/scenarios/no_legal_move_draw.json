@@ -1,0 +1,45 @@
+{
+  "name": "no_legal_move_draw",
+  "title": "No-Legal-Move Draw (Task 1C)",
+  "description": "When a player has no legal moves remaining on their turn, the game immediately terminates in a draw.",
+  "config": {
+    "board_size": 3,
+    "A": false,
+    "B": false,
+    "C": true,
+    "K": 2,
+    "M": 0
+  },
+  "start": {
+    "raw_key": [
+      [1, 1],
+      [2, 1],
+      [],
+      [],
+      0,
+      0,
+      null,
+      null,
+      false,
+      false,
+      true,
+      false,
+      [[[2, 0], 2]],
+      0
+    ]
+  },
+  "script": [
+    ["BLOCK", [2, 2]]
+  ],
+  "expect": [
+    {
+      "after_ply": 1,
+      "terminal_reason": "no_legal_actions",
+      "winner": null
+    }
+  ],
+  "final": {
+    "terminal_reason": "no_legal_actions",
+    "winner": null
+  }
+}

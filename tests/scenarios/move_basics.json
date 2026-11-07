@@ -1,0 +1,44 @@
+{
+  "name": "move_basics",
+  "title": "Movement Rules & Obstacles",
+  "description": "Pawns move one step orthogonally. Movement cannot pass through walls or land on the opponent's cell.",
+  "config": {
+    "board_size": 5,
+    "A": false,
+    "B": false,
+    "C": false,
+    "M": 2
+  },
+  "start": "initial",
+  "script": [
+    ["WALL", [0, 2, "H"]],
+    ["MOVE", [4, 1]],
+    ["MOVE", [0, 1]]
+  ],
+  "expect": [
+    {
+      "after_ply": 0,
+      "illegal": ["MOVE", [4, 2]],
+      "error_contains": "Illegal move to"
+    },
+    {
+      "after_ply": 0,
+      "illegal": ["MOVE", [1, 1]],
+      "error_contains": "Illegal move to"
+    },
+    {
+      "after_ply": 1,
+      "illegal": ["MOVE", [1, 2]],
+      "error_contains": "Illegal move to"
+    },
+    {
+      "after_ply": 2,
+      "to_move": 0,
+      "legal_includes": [["MOVE", [0, 1]], ["MOVE", [0, 3]]]
+    }
+  ],
+  "final": {
+    "terminal_reason": null,
+    "winner": null
+  }
+}

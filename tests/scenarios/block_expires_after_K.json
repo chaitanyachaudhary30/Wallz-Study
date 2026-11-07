@@ -1,0 +1,47 @@
+{
+  "name": "block_expires_after_K",
+  "title": "Temporary Cell Block Expiration (Rule C)",
+  "description": "A blocked cell cannot be entered by any pawn. Its timer decrements each turn and expires completely after exactly K plies.",
+  "config": {
+    "board_size": 5,
+    "A": false,
+    "B": false,
+    "C": true,
+    "K": 3,
+    "M": 0
+  },
+  "start": "initial",
+  "script": [
+    ["BLOCK", [3, 2]],
+    ["MOVE", [4, 1]],
+    ["MOVE", [0, 1]],
+    ["MOVE", [4, 2]]
+  ],
+  "expect": [
+    {
+      "after_ply": 1,
+      "blocked": {"3,2": 3},
+      "legal_excludes": [["MOVE", [3, 2]]],
+      "note": "Timer starts at K=3"
+    },
+    {
+      "after_ply": 2,
+      "blocked": {"3,2": 2},
+      "note": "Timer decrements to 2"
+    },
+    {
+      "after_ply": 3,
+      "blocked": {"3,2": 1},
+      "note": "Timer decrements to 1"
+    },
+    {
+      "after_ply": 4,
+      "blocked": {},
+      "note": "Block expired"
+    }
+  ],
+  "final": {
+    "terminal_reason": null,
+    "winner": null
+  }
+}

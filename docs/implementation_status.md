@@ -2,7 +2,7 @@
 
 **Project**: Multi-Agent Reinforcement Learning for Adversarial Spatial Decision-Making with Temporal Constraints  
 **Module**: Full System Integration, Baseline Suite, Exact Solver, MARL DQN, and Statistical Evaluation  
-**Status**: 100% Complete (All 10 Phases Verified)  
+**Status**: In Progress (Member 2 Engine Enhancements & Web Application Track)  
 **Last Updated**: November 2026  
 
 ---
@@ -20,35 +20,80 @@
 | **Phase 7** | Match Runner, Metrics & Logging (Holm-Bonferroni correction, Wilson CIs, table generator) | **Complete** | 14 publication-ready Markdown/LaTeX tables |
 | **Phase 8** | State Graph & Exact Solver (Adapter over retrograde engine, cycle/stalemate draw separation) | **Complete** | $K \in \{1, 2, 3\}$ solved for $N=3, 4$ |
 | **Phase 9** | Component Testing & Property Verification | **Complete** | Gate X-1 (Hypothesis stateful), Gate X-2 (NetworkX BFS) |
-| **Phase 10** | Final System Integration & Acceptance | **Complete** | 160/160 unit & component tests passing |
+| **Phase 10** | Final System Integration & Acceptance | **Complete** | 160/160 baseline unit & component tests passing |
+
+### Member 2 Track: Engine Enhancements, Verification & Web Demo
+
+| Phase | Title | Commit | Status | Verification Gate |
+| :---: | :--- | :---: | :---: | :--- |
+| **P01** | Tooling, shared test helpers, action normalisation (F2) | `153fe17` | **Complete** | C-SNAP atomicity, JSON lists accepted, 187 tests passing |
+| **P02** | Validate-before-mutate (F1), atomicity & post-terminal tests | `bb77405` | **Complete** | Clock isolation on illegal actions, post-flag raises, 197 tests |
+| **P03** | Block duration, hop and REPLACE-form rule suite (F3) | `3f7b397` | **Complete** | Frozen fixtures R7 & Hop, exact K timeline, 218 tests |
+| **P04** | No-legal-move draw and wall-budget suite (Task 1C & 1D) | `62c1413` | **Complete** | StateGraph first-hit fixture, budget M=0 audit, 234 tests |
+| **P05** | Scenario fixtures, single-source guard, coverage map | In Progress | **Complete** | 9 shared scenarios, AST single-source guard |
+| **P06** | Greedy refactor, side-to-move guard (F4), verification | Pending | Planned | Golden replay match, score_actions exposure |
+| **P07** | Re-run greedy matches across 8 factorial rule cells | Pending | Planned | 800 matches, 4 tables regenerated unchanged |
+| **P08** | Web backend core, engine adapter, agent registry | Pending | Planned | Flask endpoints /api/game/* |
+| **P09** | Web backend think endpoints (Minimax + DQN + Solver) | Pending | Planned | /api/game/think, /api/game/dqn-heatmap |
+| **P10** | Web backend arena, replays, scenarios, training data | Pending | Planned | /api/arena/run, /api/replays, /api/scenarios |
+| **P11** | Frontend scaffold, Board component, Play page | Pending | Planned | Vite+React+TS, interactive board, playable demo |
+| **P12** | Frontend Think panel, heatmap overlay, Arena page | Pending | Planned | Model explanations, multi-agent matches |
+| **P13** | Frontend Training, Replays, Rules pages | Pending | Planned | Loss curves, replay viewer, scenario runner |
+| **P14** | Documentation and final acceptance | Pending | Planned | Comprehensive user and developer guides |
 
 ---
 
-## 2. Comprehensive Test Suite (160 / 160 Passed)
+## 2. Comprehensive Test Suite (247+ Tests Passing)
 
-All 160 tests execute under Python's standard `unittest` framework:
+All tests execute cleanly via pytest:
 ```bash
-python3 -m unittest discover -s tests
+.venv/bin/python -m pytest -q
 ```
 
-### Module Breakdown
-- `tests/test_invariants_stateful.py`: Gate X-1 Hypothesis stateful property testing (100 state machines, 2,500 transitions across $N \in \{3,4,5,9\}$, $K \in \{1,2,3,5\}$, $M \in \{0,1,10\}$ verifying 8 engine invariants and illegal action fuzzing).
-- `tests/test_bfs_networkx.py`: Gate X-2 independent NetworkX BFS distance validation across 2,000 random layouts with 100% match.
-- `tests/test_agent_conformance.py` (6 tests): Parameterized conformance tests for `RandomAgent`, `GreedyAgent`, `MinimaxAgent`, `ExactSolverAgent`, and `DQNAgent` verifying legal actions, zero input mutation, non-null decisions, and execution budgets.
-- `tests/test_golden_regression.py` (3 tests): Full reproduction of committed ground-truth retrograde solves across all 8 rule cells of $3 \times 3$ and replay verification.
-- `tests/test_exact_solver.py` (9 tests): Exhaustive Bellman game-theoretic invariant checks across all states, degree conservation, and optimal policy verification.
-- `tests/test_agents.py` (13 tests): Minimax leaf evaluation, cutoffs, deadline fallbacks, and exact solver integration.
-- `tests/test_replacement.py` (7 tests): Modification A latest wall repositioning (`REPLACE`) and recency constraint enforcement.
-- `tests/test_path_preservation.py` (2 tests): Rejection of wall placements sealing pawns into pockets.
-- `tests/test_temporary_blocks.py` (2 tests): Modification C cell blocking, decay counters, and path preservation.
-- `tests/test_evaluation_fn.py` (5 tests): Protocol `EvaluationFunction` conformance, `HEvaluator`, `LinearEvaluator`, and feature extraction.
-- `tests/test_metrics_holm.py` (4 tests): Step-down Holm-Bonferroni correction and Rule R3 stalemate rate tracking.
-- `tests/test_dqn_runner_integration.py` (3 tests): DQN checkpoint loading and logged match execution.
-- `tests/test_movement.py`, `tests/test_walls.py`, `tests/test_hop.py`, `tests/test_terminal_states.py`, `tests/test_initial_state.py`, `tests/test_filter_equivalence.py`, `tests/test_match_runner.py`: Core mechanics and replay verification.
+---
+
+## 3. Member 2 Regression Coverage Map
+
+| Rule / Mechanic | Core Unit Tests | Invariant / Property Tests | New Dedicated Suites | Shared Scenarios |
+| :--- | :--- | :--- | :--- | :--- |
+| **Normal Movement** | `test_movement.py` | `test_invariants_stateful.py` | `test_strict_actions.py` | `move_basics.json` |
+| **Wall Placement** | `test_walls.py` | `test_invariants_stateful.py` | `test_strict_actions.py` | `wall_place_and_budget.json` |
+| **Wall Repositioning (REPLACE)** | `test_replacement.py` | `test_invariants_stateful.py` | `test_rules_blocks_hop.py` | `replace_latest_only.json` |
+| **Latest-Wall Restriction** | `test_replacement.py` | `test_invariants_stateful.py` | `test_rules_blocks_hop.py` | `replace_latest_only.json` |
+| **One-Time Hop (Rule B / R1)** | `test_hop.py` | `test_invariants_stateful.py` | `test_rules_blocks_hop.py` | `hop_over_wall.json` |
+| **Block Placement & Timing (Rule C)** | `test_temporary_blocks.py` | `test_invariants_stateful.py` | `test_rules_blocks_hop.py` | `block_expires_after_K.json` |
+| **Path Preservation** | `test_path_preservation.py` | `test_invariants_stateful.py` | `test_rules_blocks_hop.py` | `path_preservation_rejects_wall.json` |
+| **Five-Fold Repetition** | `test_terminal_states.py` | `test_invariants_stateful.py` | `test_strict_actions.py` | `fivefold_repetition_draw.json` |
+| **No-Legal-Move Draw (Task 1C)** | `test_terminal_states.py` | `test_invariants_stateful.py` | `test_rules_draw_budget.py` | `no_legal_move_draw.json` |
+| **Wall Inventory Budget (Task 1D)** | `test_walls.py` | `test_invariants_stateful.py` | `test_rules_draw_budget.py` | `wall_place_and_budget.json` |
+| **Invalid Action Rejection (Atomicity)** | — | `test_invariants_stateful.py` | `test_action_normalization.py`, `test_strict_actions.py` | All scenarios |
+| **Terminal Freezes & Transitions** | `test_terminal_states.py` | `test_invariants_stateful.py` | `test_strict_actions.py` | `goal_win.json` |
+
+> [!NOTE]
+> **Golden Solves Consistency**: `test_golden_regression.py` retrogrades match 100% of ground-truth solves under the exact K-ply semantics, confirming complete mathematical consistency.
 
 ---
 
-## 3. Production Artifacts & Checkpoints
+## 4. Wall-Budget Audit (`rules['M']`)
+
+An automated AST and regex scan (`tests/test_rules_draw_budget.py::test_no_hardcoded_wall_budget`) audits the entire codebase outside configuration defaults.
+- Zero hardcoded occurrences of `10` exist in `agents/greedy.py`, `evaluation/match_runner.py`, or `evaluation/features.py`.
+- Wall inventory is strictly read from `engine.wall_inventory[player]` and initialized from `rules['M']` (defaulting to 10 only at entry points).
+- Wall placement ceases when `wall_inventory[player] == 0`, and negative $M$ is rejected at initialization.
+
+---
+
+## 5. Hand-offs and Open Issues
+
+| Issue ID | Target Member | Description & Required Coordination |
+| :---: | :---: | :--- |
+| **H-1** | **Member 1** | Request public `MinimaxAgent.analyze_root(engine, depth) -> list[(action, value)]` with full-window values; until then `web/backend/explain.py` uses private `_negamax` read-only. |
+| **H-2** | **Member 3** | `docs/person3_evaluation.md` §7 and `evaluation/replay_export.py` target the legacy demo; the new web demo replays `run_match` JSON directly. |
+| **H-3** | **Member 4** | Verify DQN conformance tests (`tests/test_action_codec.py`, `tests/test_dqn_*`) pass under `_validate_action` / `_mutate` lifecycle ordering (all green). |
+
+---
+
+## 6. Production Artifacts & Checkpoints
 
 - **Released Neural Network Weights**:
   - `checkpoints/release/dqn_3x3/model.pt` + `meta.json`: Double-DQN $3 \times 3$ model (Gate X-16 validated: $>90\%$ sign agreement with $V^*$).

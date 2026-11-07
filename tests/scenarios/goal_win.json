@@ -1,0 +1,29 @@
+{
+  "name": "goal_win",
+  "title": "Goal Line Victory",
+  "description": "The primary objective of Modified Wallz: reaching the opponent's starting row wins the game immediately.",
+  "config": {
+    "board_size": 3,
+    "A": false,
+    "B": false,
+    "C": false,
+    "M": 0
+  },
+  "start": "initial",
+  "script": [
+    ["MOVE", [1, 1]],
+    ["MOVE", [2, 0]],
+    ["MOVE", [2, 1]]
+  ],
+  "expect": [
+    {
+      "after_ply": 3,
+      "terminal_reason": "goal",
+      "winner": 0
+    }
+  ],
+  "final": {
+    "terminal_reason": "goal",
+    "winner": 0
+  }
+}

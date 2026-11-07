@@ -1,0 +1,41 @@
+{
+  "name": "hop_over_wall",
+  "title": "One-Time Hop Over Obstacles (Rule B)",
+  "description": "Each player may execute a one-time orthogonal hop of distance 2, leaping over intervening walls, pawns, or blocks. Once used, hop is consumed for the rest of the game.",
+  "config": {
+    "board_size": 5,
+    "A": false,
+    "B": true,
+    "C": false,
+    "M": 2
+  },
+  "start": "initial",
+  "script": [
+    ["WALL", [0, 2, "H"]],
+    ["MOVE", [3, 2]],
+    ["HOP", [2, 2]],
+    ["MOVE", [3, 1]]
+  ],
+  "expect": [
+    {
+      "after_ply": 2,
+      "to_move": 0,
+      "legal_includes": [["HOP", [2, 2]]],
+      "legal_excludes": [["MOVE", [1, 2]]]
+    },
+    {
+      "after_ply": 3,
+      "hop": [false, true]
+    },
+    {
+      "after_ply": 4,
+      "to_move": 0,
+      "illegal": ["HOP", [4, 2]],
+      "error_contains": "Illegal hop to"
+    }
+  ],
+  "final": {
+    "terminal_reason": null,
+    "winner": null
+  }
+}
