@@ -1,0 +1,463 @@
+{
+  "timestamp": "2026-11-07T21:19:45.270026+00:00",
+  "commit": "8bf35896f05e2896d322a7872531cccd6f9393f0",
+  "args": {
+    "quick": false,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "out_dir": "experiments/results/greedy"
+  },
+  "campaign_results": [
+    {
+      "pairing": "greedy_vs_random",
+      "board": "N3_solver",
+      "games": 100,
+      "wins": 96,
+      "draws": 0,
+      "losses": 4,
+      "win_rate": 0.96,
+      "win_rate_ci": [
+        0.9016,
+        0.9843
+      ],
+      "draw_rate": 0.0,
+      "draw_rate_ci": [
+        0.0,
+        0.037
+      ],
+      "mean_plies": 4.16,
+      "sd_plies": 1.69,
+      "categories": {
+        "goal": 100
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 50,
+          "wins": 49,
+          "draws": 0,
+          "losses": 1
+        },
+        "1": {
+          "games": 50,
+          "wins": 47,
+          "draws": 0,
+          "losses": 3
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.9,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 0.9
+      },
+      "seed_mean_sd": [
+        0.96,
+        0.0548
+      ]
+    },
+    {
+      "pairing": "greedy_vs_minimax2",
+      "board": "N3_solver",
+      "games": 100,
+      "wins": 43,
+      "draws": 0,
+      "losses": 57,
+      "win_rate": 0.43,
+      "win_rate_ci": [
+        0.3373,
+        0.5278
+      ],
+      "draw_rate": 0.0,
+      "draw_rate_ci": [
+        0.0,
+        0.037
+      ],
+      "mean_plies": 3.21,
+      "sd_plies": 0.56,
+      "categories": {
+        "goal": 100
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 50,
+          "wins": 43,
+          "draws": 0,
+          "losses": 7
+        },
+        "1": {
+          "games": 50,
+          "wins": 0,
+          "draws": 0,
+          "losses": 50
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.35,
+        "43": 0.5,
+        "44": 0.5,
+        "45": 0.4,
+        "46": 0.4
+      },
+      "seed_mean_sd": [
+        0.43,
+        0.0671
+      ]
+    },
+    {
+      "pairing": "greedy_vs_greedy_self",
+      "board": "N3_solver",
+      "games": 100,
+      "wins": 86,
+      "draws": 0,
+      "losses": 14,
+      "win_rate": 0.86,
+      "win_rate_ci": [
+        0.7786,
+        0.9147
+      ],
+      "draw_rate": 0.0,
+      "draw_rate_ci": [
+        0.0,
+        0.037
+      ],
+      "mean_plies": 3.14,
+      "sd_plies": 0.35,
+      "categories": {
+        "goal": 100
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 100,
+          "wins": 86,
+          "draws": 0,
+          "losses": 14
+        },
+        "1": {
+          "games": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.7,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 0.8,
+        "46": 0.8
+      },
+      "seed_mean_sd": [
+        0.86,
+        0.1342
+      ]
+    },
+    {
+      "pairing": "greedy_vs_random",
+      "board": "N5_final",
+      "games": 100,
+      "wins": 100,
+      "draws": 0,
+      "losses": 0,
+      "win_rate": 1.0,
+      "win_rate_ci": [
+        0.963,
+        1.0
+      ],
+      "draw_rate": 0.0,
+      "draw_rate_ci": [
+        0.0,
+        0.037
+      ],
+      "mean_plies": 9.74,
+      "sd_plies": 5.92,
+      "categories": {
+        "goal": 100
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 50,
+          "wins": 50,
+          "draws": 0,
+          "losses": 0
+        },
+        "1": {
+          "games": 50,
+          "wins": 50,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "per_seed_rates": {
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0
+      },
+      "seed_mean_sd": [
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "pairing": "greedy_vs_minimax2",
+      "board": "N5_final",
+      "games": 100,
+      "wins": 27,
+      "draws": 7,
+      "losses": 66,
+      "win_rate": 0.27,
+      "win_rate_ci": [
+        0.1927,
+        0.3643
+      ],
+      "draw_rate": 0.07,
+      "draw_rate_ci": [
+        0.0343,
+        0.1375
+      ],
+      "mean_plies": 20.65,
+      "sd_plies": 23.05,
+      "categories": {
+        "goal": 93,
+        "draw_repetition": 7
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 50,
+          "wins": 19,
+          "draws": 7,
+          "losses": 24
+        },
+        "1": {
+          "games": 50,
+          "wins": 8,
+          "draws": 0,
+          "losses": 42
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.35,
+        "43": 0.25,
+        "44": 0.2,
+        "45": 0.35,
+        "46": 0.2
+      },
+      "seed_mean_sd": [
+        0.27,
+        0.0758
+      ]
+    },
+    {
+      "pairing": "greedy_vs_greedy_self",
+      "board": "N5_final",
+      "games": 100,
+      "wins": 64,
+      "draws": 2,
+      "losses": 34,
+      "win_rate": 0.64,
+      "win_rate_ci": [
+        0.5424,
+        0.7273
+      ],
+      "draw_rate": 0.02,
+      "draw_rate_ci": [
+        0.0055,
+        0.07
+      ],
+      "mean_plies": 7.4,
+      "sd_plies": 9.01,
+      "categories": {
+        "goal": 98,
+        "draw_repetition": 2
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 100,
+          "wins": 64,
+          "draws": 2,
+          "losses": 34
+        },
+        "1": {
+          "games": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.3,
+        "43": 0.7,
+        "44": 0.8,
+        "45": 0.7,
+        "46": 0.7
+      },
+      "seed_mean_sd": [
+        0.64,
+        0.1949
+      ]
+    },
+    {
+      "pairing": "greedy_vs_random",
+      "board": "N9_final",
+      "games": 40,
+      "wins": 40,
+      "draws": 0,
+      "losses": 0,
+      "win_rate": 1.0,
+      "win_rate_ci": [
+        0.9124,
+        1.0
+      ],
+      "draw_rate": 0.0,
+      "draw_rate_ci": [
+        0.0,
+        0.0876
+      ],
+      "mean_plies": 21.1,
+      "sd_plies": 14.05,
+      "categories": {
+        "goal": 40
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 20,
+          "wins": 20,
+          "draws": 0,
+          "losses": 0
+        },
+        "1": {
+          "games": 20,
+          "wins": 20,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "per_seed_rates": {
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0
+      },
+      "seed_mean_sd": [
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "pairing": "greedy_vs_minimax2",
+      "board": "N9_final",
+      "games": 40,
+      "wins": 0,
+      "draws": 2,
+      "losses": 38,
+      "win_rate": 0.0,
+      "win_rate_ci": [
+        0.0,
+        0.0876
+      ],
+      "draw_rate": 0.05,
+      "draw_rate_ci": [
+        0.0138,
+        0.165
+      ],
+      "mean_plies": 30.82,
+      "sd_plies": 32.27,
+      "categories": {
+        "goal": 38,
+        "draw_repetition": 1,
+        "truncated": 1
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 20,
+          "wins": 0,
+          "draws": 0,
+          "losses": 20
+        },
+        "1": {
+          "games": 20,
+          "wins": 0,
+          "draws": 2,
+          "losses": 18
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.0,
+        "43": 0.0,
+        "44": 0.0,
+        "45": 0.0,
+        "46": 0.0
+      },
+      "seed_mean_sd": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "pairing": "greedy_vs_greedy_self",
+      "board": "N9_final",
+      "games": 40,
+      "wins": 22,
+      "draws": 5,
+      "losses": 13,
+      "win_rate": 0.55,
+      "win_rate_ci": [
+        0.3983,
+        0.6929
+      ],
+      "draw_rate": 0.125,
+      "draw_rate_ci": [
+        0.0546,
+        0.2611
+      ],
+      "mean_plies": 35.3,
+      "sd_plies": 48.73,
+      "categories": {
+        "draw_repetition": 5,
+        "goal": 35
+      },
+      "mean_greedy_decision_sec": 0.0,
+      "by_colour": {
+        "0": {
+          "games": 40,
+          "wins": 22,
+          "draws": 5,
+          "losses": 13
+        },
+        "1": {
+          "games": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "per_seed_rates": {
+        "42": 0.125,
+        "43": 0.75,
+        "44": 0.5,
+        "45": 0.625,
+        "46": 0.75
+      },
+      "seed_mean_sd": [
+        0.55,
+        0.2592
+      ]
+    }
+  ]
+}

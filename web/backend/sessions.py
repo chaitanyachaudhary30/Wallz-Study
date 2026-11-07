@@ -71,7 +71,7 @@ class GameSession:
             "B": self.config.get("B", True),
             "C": self.config.get("C", True),
             "K": self.config.get("K", 3),
-            "M": self.config.get("M", 10),
+            "M": self.config.get("M", WallzConfig().M),
         }
         config_obj = WallzConfig(
             board_size=board_size,
@@ -117,7 +117,7 @@ class SessionStore:
             "B": config.get("B", True),
             "C": config.get("C", True),
             "K": config.get("K", 3),
-            "M": config.get("M", 10),
+            "M": config.get("M", WallzConfig().M),
         }
         cfg_dict = {"board_size": board_size, "max_plies": max_plies, **rules}
 

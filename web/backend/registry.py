@@ -11,6 +11,7 @@ import os
 from typing import Any, Dict, List, Optional, Tuple
 
 from evaluation.match_runner import MatchConfig, make_agent
+from src.modified_wallz.config import WallzConfig
 
 
 # Cached models for DQN to avoid reloading weights repeatedly
@@ -25,7 +26,7 @@ def presets() -> List[Dict[str, Any]]:
         {
             "id": "default_5x5",
             "label": "Standard 5×5 (Final Rules)",
-            "config": {"board_size": 5, "A": True, "B": True, "C": True, "K": 3, "M": 10},
+            "config": {"board_size": 5, "A": True, "B": True, "C": True, "K": 3, "M": WallzConfig().M},
         },
         {
             "id": "dqn_3x3",
@@ -40,7 +41,7 @@ def presets() -> List[Dict[str, Any]]:
         {
             "id": "classic_9x9",
             "label": "Classic 9×9 (Base Rules)",
-            "config": {"board_size": 9, "A": False, "B": False, "C": False, "K": 1, "M": 10},
+            "config": {"board_size": 9, "A": False, "B": False, "C": False, "K": 1, "M": WallzConfig().M},
         },
     ]
 
@@ -48,7 +49,7 @@ def presets() -> List[Dict[str, Any]]:
 def list_agents(config: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """Returns catalog of registered agent specs with compatibility flags for `config`."""
     if config is None:
-        config = {"board_size": 5, "A": True, "B": True, "C": True, "K": 3, "M": 10}
+        config = {"board_size": 5, "A": True, "B": True, "C": True, "K": 3, "M": WallzConfig().M}
 
     n = config.get("board_size", 5)
     rules = {
@@ -56,7 +57,7 @@ def list_agents(config: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]
         "B": config.get("B", True),
         "C": config.get("C", True),
         "K": config.get("K", 3),
-        "M": config.get("M", 10),
+        "M": config.get("M", WallzConfig().M),
     }
 
     agents: List[Dict[str, Any]] = [
@@ -208,7 +209,7 @@ def build_agent(spec: str, player: int, config: Dict[str, Any]) -> Any:
         "B": config.get("B", True),
         "C": config.get("C", True),
         "K": config.get("K", 3),
-        "M": config.get("M", 10),
+        "M": config.get("M", WallzConfig().M),
     }
     match_cfg = MatchConfig(board_size=board_size, rules=rules)
 

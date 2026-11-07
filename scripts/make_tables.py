@@ -329,6 +329,12 @@ def make_solve_table(solve_data: Dict[str, Any]) -> Tuple[str, str]:
     return "\n".join(md), "\n".join(tex)
 
 
+def make_greedy_table(summary_data: dict) -> tuple[str, str]:
+    """Delegates greedy table rendering to scripts.run_greedy_matches."""
+    from scripts.run_greedy_matches import make_greedy_table as _make
+    return _make(summary_data)
+
+
 def generate_all_tables(output_dir: str = "experiments/tables/"):
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
@@ -403,6 +409,17 @@ def generate_all_tables(output_dir: str = "experiments/tables/"):
             (out_path / f"{stem}.md").write_text(md_sol, encoding='utf-8')
             (out_path / f"{stem}.tex").write_text(tex_sol, encoding='utf-8')
             generated.append(stem)
+
+    # 5. Greedy matches table (P07)
+    greedy_summary_path = Path("experiments/results/greedy/summary.json")
+    if greedy_summary_path.exists():
+        with open(greedy_summary_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        md_greedy, tex_greedy = make_greedy_table(data)
+        stem = "table_greedy_matches"
+        (out_path / f"{stem}.md").write_text(md_greedy, encoding='utf-8')
+        (out_path / f"{stem}.tex").write_text(tex_greedy, encoding='utf-8')
+        generated.append(stem)
 
     print("============================================================")
     print(f"Generated {len(generated)} report tables in {out_path}:")

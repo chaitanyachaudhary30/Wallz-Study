@@ -12,6 +12,7 @@ from flask import Blueprint, jsonify, request
 from web.backend.registry import build_agent, list_agents, presets
 from web.backend.serialize import action_to_json, parse_action, state_json
 from web.backend.sessions import SessionStore
+from src.modified_wallz.config import WallzConfig
 
 
 games_bp = Blueprint("games", __name__)
@@ -26,7 +27,7 @@ def get_config_defaults():
         "B": True,
         "C": True,
         "K": 3,
-        "M": 10,
+        "M": WallzConfig().M,
         "max_plies": 200,
     }
     limits = {
@@ -53,7 +54,7 @@ def get_agents():
     try:
         n = int(request.args.get("N", request.args.get("board_size", 5)))
         k = int(request.args.get("K", 3))
-        m = int(request.args.get("M", 10))
+        m = int(request.args.get("M", WallzConfig().M))
     except (ValueError, TypeError) as err:
         return jsonify({"error": f"Invalid integer configuration: {err}"}), 400
 
@@ -82,7 +83,7 @@ def create_game():
         "B": bool(cfg.get("B", True)),
         "C": bool(cfg.get("C", True)),
         "K": int(cfg.get("K", 3)),
-        "M": int(cfg.get("M", 10)),
+        "M": int(cfg.get("M", WallzConfig().M)),
         "max_plies": int(cfg.get("max_plies", 200)),
     }
 
