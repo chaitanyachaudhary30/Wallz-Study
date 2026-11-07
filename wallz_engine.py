@@ -30,6 +30,12 @@ except ImportError:
 
 
 class WallzEngine:
+    _ACTION_TYPES = ('MOVE', 'HOP', 'WALL', 'REPLACE', 'BLOCK')
+
+    @staticmethod
+    def _is_int(x: Any) -> bool:
+        return isinstance(x, int) and not isinstance(x, bool)
+
     def __init__(
         self,
         board_size: int | WallzConfig = 9,
@@ -725,9 +731,72 @@ class WallzEngine:
         self.board.add_wall(new_wall[0], new_wall[1], new_wall[2])
         return True
 
+    def _normalize_action(self, action: Any) -> Tuple[str, Any]:
+        """Return a canonical (type, tuple) action or raise ValueError('Malformed action ...').
+        Accepts tuples or lists (JSON). Performs no game-state checks."""
+        if not isinstance(action, (tuple, list)) or isinstance(action, (str, bytes)):
+            raise ValueError(f"Malformed action: expected 2-sequence (type, value), got {type(action).__name__}")
+        if len(action) != 2:
+            raise ValueError(f"Malformed action: expected 2-sequence (type, value), got length {len(action)}")
+
+        act_type, act_val = action[0], action[1]
+        if not isinstance(act_type, str) or act_type not in self._ACTION_TYPES:
+            raise ValueError(f"Unknown action type {act_type!r}.")
+
+        if act_type in ('MOVE', 'HOP', 'BLOCK'):
+            if not isinstance(act_val, (tuple, list)) or isinstance(act_val, (str, bytes)):
+                raise ValueError(f"Malformed {act_type} action value: expected 2-sequence, got {type(act_val).__name__}")
+            if len(act_val) != 2:
+                raise ValueError(f"Malformed {act_type} action value: expected (r, c), got length {len(act_val)}")
+            r, c = act_val[0], act_val[1]
+            if not (self._is_int(r) and self._is_int(c)):
+                raise ValueError(f"Malformed {act_type} action coordinates: expected integers, got ({r!r}, {c!r})")
+            return (act_type, (int(r), int(c)))
+
+        elif act_type == 'WALL':
+            if not isinstance(act_val, (tuple, list)) or isinstance(act_val, (str, bytes)):
+                raise ValueError(f"Malformed WALL action value: expected 3-sequence, got {type(act_val).__name__}")
+            if len(act_val) != 3:
+                raise ValueError(f"Malformed WALL action value: expected (r, c, orient), got length {len(act_val)}")
+            r, c, orient = act_val[0], act_val[1], act_val[2]
+            if not (self._is_int(r) and self._is_int(c)):
+                raise ValueError(f"Malformed WALL action coordinates: expected integers, got ({r!r}, {c!r})")
+            if orient not in ('H', 'V'):
+                raise ValueError(f"Malformed WALL action orientation: expected 'H' or 'V', got {orient!r}")
+            return ('WALL', (int(r), int(c), str(orient)))
+
+        elif act_type == 'REPLACE':
+            if not isinstance(act_val, (tuple, list)) or isinstance(act_val, (str, bytes)):
+                raise ValueError(f"Malformed REPLACE action value: expected wall triple or pair, got {type(act_val).__name__}")
+            if len(act_val) == 2 and isinstance(act_val[0], (tuple, list)) and isinstance(act_val[1], (tuple, list)):
+                w1, w2 = act_val[0], act_val[1]
+                if (
+                    len(w1) != 3
+                    or not (self._is_int(w1[0]) and self._is_int(w1[1]) and w1[2] in ('H', 'V'))
+                ):
+                    raise ValueError(f"Malformed REPLACE old wall triple: {w1!r}")
+                if (
+                    len(w2) != 3
+                    or not (self._is_int(w2[0]) and self._is_int(w2[1]) and w2[2] in ('H', 'V'))
+                ):
+                    raise ValueError(f"Malformed REPLACE new wall triple: {w2!r}")
+                return ('REPLACE', ((int(w1[0]), int(w1[1]), str(w1[2])), (int(w2[0]), int(w2[1]), str(w2[2]))))
+            elif (
+                len(act_val) == 3
+                and self._is_int(act_val[0])
+                and self._is_int(act_val[1])
+                and act_val[2] in ('H', 'V')
+            ):
+                return ('REPLACE', (int(act_val[0]), int(act_val[1]), str(act_val[2])))
+            else:
+                raise ValueError(f"Malformed REPLACE action value: expected wall triple or pair, got {act_val!r}")
+
+        raise ValueError(f"Unknown action type {act_type!r}.")
+
     def apply_action(self, action: Tuple[str, Any], update_clock: bool = True):
         if self.is_terminal():
             raise ValueError("Game is already over; no further actions may be applied.")
+        action = self._normalize_action(action)
         if update_clock:
             self.update_clock()
             if self.winner is not None:

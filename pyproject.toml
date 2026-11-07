@@ -28,7 +28,16 @@ dqn = [
 dev = [
     "hypothesis>=6.0",
     "pytest>=7.0",
+    "pytest-timeout>=2.2",
 ]
+web = [
+    "flask>=3.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+timeout = 300
 
 [tool.setuptools]
 py-modules = ["wallz_engine", "greedy_agent"]
