@@ -258,9 +258,8 @@ class MinimaxAgent:
         current_player = engine.current_player
         legal_actions = engine.get_legal_actions(current_player)
 
-        # If a player has no legal actions, they lose
         if not legal_actions:
-            return -self.WIN_SCORE + ply if is_maximizing else self.WIN_SCORE - ply
+            return self.evaluate(engine, depth, ply)
 
         if self.order_moves:
             actions = self.order_actions(engine, legal_actions, current_player)
