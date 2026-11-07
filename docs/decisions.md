@@ -71,5 +71,19 @@ This document records the key architectural and algorithmic decisions made durin
 - **Decision**: All active temporary blocks are treated as impassable obstacles during path preservation checks, including blocks with $\tau = 1$ that decay on the transition.
 - **Rationale**: Conservative by at most 1 ply, prevents temporary edge-case entrapments, and guarantees that the reachability invariant is never violated.
 
+---
+
+### Decision 10: Tier-1 Greedy Agent Explicit Tie Order & Draw Scoring (Phase 4)
+- **Context**: The proposal specifies $a^* = \arg\max H_i(T(s, a))$ where $H = d_{-i} - d_i$, but does not specify how ties are broken or how draws are scored. Previously, ties implicitly favored walls, and all draws were skipped even when all alternatives lost.
+- **Decision**: Implemented an explicit 4-tier lexicographical score tuple:
+  $$\text{score}(a) = \left(H_i(T(s, a)),\ \text{cat\_priority}(a),\ -d_i(T(s, a)),\ \text{tie\_key}(a)\right)$$
+  1. Primary: Distance advantage $H = d_{\text{opp}} - d_{\text{self}}$.
+  2. Category Priority: $\text{MOVE} (4) > \text{REPLACE} (3) > \text{HOP} (2) > \text{WALL} (1) > \text{BLOCK} (0)$ to favor conserving finite resources when heuristic values are identical.
+  3. Spatial Progress: Minimizing own goal distance ($-d_{\text{self}}$).
+  4. Tie-breaking key: Deterministic lower index ($-idx$) by default, or seeded pseudo-random float ($\text{rng.random}()$) when initialized with `seed=S` (registered as `greedy:seed=S` in `make_agent`).
+  5. Draw scoring: Terminal draws (repetition or no legal action) score neutral ($H = 0.0$), ensuring draws are chosen over forced losses ($H < 0$).
+- **Rationale**: Eliminates bias toward spending walls unnecessarily, prevents skipping winning draws in losing endgames, and allows randomized multi-match exploration across tournament seeds.
+
+
 
 
