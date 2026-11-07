@@ -59,6 +59,8 @@ def terminal_label(engine):
             # Repetition needs history; graph transitions always start from a fresh history.
             raise RuntimeError(f"Unexpected history-dependent terminal: {engine.terminal_reason}")
         return DRAW_NO_LEGAL_ACTIONS
+    if not engine.has_legal_action():
+        return DRAW_NO_LEGAL_ACTIONS
     return NONTERMINAL
 
 

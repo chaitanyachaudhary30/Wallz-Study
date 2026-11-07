@@ -278,6 +278,57 @@ def make_benchmark_table(benchmark_data: Dict[str, Any]) -> Tuple[str, str]:
     return "\n".join(md), "\n".join(tex)
 
 
+def make_solve_table(solve_data: Dict[str, Any]) -> Tuple[str, str]:
+    """Generates Table X-4: Retrograde solve state space and root outcomes across cells (P8.2/P8.3)."""
+    cells = solve_data.get('cells', [])
+    if not cells:
+        return "", ""
+
+    md = [
+        "### Exact Retrograde Solve State Space & Equilibrium Values\n",
+        "| Cell Config | States | Edges | Complete | Root Status | Root Rank | Draws (Stalemate / Cycle) | Time (s) |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
+    ]
+    tex = [
+        r"\begin{table}[htbp]",
+        r"\centering",
+        r"\caption{Exact Retrograde Solved State Space and Game-Theoretic Equilibria}",
+        r"\label{tab:exact_solves}",
+        r"\begin{tabular}{lccccccr}",
+        r"\toprule",
+        r"Cell & States & Edges & Complete & Root & Rank & Draws (Stalemate / Cycle) & Time (s) \\",
+        r"\midrule",
+    ]
+
+    for c in cells:
+        rules = c.get('rules', {})
+        n = c.get('board_size', '?')
+        abc = f"A{int(rules.get('A', False))}B{int(rules.get('B', False))}C{int(rules.get('C', False))}"
+        k = rules.get('K', '?')
+        m = rules.get('M', '?')
+        label = f"N{n}_{abc}_K{k}_M{m}"
+
+        states = c.get('states', 0)
+        edges = c.get('edges', 0)
+        complete = "Yes" if c.get('complete', False) else "No"
+        root_st = c.get('root_status', '-')
+        root_rank = c.get('root_rank', '-')
+        rank_str = str(root_rank) if root_rank is not None else "$\\infty$"
+
+        dc = c.get('draw_counts', {})
+        stale = dc.get('no_legal_actions', 0)
+        cycle = dc.get('cycle', 0)
+        draw_str = f"{stale} / {cycle}"
+
+        sec = c.get('build_seconds', 0.0) + c.get('solve_seconds', 0.0)
+
+        md.append(f"| `{label}` | {states:,} | {edges:,} | {complete} | **{root_st}** | {rank_str} | {draw_str} | {sec:.2f} |")
+        tex.append(f"{label.replace('_', r'\_')} & {states:,} & {edges:,} & {complete} & \\textbf{{{root_st}}} & {rank_str} & {draw_str} & {sec:.2f} \\\\")
+
+    tex.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+    return "\n".join(md), "\n".join(tex)
+
+
 def generate_all_tables(output_dir: str = "experiments/tables/"):
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
@@ -339,6 +390,18 @@ def generate_all_tables(output_dir: str = "experiments/tables/"):
             stem = f"table_x9_benchmark_{p.stem}"
             (out_path / f"{stem}.md").write_text(md_bench, encoding='utf-8')
             (out_path / f"{stem}.tex").write_text(tex_bench, encoding='utf-8')
+            generated.append(stem)
+
+    # 4. Solves tables (P8.2 / P8.3)
+    solves_dir = Path("experiments/results/solves")
+    if solves_dir.exists():
+        for p in sorted(solves_dir.glob("solve_*.json")):
+            with open(p, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            md_sol, tex_sol = make_solve_table(data)
+            stem = f"table_x4_{p.stem}"
+            (out_path / f"{stem}.md").write_text(md_sol, encoding='utf-8')
+            (out_path / f"{stem}.tex").write_text(tex_sol, encoding='utf-8')
             generated.append(stem)
 
     print("============================================================")

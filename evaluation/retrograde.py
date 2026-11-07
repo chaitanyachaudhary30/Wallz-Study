@@ -40,6 +40,20 @@ class Solution:
     def status(self, node):
         return STATUS[self.value[node]]
 
+    def draw_type(self, node):
+        """
+        Distinguishes between terminal stalemate draws (Rule R3) and cycle draws (P8.3).
+        Returns:
+            'no_legal_actions': terminal draw where side to move had no legal action
+            'cycle': infinite cycle draw under mutual optimal play
+            None: if node is not a DRAW
+        """
+        if self.value[node] != DRAW:
+            return None
+        if self.graph.terminal[node] == DRAW_NO_LEGAL_ACTIONS:
+            return 'no_legal_actions'
+        return 'cycle'
+
     def value_for(self, node, player):
         """Value from ``player``'s perspective."""
         v = self.value[node]
@@ -123,6 +137,19 @@ class Solution:
             c[STATUS[v]] += 1
         return c
 
+    def draw_counts(self):
+        """Breakdown of draws into no_legal_actions (stalemate) vs cycle draws (P8.3)."""
+        counts = {'no_legal_actions': 0, 'cycle': 0, 'total': 0}
+        for u in range(len(self.graph.keys)):
+            dt = self.draw_type(u)
+            if dt == 'no_legal_actions':
+                counts['no_legal_actions'] += 1
+                counts['total'] += 1
+            elif dt == 'cycle':
+                counts['cycle'] += 1
+                counts['total'] += 1
+        return counts
+
     def summary(self):
         r = self.root()
         rank_opt = self.rank_optimal_actions(r)
@@ -132,8 +159,10 @@ class Solution:
             'model': MODEL,
             'exact': self.exact,
             'value_counts': self.counts(),
+            'draw_counts': self.draw_counts(),
             'root_to_move': self.graph.to_move[r],
             'root_status': self.status(r),
+            'root_draw_type': self.draw_type(r),
             'root_rank': self.rank[r],
             'root_rank_is_upper_bound': not self.exact and self.rank[r] is not None,
             'root_rank_optimal_actions': None if rank_opt is None else [list(a) for a in rank_opt],

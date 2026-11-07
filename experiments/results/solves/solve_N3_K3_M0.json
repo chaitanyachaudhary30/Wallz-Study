@@ -1,0 +1,804 @@
+{
+  "source": {
+    "commit": "6fbed99a14b79a050a238b66816eeb7f73b3d584",
+    "dirty": true
+  },
+  "caps": {
+    "max_states": 1000000,
+    "max_edges": 20000000,
+    "max_seconds": 900.0
+  },
+  "cells": [
+    {
+      "board_size": 3,
+      "rules": {
+        "A": false,
+        "B": false,
+        "C": false,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "df40e3e74f411d1c",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 45,
+      "edges": 82,
+      "expanded_nonterminal": 33,
+      "unexpanded": 0,
+      "terminal_win_p0": 6,
+      "terminal_win_p1": 6,
+      "terminal_draw_no_legal_actions": 0,
+      "mean_branching": 2.484848484848485,
+      "max_branching": 4,
+      "build_seconds": 0.003,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 17,
+        "LOSS": 17,
+        "DRAW": 11,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 0,
+        "cycle": 11,
+        "total": 11
+      },
+      "root_to_move": 0,
+      "root_status": "WIN",
+      "root_draw_type": null,
+      "root_rank": 3,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "solve_seconds": 0.0,
+      "config_label": "N3_A0B0C0_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": false,
+        "B": false,
+        "C": true,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "33fb18830033953a",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 4812,
+      "edges": 11060,
+      "expanded_nonterminal": 4048,
+      "unexpanded": 0,
+      "terminal_win_p0": 346,
+      "terminal_win_p1": 342,
+      "terminal_draw_no_legal_actions": 76,
+      "mean_branching": 2.7322134387351777,
+      "max_branching": 11,
+      "build_seconds": 0.426,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 2093,
+        "LOSS": 1600,
+        "DRAW": 1119,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 76,
+        "cycle": 1043,
+        "total": 1119
+      },
+      "root_to_move": 0,
+      "root_status": "WIN",
+      "root_draw_type": null,
+      "root_rank": 5,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "solve_seconds": 0.004,
+      "config_label": "N3_A0B0C1_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": false,
+        "B": true,
+        "C": false,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "f3f8d82640f1e04d",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 186,
+      "edges": 398,
+      "expanded_nonterminal": 132,
+      "unexpanded": 0,
+      "terminal_win_p0": 27,
+      "terminal_win_p1": 27,
+      "terminal_draw_no_legal_actions": 0,
+      "mean_branching": 3.015151515151515,
+      "max_branching": 4,
+      "build_seconds": 0.013,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 92,
+        "LOSS": 83,
+        "DRAW": 11,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 0,
+        "cycle": 11,
+        "total": 11
+      },
+      "root_to_move": 0,
+      "root_status": "LOSS",
+      "root_draw_type": null,
+      "root_rank": 2,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "solve_seconds": 0.0,
+      "config_label": "N3_A0B1C0_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": false,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "7c8dc402a9dbaa37",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 20040,
+      "edges": 51240,
+      "expanded_nonterminal": 16472,
+      "unexpanded": 0,
+      "terminal_win_p0": 1708,
+      "terminal_win_p1": 1708,
+      "terminal_draw_no_legal_actions": 152,
+      "mean_branching": 3.1107333657115106,
+      "max_branching": 11,
+      "build_seconds": 1.918,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 10516,
+        "LOSS": 8227,
+        "DRAW": 1297,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 152,
+        "cycle": 1145,
+        "total": 1297
+      },
+      "root_to_move": 0,
+      "root_status": "LOSS",
+      "root_draw_type": null,
+      "root_rank": 4,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "BLOCK",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "solve_seconds": 0.022,
+      "config_label": "N3_A0B1C1_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": false,
+        "C": false,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "df40e3e74f411d1c",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 45,
+      "edges": 82,
+      "expanded_nonterminal": 33,
+      "unexpanded": 0,
+      "terminal_win_p0": 6,
+      "terminal_win_p1": 6,
+      "terminal_draw_no_legal_actions": 0,
+      "mean_branching": 2.484848484848485,
+      "max_branching": 4,
+      "build_seconds": 0.003,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 17,
+        "LOSS": 17,
+        "DRAW": 11,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 0,
+        "cycle": 11,
+        "total": 11
+      },
+      "root_to_move": 0,
+      "root_status": "WIN",
+      "root_draw_type": null,
+      "root_rank": 3,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "solve_seconds": 0.0,
+      "config_label": "N3_A1B0C0_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": false,
+        "C": true,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "33fb18830033953a",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 4812,
+      "edges": 11060,
+      "expanded_nonterminal": 4048,
+      "unexpanded": 0,
+      "terminal_win_p0": 346,
+      "terminal_win_p1": 342,
+      "terminal_draw_no_legal_actions": 76,
+      "mean_branching": 2.7322134387351777,
+      "max_branching": 11,
+      "build_seconds": 0.442,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 2093,
+        "LOSS": 1600,
+        "DRAW": 1119,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 76,
+        "cycle": 1043,
+        "total": 1119
+      },
+      "root_to_move": 0,
+      "root_status": "WIN",
+      "root_draw_type": null,
+      "root_rank": 5,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "solve_seconds": 0.004,
+      "config_label": "N3_A1B0C1_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": false,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "f3f8d82640f1e04d",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 186,
+      "edges": 398,
+      "expanded_nonterminal": 132,
+      "unexpanded": 0,
+      "terminal_win_p0": 27,
+      "terminal_win_p1": 27,
+      "terminal_draw_no_legal_actions": 0,
+      "mean_branching": 3.015151515151515,
+      "max_branching": 4,
+      "build_seconds": 0.013,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 92,
+        "LOSS": 83,
+        "DRAW": 11,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 0,
+        "cycle": 11,
+        "total": 11
+      },
+      "root_to_move": 0,
+      "root_status": "LOSS",
+      "root_draw_type": null,
+      "root_rank": 2,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "solve_seconds": 0.0,
+      "config_label": "N3_A1B1C0_K3_M0"
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 0
+      },
+      "root_state_id": "7c8dc402a9dbaa37",
+      "canonical_positions": true,
+      "complete": true,
+      "stop_reason": null,
+      "states": 20040,
+      "edges": 51240,
+      "expanded_nonterminal": 16472,
+      "unexpanded": 0,
+      "terminal_win_p0": 1708,
+      "terminal_win_p1": 1708,
+      "terminal_draw_no_legal_actions": 152,
+      "mean_branching": 3.1107333657115106,
+      "max_branching": 11,
+      "build_seconds": 1.994,
+      "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
+      "exact": true,
+      "value_counts": {
+        "WIN": 10516,
+        "LOSS": 8227,
+        "DRAW": 1297,
+        "UNKNOWN": 0
+      },
+      "draw_counts": {
+        "no_legal_actions": 152,
+        "cycle": 1145,
+        "total": 1297
+      },
+      "root_to_move": 0,
+      "root_status": "LOSS",
+      "root_draw_type": null,
+      "root_rank": 4,
+      "root_rank_is_upper_bound": false,
+      "root_rank_optimal_actions": [
+        [
+          "BLOCK",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "root_value_optimal_actions": [
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            0
+          ]
+        ],
+        [
+          "BLOCK",
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "solve_seconds": 0.016,
+      "config_label": "N3_A1B1C1_K3_M0"
+    }
+  ],
+  "factorial_effects": {
+    "log10_states": {
+      "A": 0.0,
+      "B": 0.6179362644849871,
+      "C": 2.030748938934878,
+      "AB": 0.0,
+      "AC": 0.0,
+      "BC": 0.001635834042414075,
+      "ABC": 0.0
+    },
+    "mean_branching": {
+      "A": 0.0,
+      "B": 0.454411478639682,
+      "C": 0.17147340222334417,
+      "AB": 0.0,
+      "AC": 0.0,
+      "BC": -0.07589155166334915,
+      "ABC": 0.0
+    },
+    "draw_fraction": {
+      "A": 0.0,
+      "B": -0.17656387075686397,
+      "C": -0.0031600148053449184,
+      "AB": 0.0,
+      "AC": 0.0,
+      "BC": 0.008740788741343875,
+      "ABC": 0.0
+    }
+  }
+}

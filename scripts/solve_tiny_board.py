@@ -96,6 +96,10 @@ def main():
     print(f"  * WIN  States: {stats['win_count']:,} ({pct_win:.2f}%)")
     print(f"  * LOSS States: {stats['loss_count']:,} ({pct_loss:.2f}%)")
     print(f"  * DRAW States: {stats['draw_count']:,} ({pct_draw:.2f}%)")
+    if 'draw_counts' in stats:
+        dc = stats['draw_counts']
+        print(f"      - Rule R3 Stalemate (No Actions): {dc.get('no_legal_actions', 0):,}")
+        print(f"      - Cycle / Infinite Play Draws:   {dc.get('cycle', 0):,}")
     print("=" * 70)
 
     # Root state evaluation
