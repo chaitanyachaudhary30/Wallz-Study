@@ -4,9 +4,15 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Dict
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 
 from web.backend.arena import ARENA_STORE, run_arena_batch
+from web.backend.live_training import (
+    get_live_status,
+    start_live_training,
+    stop_live_training,
+    stream_live_events,
+)
 from web.backend.replays import get_replay_item, list_replays, verify_and_frame_replay
 from web.backend.scenarios import create_game_from_scenario, get_scenario, list_scenarios
 from web.backend.training_data import (
@@ -178,3 +184,44 @@ def get_rules_text():
     if rules_path.exists():
         return jsonify({"rules": rules_path.read_text(encoding="utf-8")})
     return jsonify({"rules": "# Game Rules\n\nRule documentation not found."})
+
+
+# -----------------------------------------------------------------------------
+# Live Mini-Training Endpoints (P15)
+# -----------------------------------------------------------------------------
+
+@data_bp.route("/api/training/live", methods=["POST"])
+def live_train():
+    data = request.get_json(force=True, silent=True) or {}
+    steps = data.get("steps", 2000)
+    seed = data.get("seed", 42)
+    try:
+        res = start_live_training(steps=steps, seed=seed)
+        return jsonify(res), 202
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 409
+    except Exception as err:
+        return jsonify({"error": f"Failed to start live training: {err}"}), 500
+
+
+@data_bp.route("/api/training/live/status", methods=["GET"])
+def live_train_status():
+    return jsonify(get_live_status())
+
+
+@data_bp.route("/api/training/live/stop", methods=["POST"])
+def live_train_stop():
+    return jsonify(stop_live_training())
+
+
+@data_bp.route("/api/training/live/stream", methods=["GET"])
+def live_train_stream():
+    return Response(
+        stream_live_events(),
+        mimetype="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        },
+    )

@@ -18,17 +18,21 @@ export const TrainingPage: React.FC = () => {
   const [summaryData, setSummaryData] = useState<any | null>(null);
   const [trainerConfig, setTrainerConfig] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [liveStatus, setLiveStatus] = useState<any | null>(null);
+  const [liveStarting, setLiveStarting] = useState<boolean>(false);
 
   useEffect(() => {
     Promise.all([
       api.fetchTrainingRuns(),
       api.fetchTrainingSummary(),
       api.fetchTrainingConfig(),
+      api.fetchLiveStatus(),
     ])
-      .then(([runsList, summary, cfg]) => {
+      .then(([runsList, summary, cfg, live]) => {
         setRuns(runsList);
         setSummaryData(summary?.summary || {});
         setTrainerConfig(cfg);
+        setLiveStatus(live);
         if (runsList.length > 0) {
           const defaultRun = runsList.find((r: any) => r.has_log) || runsList[0];
           setSelectedRunId(defaultRun.id);
@@ -60,6 +64,29 @@ export const TrainingPage: React.FC = () => {
       epsilon: eps[i],
     }));
   }, [runData]);
+
+  const handleStartLive = async () => {
+    setLiveStarting(true);
+    try {
+      await api.startLiveTraining(2000, 42);
+      const st = await api.fetchLiveStatus();
+      setLiveStatus(st);
+    } catch (err: any) {
+      alert(err.message || 'Failed to start live training');
+    } finally {
+      setLiveStarting(false);
+    }
+  };
+
+  const handleStopLive = async () => {
+    try {
+      await api.stopLiveTraining();
+      const st = await api.fetchLiveStatus();
+      setLiveStatus(st);
+    } catch (err: any) {
+      alert(err.message || 'Failed to stop live training');
+    }
+  };
 
   if (loading) {
     return <div className="main-content">Loading training metrics...</div>;
@@ -132,6 +159,47 @@ export const TrainingPage: React.FC = () => {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Live Mini-Training Card (P15) */}
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div className="card-title" style={{ margin: 0 }}>Interactive Live Mini-Training (N=3)</div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: '0.25rem 0 0 0' }}>
+              Launch a live Double-DQN self-play training run in the background. Stream training logs and inspect checkpoints.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            {liveStatus?.active ? (
+              <>
+                <span style={{ fontSize: '0.85rem', color: '#10b981', fontWeight: 600 }}>
+                  ● Training Active ({liveStatus.elapsed_seconds || 0}s)
+                </span>
+                <button className="btn" onClick={handleStopLive}>
+                  Stop Training
+                </button>
+              </>
+            ) : (
+              <button
+                className="btn btn-primary"
+                disabled={liveStarting}
+                onClick={handleStartLive}
+              >
+                {liveStarting ? 'Starting...' : '⚡ Start 2,000-Step Mini-Training'}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {liveStatus?.checkpoints && liveStatus.checkpoints.length > 0 && (
+          <div style={{ marginTop: '0.75rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.5rem', fontSize: '0.85rem' }}>
+            <span style={{ fontWeight: 600, color: 'var(--text-color)' }}>Generated Checkpoints: </span>
+            <span style={{ color: 'var(--primary)', fontFamily: 'monospace' }}>
+              {liveStatus.checkpoints.join(', ')}
+            </span>
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>

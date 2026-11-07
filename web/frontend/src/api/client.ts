@@ -129,4 +129,13 @@ export const api = {
 
   // Rules Documentation
   fetchRules: () => request<{ rules: string }>('/api/rules'),
+
+  // Live Training (P15)
+  startLiveTraining: (steps: number = 2000, seed: number = 42) =>
+    request<any>('/api/training/live', {
+      method: 'POST',
+      body: JSON.stringify({ steps, seed }),
+    }),
+  fetchLiveStatus: () => request<any>('/api/training/live/status'),
+  stopLiveTraining: () => request<any>('/api/training/live/stop', { method: 'POST' }),
 };

@@ -37,11 +37,12 @@
 | **P09** | Web backend think endpoints (Greedy + Minimax + DQN + Solver) | `9e3fa49` | **Complete** | C-EXPL introspection, /api/games/<id>/analyze |
 | **P10** | Web backend arena, replays, scenarios, training data | `d11fc0f` | **Complete** | /api/arena/batch, verified replays, training curves |
 | **P11–P13** | Frontend React app, Board, Think panels, Arena, Training, Replays, Rules | `a7ee744` | **Complete** | Interactive board, Vitest tests pass, Vite build succeeds |
-| **P14** | Documentation and final acceptance | Current | **Complete** | Final rules, architecture, web demo guide, 301 tests passing |
+| **P14** | Documentation and final acceptance | `cae3f11` | **Complete** | Final rules, architecture, web demo guide, 301 tests passing |
+| **P15** | (Stretch) Live mini-training stream and Dockerfile | Current | **Complete** | Managed subprocess, SSE stream, multi-stage Dockerfile |
 
 ---
 
-## 2. Comprehensive Test Suite (301 Tests Passing)
+## 2. Comprehensive Test Suite (304 Tests Passing)
 
 All tests execute cleanly via pytest:
 ```bash
