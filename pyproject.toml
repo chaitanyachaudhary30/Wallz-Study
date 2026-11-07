@@ -38,6 +38,9 @@ web = [
 testpaths = ["tests"]
 pythonpath = ["."]
 timeout = 300
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
 
 [tool.setuptools]
 py-modules = ["wallz_engine", "greedy_agent"]

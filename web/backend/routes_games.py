@@ -9,6 +9,8 @@ import time
 from typing import Any, Dict
 from flask import Blueprint, jsonify, request
 
+from evaluation.match_runner import parse_agent_spec
+from web.backend.explain import explain_and_choose
 from web.backend.registry import build_agent, list_agents, presets
 from web.backend.serialize import action_to_json, parse_action, state_json
 from web.backend.sessions import SessionStore
@@ -176,16 +178,24 @@ def step_game(gid: str):
     if spec == "human":
         return jsonify({"error": f"Cannot step: player {curr_p} is a human player"}), 409
 
+    data = request.get_json(force=True, silent=True) or {}
+    explain = bool(data.get("explain", True))
+
     agent = session.agents.get(curr_p)
     if agent is None:
         agent = build_agent(spec, curr_p, session.config)
         session.agents[curr_p] = agent
 
+    family, _ = parse_agent_spec(spec)
     t0 = time.perf_counter()
     try:
-        action = agent.select_action(session.engine)
+        if explain:
+            action, explanation = explain_and_choose(agent, family, session.engine)
+        else:
+            action = agent.select_action(session.engine)
+            explanation = None
     except Exception as err:
-        return jsonify({"error": f"Agent error during select_action: {err}"}), 500
+        return jsonify({"error": f"Agent error during decision: {err}"}), 500
     duration = time.perf_counter() - t0
 
     if action is None:
@@ -197,15 +207,39 @@ def step_game(gid: str):
         "player": curr_p,
         "action": action_to_json(action),
         "source": spec,
-        "explanation": None,
+        "explanation": explanation,
         "decision_seconds": round(duration, 5),
     })
 
     return jsonify({
         "action": action_to_json(action),
-        "explanation": None,
+        "explanation": explanation,
         "session": session.to_json(),
     })
+
+
+@games_bp.route("/api/games/<gid>/analyze", methods=["POST"])
+def analyze_game(gid: str):
+    try:
+        session = SESSION_STORE.get(gid)
+    except KeyError:
+        return jsonify({"error": f"Game '{gid}' not found"}), 404
+
+    if session.engine.is_terminal():
+        return jsonify({"error": "Cannot analyze a terminal position"}), 409
+
+    data = request.get_json(force=True, silent=True) or {}
+    agent_spec = data.get("agent", "greedy")
+
+    curr_p = session.engine.current_player
+    family, _ = parse_agent_spec(agent_spec)
+    try:
+        temp_agent = build_agent(agent_spec, curr_p, session.config)
+        _, explanation = explain_and_choose(temp_agent, family, session.engine.clone())
+    except Exception as err:
+        return jsonify({"error": f"Analysis failed: {err}"}), 500
+
+    return jsonify(explanation)
 
 
 @games_bp.route("/api/games/<gid>/undo", methods=["POST"])
