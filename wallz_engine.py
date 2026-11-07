@@ -793,37 +793,22 @@ class WallzEngine:
 
         raise ValueError(f"Unknown action type {act_type!r}.")
 
-    def apply_action(self, action: Tuple[str, Any], update_clock: bool = True):
-        if self.is_terminal():
-            raise ValueError("Game is already over; no further actions may be applied.")
-        action = self._normalize_action(action)
-        if update_clock:
-            self.update_clock()
-            if self.winner is not None:
-                return self.get_state(), self.winner, self.is_draw
-
-        player = self.current_player
+    def _validate_action(self, action: Tuple[str, Any], player: int) -> None:
+        """Raise ValueError if `action` is illegal for `player`. Must leave all state unchanged
+        (the _is_valid_* helpers mutate temporarily and restore)."""
         act_type, act_val = action
-
         if act_type == 'MOVE':
             if not self._is_valid_move(player, act_val):
                 raise ValueError(f"Illegal move to {act_val}.")
-            self.pawns[player] = act_val
         elif act_type == 'HOP':
             if not self._is_valid_hop(player, act_val):
                 raise ValueError(f"Illegal hop to {act_val}.")
-            self.pawns[player] = act_val
-            self.hop_available[player] = False
         elif act_type == 'WALL':
             if self.wall_inventory[player] <= 0:
                 raise ValueError(f"Player {player} has no walls remaining in inventory.")
             r, c, orient = act_val
             if not self._is_valid_wall_placement(player, r, c, orient):
                 raise ValueError(f"Illegal wall placement at {act_val}.")
-            self.walls[player].append(act_val)
-            self.latest_wall[player] = act_val
-            self.wall_inventory[player] -= 1
-            self.board.add_wall(r, c, orient)
         elif act_type == 'REPLACE':
             if not self.rules['A']:
                 raise ValueError("Reusable wall mechanic (Rule A) is disabled.")
@@ -840,21 +825,56 @@ class WallzEngine:
 
             if not self._is_valid_wall_replacement(player, new_w, old_wall=old_w):
                 raise ValueError(f"Illegal wall replacement {old_w} -> {new_w}: collision or path preservation violated.")
-
-            idx = self.walls[player].index(old_w)
-            self.walls[player][idx] = new_w
-            self.latest_wall[player] = new_w
-
-            self.board.remove_wall(old_w[0], old_w[1], old_w[2])
-            self.board.add_wall(new_w[0], new_w[1], new_w[2])
         elif act_type == 'BLOCK':
             if not (self.rules['C'] and self.block_available[player]):
                 raise ValueError(f"Player {player} has no cell block available.")
             if not self._is_valid_cell_block(act_val[0], act_val[1]):
                 raise ValueError(f"Illegal cell block at {act_val}: path preservation violated.")
-            self.block_available[player] = False
         else:
             raise ValueError(f"Unknown action type {act_type!r}.")
+
+    def _mutate(self, action: Tuple[str, Any], player: int) -> None:
+        """Apply a validated action: pawn/wall/inventory/hop/block changes only."""
+        act_type, act_val = action
+        if act_type == 'MOVE':
+            self.pawns[player] = act_val
+        elif act_type == 'HOP':
+            self.pawns[player] = act_val
+            self.hop_available[player] = False
+        elif act_type == 'WALL':
+            r, c, orient = act_val
+            self.walls[player].append(act_val)
+            self.latest_wall[player] = act_val
+            self.wall_inventory[player] -= 1
+            self.board.add_wall(r, c, orient)
+        elif act_type == 'REPLACE':
+            if len(act_val) == 2 and isinstance(act_val[0], tuple) and isinstance(act_val[1], tuple):
+                old_w, new_w = act_val
+            else:
+                new_w = act_val
+                old_w = self.latest_wall[player]
+            idx = self.walls[player].index(old_w)
+            self.walls[player][idx] = new_w
+            self.latest_wall[player] = new_w
+            self.board.remove_wall(old_w[0], old_w[1], old_w[2])
+            self.board.add_wall(new_w[0], new_w[1], new_w[2])
+        elif act_type == 'BLOCK':
+            self.block_available[player] = False
+
+    def apply_action(self, action: Tuple[str, Any], update_clock: bool = True):
+        """Apply an action following strict order:
+        terminal check -> normalise -> validate -> clock -> mutate -> goal -> timers -> turn -> truncation -> no-legal draw -> repetition.
+        """
+        if self.is_terminal():
+            raise ValueError("Game is already over; no further actions may be applied.")
+        action = self._normalize_action(action)
+        player = self.current_player
+        self._validate_action(action, player)
+        if update_clock:
+            self.update_clock()
+            if self.winner is not None:
+                return self.get_state(), self.winner, self.is_draw
+        self._mutate(action, player)
 
         # Win condition check
         if self.pawns[player][0] == self.goals[player]:
@@ -869,8 +889,8 @@ class WallzEngine:
                 to_remove.append(cell)
         for cell in to_remove:
             del self.blocked_cells[cell]
-        if act_type == 'BLOCK':
-            self.blocked_cells[act_val] = self.rules['K']
+        if action[0] == 'BLOCK':
+            self.blocked_cells[action[1]] = self.rules['K']
 
         # Turn transition
         self.current_player = 1 - self.current_player
