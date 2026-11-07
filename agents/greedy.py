@@ -38,24 +38,50 @@ class GreedyAgent:
         self.seed = seed
         self.rng = random.Random(seed) if seed is not None else None
 
-    def select_action(self, engine) -> Optional[Tuple[str, Any]]:
+    def score_actions(self, engine) -> List[Dict[str, Any]]:
+        """Score every legal action exactly as select_action ranks them.
+
+        Each row contains:
+            'action': canonical action tuple
+            'category': str ('MOVE', 'HOP', etc.)
+            'priority': int category priority
+            'immediate_win': bool
+            'outcome': str in {'win', 'loss', 'draw', 'ongoing'}
+            'H': float distance advantage (or inf/-inf/0.0)
+            'd_self': float shortest path for player (or inf/0.0)
+            'd_opp': Optional[float] shortest path for opponent
+            'tie_key': float (-idx or rng draw)
+            'score': comparison 4-tuple (H, priority, -d_self, tie_key)
+
+        Note: If an immediate winning move is encountered in legal order,
+        further evaluations are short-circuited to match the exact evaluation
+        and random draw sequence of select_action.
+        """
         legal_actions = engine.get_legal_actions(self.player_id)
         if not legal_actions:
-            return None
+            return []
 
-        best_action = None
-        best_score = None
-
+        rows = []
         for idx, action in enumerate(legal_actions):
             sim_engine = engine.clone() if hasattr(engine, 'clone') else copy.deepcopy(engine)
             _, winner, is_draw = sim_engine.apply_action(action, update_clock=False)
+            cat_prio = CATEGORY_PRIORITY.get(action[0], 0)
 
             # 1. Immediate winning move
             if winner == self.player_id:
-                return action
-
-            # Category priority: MOVE=4 > REPLACE=3 > HOP=2 > WALL=1 > BLOCK=0 (P4.1)
-            cat_prio = CATEGORY_PRIORITY.get(action[0], 0)
+                rows.append({
+                    'action': action,
+                    'category': action[0],
+                    'priority': cat_prio,
+                    'immediate_win': True,
+                    'outcome': 'win',
+                    'H': float('inf'),
+                    'd_self': 0.0,
+                    'd_opp': None,
+                    'tie_key': None,
+                    'score': (float('inf'), cat_prio, 0.0, 0),
+                })
+                break
 
             # Tie key: deterministic -idx or seeded random float (P4.3)
             tie_k = self.rng.random() if self.rng is not None else -idx
@@ -64,15 +90,20 @@ class GreedyAgent:
                 # Immediate loss
                 H = -float('inf')
                 d_self = float('inf')
+                d_opp = None
+                outcome = 'loss'
             elif is_draw:
                 # Rule draw: repetition or no legal action (P4.2)
                 # Scored as H = 0.0; strictly preferred over a loss (H < 0)
                 H = 0.0
                 d_self = sim_engine.shortest_path(self.player_id)
+                d_opp = None
+                outcome = 'draw'
             else:
                 d_self = sim_engine.shortest_path(self.player_id)
                 d_opp = sim_engine.shortest_path(1 - self.player_id)
                 H = d_opp - d_self
+                outcome = 'ongoing'
 
             score = (
                 H,         # 1. Distance advantage H = d_opp - d_self
@@ -81,11 +112,32 @@ class GreedyAgent:
                 tie_k,     # 4. Deterministic -idx or seeded random float
             )
 
-            if best_score is None or score > best_score:
-                best_score = score
-                best_action = action
+            rows.append({
+                'action': action,
+                'category': action[0],
+                'priority': cat_prio,
+                'immediate_win': False,
+                'outcome': outcome,
+                'H': H,
+                'd_self': d_self,
+                'd_opp': d_opp,
+                'tie_key': tie_k,
+                'score': score,
+            })
 
-        if best_action is None and legal_actions:
-            best_action = legal_actions[0]
+        return rows
 
-        return best_action
+    def select_action(self, engine) -> Optional[Tuple[str, Any]]:
+        # Side-to-move assertion (P5.4 / P06 F4)
+        assert engine.current_player == self.player_id, (
+            f"Engine side to move ({engine.current_player}) does not match agent player_id ({self.player_id})"
+        )
+        rows = self.score_actions(engine)
+        if not rows:
+            return None
+
+        wins = [r for r in rows if r['immediate_win']]
+        if wins:
+            return wins[0]['action']
+
+        return max(rows, key=lambda r: r['score'])['action']
