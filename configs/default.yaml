@@ -1,0 +1,17 @@
+# Default 9x9 Modified Wallz Match Configuration
+board_size: 9
+max_plies: 200
+opening_plies: 2
+opening_seed: 42
+move_time_limit: 10.0
+record_replay: false
+
+rules:
+  A: true  # Reusable Walls (REPLACE)
+  B: true  # One-Time Hop (HOP)
+  C: true  # Temporary Cell Block (BLOCK)
+  K: 3     # Block duration in plies
+  M: 10    # Initial wall inventory
+
+p0: "greedy"
+p1: "minimax:depth=2"

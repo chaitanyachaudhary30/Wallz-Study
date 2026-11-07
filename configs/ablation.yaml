@@ -1,0 +1,20 @@
+# Factorial Mechanic Ablation Configuration (Gate X-10)
+experiment:
+  name: "ablation_5x5_default"
+  command: "ablation"
+  description: "2^3 Factorial Ablation of A/B/C mechanics on 5x5 board"
+
+params:
+  x: "minimax:depth=2"
+  y: "greedy"
+  N: 5
+  K: 3
+  M: 10
+  seeds: 100
+  seed_start: 0
+  opening_plies: 2
+  max_plies: 200
+  move_time_limit: null
+  n_boot: 2000
+  out_dir: "experiments/results/ablation_5x5_k3"
+  log_dir: "experiments/logs"

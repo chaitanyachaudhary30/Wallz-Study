@@ -127,3 +127,28 @@ stats = agent.get_stats()
 - `last_decision_time`: Wall-clock decision latency (in seconds).
 - `last_action_value`: Backed-up minimax score of the selected action.
 
+---
+
+## 7. Negamax Formulation & Search Optimizations (Phase 5)
+
+### Negamax Recurrence
+The search tree is refactored into canonical Negamax form:
+$$V(s, \alpha, \beta, d) = \max_{a \in \mathcal{A}(s)} \left( -V(T(s, a), -\beta, -\alpha, d - 1) \right)$$
+Evaluations at leaf nodes are evaluated from the active side-to-move perspective:
+$$U(s) = \tanh\left(0.2 \cdot (d_{\text{opp}}(s) - d_{\text{mover}}(s))\right)$$
+This eliminates redundant min/max dual-branching logic while preserving identical search decisions.
+
+### Advanced Move Ordering
+1. **PV-First Ordering**: The principal variation move discovered from iteration $d - 1$ is tried first at iteration $d$.
+2. **Shortest-Path Wall Prioritization**: Walls and blocks intersecting the opponent's current shortest-path edges are ordered before off-path walls.
+3. **History Heuristic**: Non-capturing moves causing beta-cutoffs accrue a history score proportional to $d^2$, dynamically boosting effective candidate moves across sibling branches.
+
+### Goal-Proximity Search Extension (`extend_goal`)
+When `extend_goal=True`, at horizon $d = 0$, if either player is within critical proximity of victory ($\min(d_{\text{self}}, d_{\text{opp}}) \le 2$), the search extends by 1 ply (quiescence extension, capped at 2 extensions per branch) to eliminate horizon effects near goal rows.
+
+### Modular Evaluator Protocol (Contract C7)
+`MinimaxAgent` accepts an `evaluator` parameter conforming to the `@runtime_checkable` `EvaluationFunction` protocol:
+- `HEvaluator`: Canonical baseline evaluating $\tanh(0.2 \cdot (d_{\text{opp}} - d_{\text{self}}))$.
+- `LinearEvaluator(weights, scale=0.5)`: Linear feature combination $\tanh(w \cdot f / 2) = 2\sigma(w \cdot f) - 1$ utilizing 6 spatial and temporal features ($f_1 \dots f_6$).
+
+

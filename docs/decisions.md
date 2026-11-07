@@ -98,6 +98,17 @@ This document records the key architectural and algorithmic decisions made durin
   - On 4×4 retrograde solved states, $H$ alone achieves 87.71% AUC, while all 6 features achieve 95.51% AUC (+7.80% improvement).
   - Both pass Gate X-5 (>70% AUC). Minimax defaults to `HEvaluator` preserving baseline behavior, with seamless pluggability for tuned evaluators via `MinimaxAgent(evaluator=...)`.
 
+---
+
+### Decision 12: Deferred `WallzState` Immutable Class in Favor of Engine Canonical Key Facade
+- **Context**: A separate immutable dataclass `WallzState` was considered to encapsulate board state independently from engine methods. However, every existing baseline (Greedy, Minimax, ExactSolver, Match Runner, and RL Environment) already interfaces cleanly with `WallzEngine`, which holds all state attributes and mutation logic.
+- **Decision**: Deferred introducing a standalone `WallzState` class. Instead, enhanced `WallzEngine` with:
+  1. Canonical `position_key()` matching `state_graph.canonical_key` (hashable tuple identity).
+  2. Copy-on-write `ChainMap` repetition history, rendering `clone()` $O(1)$ in game length (~2.8 $\mu$s latency).
+  3. `restore_state_key(key)` reconstructing full engine state from any position key without object re-allocation.
+- **Rationale**: Preserves 100% backward compatibility across all 160 unit and component tests, eliminates redundant wrapper allocations during high-throughput Alpha-Beta search and state-graph enumeration, and achieves legal-action generation speeds under 1.6 ms on 9×9 boards.
+
+
 
 
 
