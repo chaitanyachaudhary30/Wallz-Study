@@ -70,23 +70,65 @@ def get_agents():
     return jsonify(list_agents(cfg))
 
 
+def _as_bool(val: Any, default: bool) -> bool:
+    if val is None:
+        return default
+    if isinstance(val, bool):
+        return val
+    if isinstance(val, (int, float)):
+        return bool(val)
+    text = str(val).strip().lower()
+    if text in ("true", "1", "yes", "on"):
+        return True
+    if text in ("false", "0", "no", "off", ""):
+        return False
+    raise ValueError(f"expected a boolean, got {val!r}")
+
+
+def _as_int(val: Any, name: str, default: int) -> int:
+    if val is None:
+        return default
+    if isinstance(val, bool):
+        raise ValueError(f"{name} must be an integer, got {val!r}")
+    try:
+        f = float(val)
+    except (TypeError, ValueError):
+        raise ValueError(f"{name} must be an integer, got {val!r}")
+    if not f.is_integer():
+        raise ValueError(f"{name} must be an integer, got {val!r}")
+    return int(f)
+
+
+def parse_game_config(cfg: Dict[str, Any]) -> Dict[str, Any]:
+    """Validate a client config. Raises ValueError with a user-facing message.
+
+    Range checks for K, M and max_plies come from WallzConfig itself (single source).
+    """
+    if not isinstance(cfg, dict):
+        raise ValueError("config must be an object")
+    board_size = _as_int(cfg.get("board_size", cfg.get("N")), "board_size", 5)
+    if not (3 <= board_size <= 9):
+        raise ValueError(f"board_size must be between 3 and 9, got {board_size}")
+    game_config = {
+        "board_size": board_size,
+        "A": _as_bool(cfg.get("A"), True),
+        "B": _as_bool(cfg.get("B"), True),
+        "C": _as_bool(cfg.get("C"), True),
+        "K": _as_int(cfg.get("K"), "K", 3),
+        "M": _as_int(cfg.get("M"), "M", WallzConfig().M),
+        "max_plies": _as_int(cfg.get("max_plies"), "max_plies", 200),
+    }
+    WallzConfig(**game_config)  # raises ValueError for K < 1, M < 0, max_plies < 1
+    return game_config
+
+
 @games_bp.route("/api/games", methods=["POST"])
 def create_game():
     data = request.get_json(force=True, silent=True) or {}
-    cfg = data.get("config", {})
-    board_size = cfg.get("board_size", cfg.get("N", 5))
-    if not (3 <= board_size <= 9):
-        return jsonify({"error": f"board_size must be between 3 and 9, got {board_size}"}), 400
-
-    game_config = {
-        "board_size": board_size,
-        "A": bool(cfg.get("A", True)),
-        "B": bool(cfg.get("B", True)),
-        "C": bool(cfg.get("C", True)),
-        "K": int(cfg.get("K", 3)),
-        "M": int(cfg.get("M", WallzConfig().M)),
-        "max_plies": int(cfg.get("max_plies", 200)),
-    }
+    try:
+        game_config = parse_game_config(data.get("config", {}))
+    except ValueError as err:
+        return jsonify({"error": f"Invalid configuration: {err}"}), 400
 
     p0_spec = data.get("p0", "human")
     p1_spec = data.get("p1", "greedy")
@@ -182,14 +224,17 @@ def step_game(gid: str):
 
     agent = session.agents.get(curr_p)
     if agent is None:
-        agent = build_agent(spec, curr_p, session.config)
+        try:
+            agent = build_agent(spec, curr_p, session.config)
+        except Exception as err:
+            return jsonify({"error": f"Failed to build agent '{spec}': {err}"}), 400
         session.agents[curr_p] = agent
 
     family, _ = parse_agent_spec(spec)
     t0 = time.perf_counter()
     try:
         if explain:
-            action, explanation = explain_and_choose(agent, family, session.engine)
+            action, explanation = explain_and_choose(agent, family, session.engine, spec=spec)
         else:
             action = agent.select_action(session.engine)
             explanation = None
@@ -234,7 +279,7 @@ def analyze_game(gid: str):
     family, _ = parse_agent_spec(agent_spec)
     try:
         temp_agent = build_agent(agent_spec, curr_p, session.config)
-        _, explanation = explain_and_choose(temp_agent, family, session.engine.clone())
+        _, explanation = explain_and_choose(temp_agent, family, session.engine.clone(), spec=agent_spec)
     except Exception as err:
         return jsonify({"error": f"Analysis failed: {err}"}), 500
 

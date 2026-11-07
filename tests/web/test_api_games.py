@@ -39,7 +39,10 @@ def test_agents_list_gates_dqn(client):
 
     assert "human" in specs3 and specs3["human"]["available"] is True
     assert "greedy" in specs3 and specs3["greedy"]["available"] is True
-    assert "exact" in specs3 and specs3["exact"]["available"] is True
+    # Exact solving never blocks a request: it is either cached or solving in the background
+    assert "exact" in specs3
+    if not specs3["exact"]["available"]:
+        assert "solving" in specs3["exact"]["reason"] or "waiting" in specs3["exact"]["reason"]
 
     # Find release DQN 3x3
     dqn_3x3_release = [a for a in agents3 if "dqn_3x3" in a["spec"] and "release" in a["spec"]]
@@ -236,3 +239,76 @@ def test_shortest_path_cells():
         assert not e.board.is_edge_blocked((r1, c1), (r2, c2))
 
     assert len(path) - 1 == int(e.shortest_path(0))
+
+
+def test_exact_solver_gating_never_blocks(client):
+    """Exact solver: unsupported configs are refused with a reason; supported ones solve in
+    the background and become available once cached (regression: 4x4 M=10 used to hang)."""
+    import time
+    from web.backend import registry
+
+    t0 = time.time()
+    big = {a["spec"]: a for a in client.get("/api/agents?N=4&K=3&M=10").get_json()}
+    assert big["exact"]["available"] is False
+    assert "too large" in big["exact"]["reason"]
+    res = client.post("/api/games", json={"config": {"board_size": 4, "K": 3, "M": 10},
+                                          "p0": "human", "p1": "exact"})
+    assert res.status_code == 400
+    assert time.time() - t0 < 5
+
+    rules = {"A": True, "B": True, "C": True, "K": 1, "M": 0}
+    assert registry.wait_for_exact(3, rules, timeout=120)
+    small = {a["spec"]: a for a in client.get("/api/agents?N=3&K=1&M=0").get_json()}
+    assert small["exact"]["available"] is True
+    res = client.post("/api/games", json={"config": {"board_size": 3, "K": 1, "M": 0},
+                                          "p0": "exact", "p1": "greedy"})
+    assert res.status_code == 201
+
+
+def test_presets_match_release_checkpoints(client):
+    """Every DQN preset must make its release checkpoint available (regression: the 4x4
+    preset said M=1 while the checkpoint was trained with M=0)."""
+    presets = client.get("/api/config/defaults").get_json()["presets"]
+    dqn_presets = [p for p in presets if p["id"].startswith("dqn_")]
+    assert dqn_presets
+    for p in dqn_presets:
+        c = p["config"]
+        q = f"N={c['board_size']}&A={c['A']}&B={c['B']}&C={c['C']}&K={c['K']}&M={c['M']}"
+        agents = client.get(f"/api/agents?{q}").get_json()
+        release = [a for a in agents if a["family"] == "dqn" and "release" in a["spec"]
+                   and f"dqn_{c['board_size']}x{c['board_size']}" in a["spec"]]
+        assert release and release[0]["available"], p
+
+
+def test_invalid_configs_return_400(client):
+    """Malformed configs are rejected with 400 and a message, never a 500."""
+    bad = [{"board_size": "x"}, {"board_size": None, "K": 0}, {"board_size": 5, "max_plies": 0},
+           {"board_size": 5, "M": -1}, {"board_size": 12}, {"board_size": 5, "A": "maybe"}]
+    for cfg in bad:
+        res = client.post("/api/games", json={"config": cfg, "p0": "human", "p1": "greedy"})
+        assert res.status_code == 400, cfg
+        assert "error" in res.get_json()
+    res = client.post("/api/games", json={"config": {"board_size": "5", "A": "false"},
+                                          "p0": "human", "p1": "greedy"})
+    assert res.status_code == 201
+    assert res.get_json()["config"]["A"] is False
+
+
+def test_undo_in_scenario_game_keeps_scenario_start(client):
+    """Undo in a game started from a raw-key scenario rebuilds from that start position
+    (regression: it rebuilt from the default initial position)."""
+    res = client.post("/api/games/from-scenario/no_legal_move_draw", json={"p0": "human", "p1": "human"})
+    assert res.status_code == 201
+    s = res.get_json()
+    before = s["state"]
+    assert s["history"]
+    res = client.post(f"/api/games/{s['id']}/undo", json={"n": 1})
+    assert res.status_code == 200
+    after = res.get_json()["state"]
+    assert after["terminal"]["over"] is False
+    assert after["turn"] == before["turn"] - 1 or after["turn"] == 0
+    # Replaying the undone action from the restored position reproduces the scenario end state
+    redo = client.post(f"/api/games/{s['id']}/action", json={"action": s["history"][-1]["action"]})
+    assert redo.status_code == 200
+    assert redo.get_json()["state"]["pawns"] == before["pawns"]
+    assert redo.get_json()["state"]["terminal"] == before["terminal"]

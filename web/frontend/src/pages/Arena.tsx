@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
-import { AgentInfo, GameConfig, OverlayItem, SessionData } from '../api/types';
+import { AgentInfo, ConfigDefaults, GameConfig, OverlayItem, SessionData } from '../api/types';
 import { Board } from '../components/Board';
+import { ConfigForm } from '../components/ConfigForm';
 import { TerminalBanner } from '../components/TerminalBanner';
 
 export const ArenaPage: React.FC = () => {
@@ -15,7 +16,7 @@ export const ArenaPage: React.FC = () => {
   });
   const [agents, setAgents] = useState<AgentInfo[]>([]);
   const [p0, setP0] = useState<string>('greedy');
-  const [p1, setP1] = useState<string>('random:seed=1');
+  const [p1, setP1] = useState<string>('random:seed=0');
 
   const [session, setSession] = useState<SessionData | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -28,6 +29,18 @@ export const ArenaPage: React.FC = () => {
   const [p0Explanation, setP0Explanation] = useState<any | null>(null);
   const [p1Explanation, setP1Explanation] = useState<any | null>(null);
   const [showOverlay, setShowOverlay] = useState<boolean>(true);
+  const [lastExplanation, setLastExplanation] = useState<any | null>(null);
+  const [defaults, setDefaults] = useState<ConfigDefaults | null>(null);
+  const [arenaError, setArenaError] = useState<string | null>(null);
+  const sessionRef = useRef<SessionData | null>(null);
+
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
+
+  useEffect(() => {
+    api.fetchConfigDefaults().then(setDefaults).catch(console.error);
+  }, []);
 
   // Load available agents
   useEffect(() => {
@@ -35,7 +48,7 @@ export const ArenaPage: React.FC = () => {
       const nonHuman = list.filter((a) => a.family !== 'human');
       setAgents(nonHuman);
       if (!nonHuman.find((a) => a.spec === p0)?.available) setP0('greedy');
-      if (!nonHuman.find((a) => a.spec === p1)?.available) setP1('random:seed=1');
+      if (!nonHuman.find((a) => a.spec === p1)?.available) setP1('random:seed=0');
     }).catch(console.error);
   }, [config]);
 
@@ -44,11 +57,15 @@ export const ArenaPage: React.FC = () => {
     setIsPlaying(false);
     setP0Explanation(null);
     setP1Explanation(null);
+    setLastExplanation(null);
+    setArenaError(null);
     try {
       const newSession = await api.createGame(config, p0, p1);
       setSession(newSession);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      // Do not keep showing a game from a different configuration
+      setSession(null);
+      setArenaError(err?.data?.error || err.message || 'Could not start arena game');
     }
   };
 
@@ -59,16 +76,20 @@ export const ArenaPage: React.FC = () => {
   // Step game once
   const stepOnce = async () => {
     if (!session || session.state.terminal.over) return;
+    const gid = session.id;
     try {
       const mover = session.state.to_move;
-      const res = await api.stepGame(session.id, true);
+      const res = await api.stepGame(gid, true);
+      if (sessionRef.current?.id !== gid) return; // game was reset while the AI was thinking
       setSession(res.session);
       if (res.explanation) {
         if (mover === 0) setP0Explanation(res.explanation);
         else setP1Explanation(res.explanation);
+        setLastExplanation(res.explanation);
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (sessionRef.current?.id !== gid) return;
+      setArenaError(err?.data?.error || err.message || 'AI step failed');
       setIsPlaying(false);
     }
   };
@@ -95,32 +116,25 @@ export const ArenaPage: React.FC = () => {
   };
 
   // Active overlay items
-  const activeOverlay: OverlayItem[] | undefined = showOverlay
-    ? (session?.state.to_move === 0 ? p0Explanation?.overlay : p1Explanation?.overlay)
-    : undefined;
+  const labelOf = (spec: string) => agents.find((a) => a.spec === spec)?.label || spec;
+
+  // Overlay of the move just played (its values refer to the position before that move)
+  const activeOverlay: OverlayItem[] | undefined = showOverlay ? lastExplanation?.overlay : undefined;
 
   return (
     <div className="main-content" data-testid="arena-page">
       <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr 340px', gap: '1.5rem', alignItems: 'start' }}>
         {/* Controls Column */}
         <div>
+          <ConfigForm config={config} defaults={defaults} onChange={setConfig} onNewGame={initGame} />
           <div className="card">
             <div className="card-title">Arena Controls</div>
 
-            <div className="form-group">
-              <label className="form-label">Board Size</label>
-              <select
-                className="form-select"
-                value={config.board_size}
-                onChange={(e) => setConfig({ ...config, board_size: Number(e.target.value) })}
-              >
-                {[3, 4, 5, 7, 9].map((s) => (
-                  <option key={s} value={s}>
-                    {s} × {s}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {arenaError && (
+              <div className="toast-error" style={{ position: 'static', marginBottom: '0.75rem' }} onClick={() => setArenaError(null)}>
+                ⚠ {arenaError}
+              </div>
+            )}
 
             <div className="form-group">
               <label className="form-label" style={{ color: 'var(--p0-color)' }}>Player 0 Agent</label>
@@ -227,7 +241,7 @@ export const ArenaPage: React.FC = () => {
           {/* P0 Think Box */}
           <div className="card" style={{ borderLeft: '4px solid var(--p0-color)', marginBottom: '1rem' }}>
             <div className="card-title" style={{ color: 'var(--p0-color)' }}>
-              P0: {p0} {session?.state.to_move === 0 && !session.state.terminal.over && '● Thinking'}
+              P0: {labelOf(p0)} {session?.state.to_move === 0 && !session.state.terminal.over && '● Thinking'}
             </div>
             {p0Explanation ? (
               <div style={{ fontSize: '0.85rem' }}>
@@ -244,7 +258,7 @@ export const ArenaPage: React.FC = () => {
           {/* P1 Think Box */}
           <div className="card" style={{ borderLeft: '4px solid var(--p1-color)' }}>
             <div className="card-title" style={{ color: 'var(--p1-color)' }}>
-              P1: {p1} {session?.state.to_move === 1 && !session.state.terminal.over && '● Thinking'}
+              P1: {labelOf(p1)} {session?.state.to_move === 1 && !session.state.terminal.over && '● Thinking'}
             </div>
             {p1Explanation ? (
               <div style={{ fontSize: '0.85rem' }}>

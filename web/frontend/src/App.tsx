@@ -42,6 +42,18 @@ export const App: React.FC = () => {
           <Route path="/training" element={<TrainingPage />} />
           <Route path="/replays" element={<ReplaysPage />} />
           <Route path="/rules" element={<RulesPage />} />
+          <Route path="/play" element={<PlayPage />} />
+          <Route
+            path="*"
+            element={
+              <div className="main-content">
+                <h2>Page not found</h2>
+                <p>
+                  Use the navigation above, or go to <NavLink to="/">Play</NavLink>.
+                </p>
+              </div>
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

@@ -72,9 +72,17 @@ def main():
     parser.add_argument("--port", type=int, default=5000, help="Port to listen on (default 5000)")
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host interface (default 127.0.0.1)")
     parser.add_argument("--debug", action="store_true", help="Enable Flask debug mode")
+    parser.add_argument("--no-warmup", action="store_true",
+                        help="Do not pre-solve exact-solver presets in the background")
 
     args = parser.parse_args()
     app = create_app()
+    # With --debug the reloader starts a watcher process plus a serving child; warm up only
+    # in the process that actually serves requests.
+    serving_process = not args.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+    if serving_process and not args.no_warmup:
+        from web.backend.registry import warm_exact_presets
+        warm_exact_presets()
     print(f"Starting Wallz Web Demo server on http://{args.host}:{args.port}")
     app.run(host=args.host, port=args.port, debug=args.debug)
 

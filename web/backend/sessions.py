@@ -25,6 +25,9 @@ class GameSession:
     agents: Dict[int, Optional[Any]]
     history: List[Dict[str, Any]] = field(default_factory=list)
     created: float = field(default_factory=time.time)
+    # Raw state key of the starting position when the game did not start from the
+    # initial position (e.g. scenario fixtures); undo replays history from here.
+    start_key: Optional[tuple] = None
 
     def to_json(self) -> Dict[str, Any]:
         return {
@@ -83,6 +86,8 @@ class GameSession:
             M=rules["M"],
         )
         fresh_engine = WallzEngine(config=config_obj)
+        if self.start_key is not None:
+            fresh_engine.restore_state_key(self.start_key)
 
         for step in kept_history:
             act = parse_action(step["action"], fresh_engine)
@@ -107,6 +112,7 @@ class SessionStore:
         agents: Optional[Dict[int, Any]] = None,
         custom_id: Optional[str] = None,
         initial_engine: Optional[WallzEngine] = None,
+        start_key: Optional[tuple] = None,
     ) -> GameSession:
         gid = custom_id or str(uuid.uuid4())[:8]
 
@@ -141,6 +147,7 @@ class SessionStore:
             engine=engine,
             specs={0: p0_spec, 1: p1_spec},
             agents=agents or {0: None, 1: None},
+            start_key=start_key,
         )
 
         if len(self.sessions) >= self.capacity:

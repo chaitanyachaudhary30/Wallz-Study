@@ -93,6 +93,14 @@ def create_game_from_scenario(name: str, p0: str = "human", p1: str = "human") -
 
     engine = engine_for(target)
     script = target.get("script", [])
+    start = target.get("start", "initial")
+    start_key = None if start == "initial" else engine._get_state_hashable_key()
+
+    cfg = dict(target.get("config", {}))
+    cfg.setdefault("board_size", engine.board_size)
+    # Validate both seats before touching the session store (bad spec -> clear error)
+    from web.backend.registry import build_agent
+    agents = {0: build_agent(p0, 0, cfg), 1: build_agent(p1, 1, cfg)}
 
     history = []
     for idx, raw_act in enumerate(script, start=1):
@@ -108,12 +116,13 @@ def create_game_from_scenario(name: str, p0: str = "human", p1: str = "human") -
             "decision_seconds": 0.0,
         })
 
-    cfg = dict(target.get("config", {}))
     session = SESSION_STORE.create(
         config=cfg,
         p0_spec=p0,
         p1_spec=p1,
+        agents=agents,
         initial_engine=engine,
+        start_key=start_key,
     )
     session.history.extend(history)
     return session.to_json()

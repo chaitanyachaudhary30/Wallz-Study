@@ -216,3 +216,62 @@ def test_minimax_explain_budget():
     assert elapsed < 15.0, f"Minimax N=9 depth 2 explanation took {elapsed:.2f}s (budget: 15s)"
     assert chosen is not None
     assert len(exp["overlay"]) == len(engine.get_legal_actions())
+
+
+def test_exact_labels_count_plies_from_current_position():
+    """'WIN in k' on a move must equal the node's own rank when that move is rank-optimal
+    (regression: labels used the child's rank, one ply short)."""
+    from evaluation.match_runner import make_agent, MatchConfig
+    from web.backend.serialize import action_to_json as to_json
+
+    cfg = MatchConfig(board_size=3, rules={"A": False, "B": False, "C": False, "K": 1, "M": 1})
+    solutions = {}
+    make_agent("exact", 0, cfg, solutions=solutions)
+    solution = solutions[cfg.label()]
+    checked = 0
+    for i in range(60):
+        engine = random_reachable(3, cfg.rules, plies=i % 5, seed=300 + i)
+        node = solution.graph.node_of(engine)
+        if engine.is_terminal() or node is None or solution.status(node) != "WIN":
+            continue
+        agent, _ = make_agent("exact", engine.current_player, cfg, solutions=solutions)
+        chosen, exp = explain_and_choose(agent, "exact", engine, spec="exact")
+        label = next(o["label"] for o in exp["overlay"] if o["action"] == to_json(chosen))
+        assert label == f"WIN in {solution.rank[node]}", (label, solution.rank[node])
+        checked += 1
+    assert checked > 0
+
+
+def test_dqn_network_meta_comes_from_checkpoint():
+    """Network card must show the checkpoint's real meta.json, not placeholder values."""
+    pytest.importorskip("torch")
+    import json
+    from evaluation.match_runner import make_agent, MatchConfig
+    from wallz_engine import WallzEngine
+
+    path = "checkpoints/release/dqn_3x3/model.pt"
+    meta = json.load(open("checkpoints/release/dqn_3x3/meta.json"))
+    cfg = MatchConfig(board_size=3, rules=meta["rules"])
+    agent, _ = make_agent(f"dqn:path={path}", 0, cfg)
+    _, exp = explain_and_choose(agent, "dqn", WallzEngine(board_size=3, rules=meta["rules"]),
+                                spec=f"dqn:path={path}")
+    net = exp["details"]["network"]
+    for key in ("blocks", "channels", "hidden", "gamma", "step"):
+        assert net[key] == meta[key]
+
+
+def test_minimax_explanation_does_not_alter_agent_search_state():
+    """The extra full-window analysis must leave history heuristic and counters untouched."""
+    from agents.minimax import MinimaxAgent
+    from wallz_engine import WallzEngine
+
+    engine = WallzEngine(board_size=5)
+    a = MinimaxAgent(player_id=0, depth=2, time_limit=None)
+    a.select_action(engine)
+    expected_history = dict(a.history)
+    expected_nodes = a.nodes_expanded
+
+    b = MinimaxAgent(player_id=0, depth=2, time_limit=None)
+    explain_and_choose(b, "minimax", engine, spec="minimax:depth=2")
+    assert dict(b.history) == expected_history
+    assert b.nodes_expanded == expected_nodes

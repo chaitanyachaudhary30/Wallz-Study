@@ -38,8 +38,9 @@ export const RulesPage: React.FC = () => {
   const handlePlayFromHere = async () => {
     if (!selectedName) return;
     try {
-      await api.createGameFromScenario(selectedName, 'human', 'greedy');
-      navigate('/');
+      const created = await api.createGameFromScenario(selectedName, 'human', 'greedy');
+      // Hand the scenario game to the Play page; without this it started a fresh default game
+      navigate('/', { state: { sessionId: created.id } });
     } catch (err: any) {
       alert(err.message || 'Failed to initialize playable game');
     }

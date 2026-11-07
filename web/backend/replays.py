@@ -11,6 +11,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from evaluation.match_runner import MatchConfig
+from evaluation.state_graph import state_id
 from wallz_engine import WallzConfig, WallzEngine
 from web.backend.serialize import parse_action, state_json
 
@@ -30,6 +32,28 @@ def _is_safe_results_path(rel_path: str) -> Path:
     except ValueError:
         raise ValueError(f"Path traversal detected: {rel_path} is outside {RESULTS_DIR}")
     return resolved
+
+
+def _summary(rec: Dict[str, Any], rel_path: str, idx: int) -> Dict[str, Any]:
+    """List-row summary of a run_match result (schema: evaluation/match_runner.run_match)."""
+    outcome = rec.get("outcome") or {}
+    cfg = rec.get("config") if isinstance(rec.get("config"), dict) else {}
+    label = rec.get("config_label")
+    if not label and cfg:
+        label = MatchConfig(board_size=cfg.get("board_size", 5), rules=cfg.get("rules", {})).label()
+    return {
+        "file": rel_path,
+        "index": idx,
+        "match_id": rec.get("match_id", f"{rel_path}:{idx}"),
+        "config_label": label or "unknown",
+        "agents": rec.get("agents", {}),
+        "outcome": {
+            "category": outcome.get("category"),
+            "winner": outcome.get("winner"),
+            "reason": outcome.get("detail") or outcome.get("category"),
+        },
+        "length": rec.get("length_plies", len(rec.get("replay", []))),
+    }
 
 
 def list_replays(offset: int = 0, limit: int = 50, query: Optional[str] = None) -> Dict[str, Any]:
@@ -70,18 +94,7 @@ def list_replays(offset: int = 0, limit: int = 50, query: Optional[str] = None) 
                                 except Exception:
                                     continue
                                 if "replay" in rec and isinstance(rec["replay"], list):
-                                    file_items.append({
-                                        "file": rel_path,
-                                        "index": idx,
-                                        "match_id": rec.get("match_id", f"{rel_path}:{idx}"),
-                                        "config_label": rec.get("board", rec.get("config", {}).get("label", "unknown")),
-                                        "agents": rec.get("agents", {}),
-                                        "outcome": {
-                                            "winner": rec.get("winner"),
-                                            "reason": rec.get("terminal_reason"),
-                                        },
-                                        "length": rec.get("length", len(rec["replay"])),
-                                    })
+                                    file_items.append(_summary(rec, rel_path, idx))
                     elif f.endswith(".json"):
                         with open(full_path, "r", encoding="utf-8") as fp:
                             try:
@@ -89,18 +102,7 @@ def list_replays(offset: int = 0, limit: int = 50, query: Optional[str] = None) 
                             except Exception:
                                 data = None
                         if isinstance(data, dict) and "replay" in data:
-                            file_items.append({
-                                "file": rel_path,
-                                "index": 0,
-                                "match_id": data.get("match_id", rel_path),
-                                "config_label": data.get("board", data.get("config", {}).get("label", "unknown")),
-                                "agents": data.get("agents", {}),
-                                "outcome": {
-                                    "winner": data.get("winner"),
-                                    "reason": data.get("terminal_reason"),
-                                },
-                                "length": data.get("length", len(data["replay"])),
-                            })
+                            file_items.append(_summary(data, rel_path, 0))
                 except Exception:
                     file_items = []
 
@@ -126,74 +128,74 @@ def list_replays(offset: int = 0, limit: int = 50, query: Optional[str] = None) 
 
 
 def verify_and_frame_replay(record: Dict[str, Any]) -> Dict[str, Any]:
-    """Step-by-step replays actions through canonical WallzEngine, generating C-STATE frames."""
-    replay_actions = record.get("replay", [])
+    """Re-plays every logged action through a fresh WallzEngine and builds C-STATE frames.
 
-    # Extract configuration
+    Verification mirrors evaluation.match_runner.verify_replay: each action must be legal,
+    each logged post-action ``state_id`` must match, and the final state id and rule
+    outcome must agree with the log. The first failure stops the replay at that ply.
+    """
+    def fail(message: str, ply: int, frames: List[Dict[str, Any]]) -> Dict[str, Any]:
+        return {"result": record,
+                "verified": {"ok": False, "message": message, "failed_ply": ply},
+                "frames": frames}
+
+    replay_actions = record.get("replay", [])
+    if not isinstance(replay_actions, list):
+        return fail("Record has no replay list", 0, [])
+
     raw_cfg = record.get("config", {})
-    if isinstance(raw_cfg, str):
-        board_size = 5
-        rules = {"A": True, "B": True, "C": True, "K": 3, "M": WallzConfig().M}
-    else:
+    if not isinstance(raw_cfg, dict):
+        return fail("Record has no config object", 0, [])
+    try:
         board_size = int(raw_cfg.get("board_size", raw_cfg.get("N", 5)))
         rules_dict = raw_cfg.get("rules", raw_cfg)
-        rules = {
-            "A": bool(rules_dict.get("A", True)),
-            "B": bool(rules_dict.get("B", True)),
-            "C": bool(rules_dict.get("C", True)),
-            "K": int(rules_dict.get("K", 3)),
-            "M": int(rules_dict.get("M", WallzConfig().M)),
-        }
-
-    config_obj = WallzConfig(
-        board_size=board_size,
-        max_plies=200,
-        A=rules["A"],
-        B=rules["B"],
-        C=rules["C"],
-        K=rules["K"],
-        M=rules["M"],
-    )
+        config_obj = WallzConfig(
+            board_size=board_size,
+            max_plies=raw_cfg.get("max_plies") or 200,
+            A=bool(rules_dict.get("A", True)),
+            B=bool(rules_dict.get("B", True)),
+            C=bool(rules_dict.get("C", True)),
+            K=int(rules_dict.get("K", 3)),
+            M=int(rules_dict.get("M", WallzConfig().M)),
+        )
+    except (TypeError, ValueError) as err:
+        return fail(f"Invalid config in record: {err}", 0, [])
     engine = WallzEngine(config=config_obj)
 
     frames: List[Dict[str, Any]] = [state_json(engine)]
+    if "initial_state_id" in record and state_id(engine._get_state_hashable_key()) != record["initial_state_id"]:
+        return fail("Initial state differs from the logged initial_state_id", 0, frames)
 
     for idx, act in enumerate(replay_actions):
+        ply = idx + 1
         try:
             act_to_apply = act["action"] if isinstance(act, dict) and "action" in act else act
             parsed = parse_action(act_to_apply, engine)
             engine.apply_action(parsed, update_clock=False)
-            frames.append(state_json(engine))
-        except ValueError as err:
-            return {
-                "result": record,
-                "verified": {
-                    "ok": False,
-                    "message": f"Verification failed at ply {idx + 1}: {err}",
-                    "failed_ply": idx + 1,
-                },
-                "frames": frames,
-            }
+        except Exception as err:  # ValueError (illegal) or malformed record
+            return fail(f"Verification failed at ply {ply}: {err}", ply, frames)
+        frames.append(state_json(engine))
+        if isinstance(act, dict) and "state_id" in act and \
+                state_id(engine._get_state_hashable_key()) != act["state_id"]:
+            return fail(f"Verification failed at ply {ply}: state differs from the logged state_id", ply, frames)
 
-    # Verify terminal status match if recorded
-    rec_winner = record.get("winner")
+    n = len(replay_actions)
+    if "final_state_id" in record and state_id(engine._get_state_hashable_key()) != record["final_state_id"]:
+        return fail("Final state differs from the logged final_state_id", n, frames)
+
+    outcome = record.get("outcome") or {}
+    category = outcome.get("category")
+    if category == "goal" and engine.winner != outcome.get("winner"):
+        return fail(f"Winner mismatch: log says {outcome.get('winner')}, engine produced {engine.winner}", n, frames)
+    if isinstance(category, str) and category.startswith("draw_") and not engine.is_draw:
+        return fail(f"Logged rule draw ({category}) not reproduced by the engine", n, frames)
+    rec_winner = record.get("winner")  # legacy flat schema
     if rec_winner is not None and engine.winner != rec_winner:
-        return {
-            "result": record,
-            "verified": {
-                "ok": False,
-                "message": f"Terminal winner mismatch: expected {rec_winner}, engine produced {engine.winner}",
-                "failed_ply": len(replay_actions),
-            },
-            "frames": frames,
-        }
+        return fail(f"Winner mismatch: log says {rec_winner}, engine produced {engine.winner}", n, frames)
 
     return {
         "result": record,
-        "verified": {
-            "ok": True,
-            "message": "Replay verified successfully",
-        },
+        "verified": {"ok": True, "message": f"Verified by engine: {n} plies, outcome {category or 'unrecorded'}"},
         "frames": frames,
     }
 

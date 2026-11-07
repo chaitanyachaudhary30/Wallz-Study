@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { api, ApiError } from '../api/client';
 import {
   ActionJson,
@@ -38,7 +39,15 @@ export const PlayPage: React.FC = () => {
   const [latestExplanation, setLatestExplanation] = useState<Explanation | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const steppingRef = useRef(false);
+  const [aiThinking, setAiThinking] = useState<boolean>(false);
+  // Latest session, read by async callbacks to drop responses that belong to an old game
+  const sessionRef = useRef<SessionData | null>(null);
+  const startedRef = useRef(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
 
   // Load defaults & agents on mount
   useEffect(() => {
@@ -75,10 +84,42 @@ export const PlayPage: React.FC = () => {
     }
   }, [config, p0, p1]);
 
-  // Start initial game once
+  // Start initial game once (guarded: React StrictMode runs mount effects twice in dev).
+  // A game handed over from the Rules page ("Play From This State") is loaded instead.
   useEffect(() => {
-    handleStartGame();
+    if (startedRef.current) return;
+    startedRef.current = true;
+    const handedOver = (location.state as { sessionId?: string } | null)?.sessionId;
+    if (!handedOver) {
+      handleStartGame();
+      return;
+    }
+    api.fetchGame(handedOver).then((s) => {
+      setSession(s);
+      setP0(s.specs['0'] || 'human');
+      setP1(s.specs['1'] || 'human');
+      const { max_plies, ...cfg } = s.config as GameConfig & { max_plies?: number };
+      setConfig((prev) => ({ ...prev, ...cfg }));
+    }).catch(() => handleStartGame());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keep the selected action mode valid: after a hop/block is used (or walls run out)
+  // its button disappears, so fall back to the first available mode.
+  useEffect(() => {
+    if (!session) return;
+    const legal = session.state.legal;
+    const count: Record<string, number> = {
+      MOVE: legal.MOVE?.length || 0,
+      HOP: legal.HOP?.length || 0,
+      WALL_H: (legal.WALL || []).filter((w) => w[2] === 'H').length,
+      WALL_V: (legal.WALL || []).filter((w) => w[2] === 'V').length,
+      REPLACE: legal.REPLACE?.length || 0,
+      BLOCK: legal.BLOCK?.length || 0,
+    };
+    if (currentMode && count[currentMode] > 0) return;
+    const next = (Object.keys(count) as Exclude<ActionMode, null>[]).find((m) => count[m] > 0);
+    setCurrentMode(next ?? null);
+  }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle user action
   const handleAction = async (action: ActionJson) => {
@@ -100,31 +141,35 @@ export const PlayPage: React.FC = () => {
     }
   };
 
-  // AI Stepping Loop with 300ms pacing
+  // AI stepping loop with 300 ms pacing. Each scheduled step belongs to one game id:
+  // cleanup cancels it, and a late response for a game that is no longer shown is dropped.
   useEffect(() => {
-    if (!session || session.state.terminal.over || steppingRef.current) return;
+    if (!session || session.state.terminal.over) return;
+    const moverSpec = session.specs[String(session.state.to_move)];
+    if (!moverSpec || moverSpec === 'human') return;
 
-    const mover = session.state.to_move;
-    const moverSpec = session.specs[String(mover)];
-
-    if (moverSpec && moverSpec !== 'human') {
-      steppingRef.current = true;
-      const timer = setTimeout(async () => {
-        try {
-          const stepRes = await api.stepGame(session.id, true);
-          setSession(stepRes.session);
-          if (stepRes.explanation) {
-            setLatestExplanation(stepRes.explanation);
-          }
-        } catch (err: any) {
-          setErrorMessage(err.message || 'AI step failed');
-        } finally {
-          steppingRef.current = false;
+    const gid = session.id;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      setAiThinking(true);
+      try {
+        const stepRes = await api.stepGame(gid, true);
+        if (cancelled || sessionRef.current?.id !== gid) return;
+        setSession(stepRes.session);
+        if (stepRes.explanation) setLatestExplanation(stepRes.explanation);
+      } catch (err: any) {
+        if (!cancelled && sessionRef.current?.id === gid) {
+          setErrorMessage(err?.data?.error || err.message || 'AI step failed');
         }
-      }, 300);
+      } finally {
+        setAiThinking(false);
+      }
+    }, 300);
 
-      return () => clearTimeout(timer);
-    }
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, [session]);
 
   // Undo
@@ -134,6 +179,7 @@ export const PlayPage: React.FC = () => {
       setErrorMessage(null);
       const updated = await api.undoGame(session.id, 1, true);
       setSession(updated);
+      setLatestExplanation(null);
     } catch (err: any) {
       setErrorMessage(err.message || 'Undo failed');
     }
@@ -217,7 +263,7 @@ export const PlayPage: React.FC = () => {
           <Timeline
             history={session.history}
             onUndo={handleUndo}
-            canUndo={session.history.length > 0 && !session.state.terminal.over}
+            canUndo={session.history.length > 0 && !aiThinking}
           />
 
           <ExplanationPanel

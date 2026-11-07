@@ -3,6 +3,19 @@ import { api } from '../api/client';
 import { Board } from '../components/Board';
 import { TerminalBanner } from '../components/TerminalBanner';
 
+// e.g. "P0 wins (greedy)", "draw (repetition)", "truncated"
+function outcomeText(rep: any): string {
+  const o = rep?.outcome || {};
+  const cat: string | null = o.category ?? null;
+  if (!cat) return 'outcome n/a';
+  if (cat === 'goal' && o.winner !== null && o.winner !== undefined) {
+    const spec = rep?.agents?.[String(o.winner)]?.spec;
+    return `P${o.winner} wins${spec ? ` (${spec})` : ''}`;
+  }
+  if (cat.startsWith('draw_')) return `draw (${cat.slice(5).replace(/_/g, ' ')})`;
+  return cat.replace(/_/g, ' ');
+}
+
 export const ReplaysPage: React.FC = () => {
   const [replays, setReplays] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -126,7 +139,7 @@ export const ReplaysPage: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', color: isSelected ? '#ffffff' : 'var(--text-muted)', fontSize: '0.75rem' }}>
                     <span>{rep.config_label}</span>
-                    <span>{rep.length} plies</span>
+                    <span>{outcomeText(rep)} · {rep.length} plies</span>
                   </div>
                 </div>
               );

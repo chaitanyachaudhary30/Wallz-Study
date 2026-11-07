@@ -22,20 +22,22 @@ from evaluation.match_runner import parse_agent_spec
 from web.backend.serialize import action_to_json
 
 
-def explain_and_choose(agent: Any, family: str, engine: Any) -> Tuple[Optional[Tuple[str, Any]], Dict[str, Any]]:
+def explain_and_choose(agent: Any, family: str, engine: Any, spec: Optional[str] = None) -> Tuple[Optional[Tuple[str, Any]], Dict[str, Any]]:
     """Executes agent decision and computes a C-EXPL explanation envelope.
 
     Args:
         agent: Agent instance (RandomAgent, GreedyAgent, MinimaxAgent, DQNAgent, ExactAgent).
         family: Agent family string ('random', 'greedy', 'minimax', 'dqn', 'exact').
         engine: WallzEngine instance at current state.
+        spec: Agent spec string (e.g. 'minimax:depth=2', 'dqn:path=...'); used for labels
+            and, for DQN, to locate the checkpoint's meta.json.
 
     Returns:
         (chosen_action, explanation_dict)
     """
     mover = engine.current_player
-    agent_name = getattr(agent, "name", family.capitalize())
-    spec = getattr(agent, "spec", family)
+    spec = spec or getattr(agent, "spec", family)
+    agent_name = getattr(agent, "name", None) or _display_name(family, spec)
 
     t0 = time.time()
 
@@ -46,7 +48,7 @@ def explain_and_choose(agent: Any, family: str, engine: Any) -> Tuple[Optional[T
     elif family == "minimax":
         chosen, details, overlay, summary = _explain_minimax(agent, engine, mover)
     elif family == "dqn":
-        chosen, details, overlay, summary = _explain_dqn(agent, engine, mover)
+        chosen, details, overlay, summary = _explain_dqn(agent, engine, mover, spec)
     elif family == "exact":
         chosen, details, overlay, summary = _explain_exact(agent, engine, mover)
     else:
@@ -70,6 +72,37 @@ def explain_and_choose(agent: Any, family: str, engine: Any) -> Tuple[Optional[T
     }
 
     return chosen, explanation
+
+
+def _display_name(family: str, spec: str) -> str:
+    names = {"random": "Random", "greedy": "Greedy", "minimax": "Minimax", "dqn": "DQN", "exact": "Exact solver"}
+    return names.get(family, family.capitalize())
+
+
+def _dqn_meta(spec: Optional[str]) -> Dict[str, Any]:
+    """Network metadata read from the checkpoint's meta.json (never invented)."""
+    import json
+    import os
+    if not spec:
+        return {}
+    _, params = parse_agent_spec(spec)
+    path = params.get("path")
+    if not path:
+        return {}
+    meta_path = path if os.path.isdir(path) else os.path.dirname(path)
+    meta_path = os.path.join(meta_path, "meta.json")
+    try:
+        with open(meta_path, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    keep = ("N", "blocks", "channels", "hidden", "gamma", "double", "dueling", "step", "seed", "rules")
+    out = {k: meta[k] for k in keep if k in meta}
+    base = os.path.basename(str(path))
+    if base.startswith("step_") and base.endswith(".pt"):
+        out["checkpoint"] = base
+        out["step"] = int(base[5:-3])
+    return out
 
 
 # -----------------------------------------------------------------------------
@@ -130,10 +163,10 @@ def _explain_greedy(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tuple
         if r.get("immediate_win") or r["H"] == float("inf"):
             val = None
             label = "win"
-        elif r["H"] == -float("inf"):
+        elif r.get("outcome") == "loss" or r["H"] == -float("inf"):
             val = None
             label = "loss"
-        elif r["H"] is None:
+        elif r.get("outcome") == "draw":
             val = 0.0
             label = "draw"
         else:
@@ -157,6 +190,8 @@ def _explain_greedy(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tuple
         else:
             h_str = str(h_val)
         summary = f"Picked the move that maximises my distance advantage H = d_opp − d_self (H = {h_str})."
+        if chosen_row.get("outcome") == "draw":
+            summary = "No move improves on a draw: picked a move that ends the game in a rule draw (scored H = 0)."
 
     details = {
         "objective": "H = d_opp − d_self",
@@ -192,6 +227,11 @@ def _explain_minimax(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tupl
     root_analysis = []
     overlay = []
     chosen_child_engine = None
+
+    # The extra full-window analysis must not change the agent's future decisions:
+    # _negamax updates the history heuristic and node counters, so snapshot and restore.
+    saved_history = dict(agent.history) if hasattr(agent, "history") else None
+    saved_counters = (getattr(agent, "nodes_expanded", 0), getattr(agent, "cutoffs", 0))
 
     for act in legal:
         act_json = action_to_json(act)
@@ -232,6 +272,11 @@ def _explain_minimax(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tupl
             root_analysis.append({"action": act_json, "value": None, "kind": "not analysed"})
             overlay.append({"action": act_json, "value": None, "label": "not analysed"})
 
+    if saved_history is not None:
+        agent.history.clear()
+        agent.history.update(saved_history)
+    agent.nodes_expanded, agent.cutoffs = saved_counters
+
     # Extract features for chosen child
     features_chosen = {}
     if chosen_child_engine is not None:
@@ -265,7 +310,7 @@ def _explain_minimax(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tupl
     return chosen, details, overlay, summary
 
 
-def _explain_dqn(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tuple[str, Any]], Dict[str, Any], List[Dict[str, Any]], str]:
+def _explain_dqn(agent: Any, engine: Any, mover: int, spec: Optional[str] = None) -> Tuple[Optional[Tuple[str, Any]], Dict[str, Any], List[Dict[str, Any]], str]:
     import torch
     from agents.dqn.encoding import encode_observation
 
@@ -308,10 +353,7 @@ def _explain_dqn(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tuple[st
     q_max = float(max(q_vals[aid] for aid in legal_indices))
     q_min = float(min(q_vals[aid] for aid in legal_indices))
 
-    # Read network info if attached to agent or meta
-    network_meta = getattr(agent, "meta", {
-        "blocks": 4, "channels": 64, "hidden": 128, "gamma": 0.99, "step": "release"
-    })
+    network_meta = _dqn_meta(spec)
 
     summary = (
         f"Network estimates this position at Q = {q_chosen:+.2f} for the chosen move "
@@ -352,12 +394,14 @@ def _explain_exact(agent: Any, engine: Any, mover: int) -> Tuple[Optional[Tuple[
     for act, val, child_rank in action_values:
         act_json = action_to_json(act)
         v = float(val) if val is not None else None
+        # child_rank counts plies from the child; this move adds one more ply
+        plies = child_rank + 1 if child_rank is not None else None
         if v == 1.0:
-            label = f"WIN in {child_rank}" if child_rank is not None else "WIN"
+            label = f"WIN in {plies}" if plies is not None else "WIN"
         elif v == 0.0:
             label = "DRAW"
         elif v == -1.0:
-            label = f"LOSS in {child_rank}" if child_rank is not None else "LOSS"
+            label = f"LOSS in {plies}" if plies is not None else "LOSS"
         else:
             label = "?"
         overlay.append({"action": act_json, "value": v, "label": label})

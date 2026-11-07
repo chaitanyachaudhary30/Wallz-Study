@@ -119,9 +119,14 @@ export const Board: React.FC<BoardProps> = ({
     }
   };
 
+  const slotClickable = (m: ActionMode, o: 'H' | 'V'): boolean =>
+    interactive && (m === 'REPLACE' || (m === 'WALL_H' && o === 'H') || (m === 'WALL_V' && o === 'V'));
+
   const handleWallSlotClick = (r: number, c: number, o: 'H' | 'V') => {
     if (!interactive || !onAction || state.terminal.over) return;
     if (mode === 'WALL_H' || mode === 'WALL_V') {
+      // The H and V slot hit-areas overlap at wall junctions; never place the other orientation
+      if ((mode === 'WALL_H' ? 'H' : 'V') !== o) return;
       onAction(['WALL', [r, c, o]]);
     } else if (mode === 'REPLACE') {
       onAction(['REPLACE', [r, c, o]]);
@@ -167,7 +172,7 @@ export const Board: React.FC<BoardProps> = ({
           const isTarget = targetCells.has(cellKey);
           const blockRemaining = blockedMap.get(cellKey);
           const overlayItem = overlayLookup.cells.get(cellKey);
-          const heatmapBg = getHeatmapColor(overlayItem);
+          const heatmapBg = getHeatmapColor(overlayItem, overlayLookup.scale);
 
           // Goal rows: P1 goal is row 0; P0 goal is row n-1
           let cellFill = '#1e293b';
@@ -264,6 +269,7 @@ export const Board: React.FC<BoardProps> = ({
               strokeDasharray="4 4"
               opacity={0.65}
               strokeLinecap="round"
+              pointerEvents="none"
             />
           );
         })}
@@ -278,7 +284,7 @@ export const Board: React.FC<BoardProps> = ({
               const key = `${r},${c},H`;
               const isTarget = targetWallSlots.has(key);
               const overlayItem = overlayLookup.walls.get(key);
-              const color = getHeatmapColor(overlayItem);
+              const color = getHeatmapColor(overlayItem, overlayLookup.scale);
 
               return (
                 <rect
@@ -292,6 +298,7 @@ export const Board: React.FC<BoardProps> = ({
                   stroke={isTarget ? '#10b981' : 'none'}
                   strokeWidth={1}
                   onClick={() => handleWallSlotClick(r, c, 'H')}
+                  pointerEvents={slotClickable(mode, 'H') ? 'all' : 'none'}
                   style={{ cursor: isTarget ? 'pointer' : 'default' }}
                 />
               );
@@ -303,7 +310,7 @@ export const Board: React.FC<BoardProps> = ({
               const key = `${r},${c},V`;
               const isTarget = targetWallSlots.has(key);
               const overlayItem = overlayLookup.walls.get(key);
-              const color = getHeatmapColor(overlayItem);
+              const color = getHeatmapColor(overlayItem, overlayLookup.scale);
 
               return (
                 <rect
@@ -317,6 +324,7 @@ export const Board: React.FC<BoardProps> = ({
                   stroke={isTarget ? '#10b981' : 'none'}
                   strokeWidth={1}
                   onClick={() => handleWallSlotClick(r, c, 'V')}
+                  pointerEvents={slotClickable(mode, 'V') ? 'all' : 'none'}
                   style={{ cursor: isTarget ? 'pointer' : 'default' }}
                 />
               );
@@ -361,7 +369,7 @@ export const Board: React.FC<BoardProps> = ({
           const pText = `P${pIdx}`;
 
           return (
-            <g key={`pawn-${pIdx}`}>
+            <g key={`pawn-${pIdx}`} pointerEvents="none">
               <circle
                 cx={pt.x}
                 cy={pt.y}

@@ -206,3 +206,39 @@ def test_rules_doc_endpoint(client):
     data = res.get_json()
     assert "rules" in data
     assert "# Modified Wallz" in data["rules"]
+
+
+def test_replay_with_substituted_legal_action_is_rejected(client):
+    """Swapping one logged action for a *different legal* action must fail verification
+    via the logged state ids (regression: only illegal actions were detected)."""
+    import copy
+    import json as _json
+    from evaluation.match_runner import action_from_json, action_to_json
+    from wallz_engine import WallzEngine
+
+    listing = client.get("/api/replays?limit=200").get_json()["items"]
+    item = next(i for i in listing if i["length"] >= 4)
+    good = client.get(f"/api/replays/item?file={item['file']}&index={item['index']}").get_json()
+    assert good["verified"]["ok"] is True
+    assert good["result"]["outcome"]
+    record = copy.deepcopy(good["result"])
+    cfg = record["config"]
+    engine = WallzEngine(board_size=cfg["board_size"], rules=cfg["rules"])
+    k = next(i for i, step in enumerate(record["replay"]) if "state_id" in step)  # first agent ply
+    for step in record["replay"][:k]:
+        engine.apply_action(action_from_json(step["action"]), update_clock=False)
+    original = action_from_json(record["replay"][k]["action"])
+    alt = next(a for a in engine.get_legal_actions() if a != original)
+    record["replay"][k]["action"] = action_to_json(alt)
+    res = client.post("/api/replays/upload", data=_json.dumps(record), content_type="application/json")
+    body = res.get_json()
+    assert body["verified"]["ok"] is False
+    assert body["verified"]["failed_ply"] == k + 1
+
+
+def test_replay_listing_reports_outcome_and_label(client):
+    items = client.get("/api/replays?limit=20").get_json()["items"]
+    assert items
+    for it in items:
+        assert it["config_label"] != "unknown"
+        assert it["outcome"]["category"] is not None
