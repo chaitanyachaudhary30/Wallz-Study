@@ -340,6 +340,47 @@ class WallzEngine:
         )
         return dist
 
+    def shortest_path_cells(self, player: int) -> List[Tuple[int, int]]:
+        """Return the sequence of cells along a shortest path to goal for player."""
+        self._sync_board()
+        start = self.pawns[player]
+        target_row = self.goals[player]
+        board_size = self.board_size
+
+        if start[0] == target_row:
+            return [start]
+
+        queue = deque([start])
+        parent: Dict[Tuple[int, int], Optional[Tuple[int, int]]] = {start: None}
+        target_cell: Optional[Tuple[int, int]] = None
+
+        while queue:
+            curr = queue.popleft()
+            r, c = curr
+            if r == target_row:
+                target_cell = curr
+                break
+
+            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < board_size and 0 <= nc < board_size:
+                    nxt = (nr, nc)
+                    if nxt not in parent and nxt not in self.blocked_cells:
+                        if not self.board.is_edge_blocked(curr, nxt):
+                            parent[nxt] = curr
+                            queue.append(nxt)
+
+        if target_cell is None:
+            return []
+
+        cells = []
+        curr = target_cell
+        while curr is not None:
+            cells.append(curr)
+            curr = parent[curr]
+        cells.reverse()
+        return cells
+
     def is_path_open(self, player: int) -> bool:
         self._sync_board()
         return has_path_to_goal(
