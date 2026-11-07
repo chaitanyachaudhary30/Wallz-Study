@@ -20,7 +20,7 @@
 | **Phase 7** | Match Runner, Metrics & Logging (Holm-Bonferroni correction, Wilson CIs, table generator) | **Complete** | 14 publication-ready Markdown/LaTeX tables |
 | **Phase 8** | State Graph & Exact Solver (Adapter over retrograde engine, cycle/stalemate draw separation) | **Complete** | $K \in \{1, 2, 3\}$ solved for $N=3, 4$ |
 | **Phase 9** | Component Testing & Property Verification | **Complete** | Gate X-1 (Hypothesis stateful), Gate X-2 (NetworkX BFS) |
-| **Phase 10** | Final System Integration & Acceptance | **Complete** | 160/160 baseline unit & component tests passing |
+| **Phase 10** | Final System Integration & Acceptance | **Complete** | 301/301 unit, component, rule, and web tests passing |
 
 ### Member 2 Track: Engine Enhancements, Verification & Web Demo
 
@@ -30,25 +30,29 @@
 | **P02** | Validate-before-mutate (F1), atomicity & post-terminal tests | `bb77405` | **Complete** | Clock isolation on illegal actions, post-flag raises, 197 tests |
 | **P03** | Block duration, hop and REPLACE-form rule suite (F3) | `3f7b397` | **Complete** | Frozen fixtures R7 & Hop, exact K timeline, 218 tests |
 | **P04** | No-legal-move draw and wall-budget suite (Task 1C & 1D) | `62c1413` | **Complete** | StateGraph first-hit fixture, budget M=0 audit, 234 tests |
-| **P05** | Scenario fixtures, single-source guard, coverage map | In Progress | **Complete** | 9 shared scenarios, AST single-source guard |
-| **P06** | Greedy refactor, side-to-move guard (F4), verification | Pending | Planned | Golden replay match, score_actions exposure |
-| **P07** | Re-run greedy matches across 8 factorial rule cells | Pending | Planned | 800 matches, 4 tables regenerated unchanged |
-| **P08** | Web backend core, engine adapter, agent registry | Pending | Planned | Flask endpoints /api/game/* |
-| **P09** | Web backend think endpoints (Minimax + DQN + Solver) | Pending | Planned | /api/game/think, /api/game/dqn-heatmap |
-| **P10** | Web backend arena, replays, scenarios, training data | Pending | Planned | /api/arena/run, /api/replays, /api/scenarios |
-| **P11** | Frontend scaffold, Board component, Play page | Pending | Planned | Vite+React+TS, interactive board, playable demo |
-| **P12** | Frontend Think panel, heatmap overlay, Arena page | Pending | Planned | Model explanations, multi-agent matches |
-| **P13** | Frontend Training, Replays, Rules pages | Pending | Planned | Loss curves, replay viewer, scenario runner |
-| **P14** | Documentation and final acceptance | Pending | Planned | Comprehensive user and developer guides |
+| **P05** | Scenario fixtures, single-source guard, coverage map | `42061df` | **Complete** | 9 shared scenarios, AST single-source guard |
+| **P06** | Greedy refactor, side-to-move guard (F4), verification | `93be06f` | **Complete** | Golden replay match, score_actions exposure, 247 tests |
+| **P07** | Greedy match campaign across factorial rule cells | `5d86602` | **Complete** | 720 matches saved, summary.json, Markdown & LaTeX tables |
+| **P08** | Web backend core, engine adapter, agent registry | `8bf3589` | **Complete** | Flask endpoints /api/games/*, C-STATE serialization |
+| **P09** | Web backend think endpoints (Greedy + Minimax + DQN + Solver) | `9e3fa49` | **Complete** | C-EXPL introspection, /api/games/<id>/analyze |
+| **P10** | Web backend arena, replays, scenarios, training data | `d11fc0f` | **Complete** | /api/arena/batch, verified replays, training curves |
+| **P11–P13** | Frontend React app, Board, Think panels, Arena, Training, Replays, Rules | `a7ee744` | **Complete** | Interactive board, Vitest tests pass, Vite build succeeds |
+| **P14** | Documentation and final acceptance | Current | **Complete** | Final rules, architecture, web demo guide, 301 tests passing |
 
 ---
 
-## 2. Comprehensive Test Suite (247+ Tests Passing)
+## 2. Comprehensive Test Suite (301 Tests Passing)
 
 All tests execute cleanly via pytest:
 ```bash
 .venv/bin/python -m pytest -q
 ```
+*Result*: `301 passed in ~72s`.
+Frontend Vitest tests:
+```bash
+npm --prefix web/frontend test -- --run
+```
+*Result*: `6 passed (2 test files)`.
 
 ---
 

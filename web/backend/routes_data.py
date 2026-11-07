@@ -2,6 +2,7 @@
 """
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Dict
 from flask import Blueprint, jsonify, request
 
@@ -169,3 +170,11 @@ def get_training_summary_route():
 def get_training_config_route():
     cfg = get_training_config()
     return jsonify(cfg)
+
+
+@data_bp.route("/api/rules", methods=["GET"])
+def get_rules_text():
+    rules_path = Path(__file__).resolve().parent.parent.parent / "docs" / "game_rules.md"
+    if rules_path.exists():
+        return jsonify({"rules": rules_path.read_text(encoding="utf-8")})
+    return jsonify({"rules": "# Game Rules\n\nRule documentation not found."})

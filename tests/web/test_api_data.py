@@ -197,3 +197,12 @@ def test_training_endpoints(client):
     assert res_sum.status_code == 200
     sum_data = res_sum.get_json()
     assert "summary" in sum_data
+
+
+def test_rules_doc_endpoint(client):
+    """GET /api/rules returns the raw markdown text of docs/game_rules.md."""
+    res = client.get("/api/rules")
+    assert res.status_code == 200
+    data = res.get_json()
+    assert "rules" in data
+    assert "# Modified Wallz" in data["rules"]

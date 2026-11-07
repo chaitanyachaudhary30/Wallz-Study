@@ -3,64 +3,136 @@
 ## 1. Overview
 Modified Wallz is a deterministic, sequential, two-player zero-sum adversarial grid game inspired by Quoridor, enhanced with dynamic spatial constraints, finite reusable resources, and temporal abilities.
 
+The canonical engine implementation in `wallz_engine.py` serves as the **single source of truth** for all rules, validations, legal move generations, and state transitions.
+
 ---
 
 ## 2. Board & Pawns
-- Played on an $N \times N$ discrete grid (default $N = 9$).
-- **Player 0**: Starts at `(0, floor(N/2))`. Goal is row `N - 1`.
+- **Board Grid**: $N \times N$ discrete grid where $N \ge 3$ (standard default $N = 9$; experimental benchmarks use $N \in \{3, 4, 5, 7, 9\}$).
+- **Coordinate System**: Rows $0 \dots N-1$, Columns $0 \dots N-1$.
+  - Row 0 is at the bottom (Player 0's start row).
+  - Row $N-1$ is at the top (Player 1's start row).
+- **Player 0**: Starts at `(0, floor(N/2))`. Goal is row $N - 1$.
 - **Player 1**: Starts at `(N - 1, floor(N/2))`. Goal is row `0`.
-- Players strictly alternate turns taking exactly one action per turn.
+- **Turn Order**: Players strictly alternate turns, executing exactly one legal action per turn. Player 0 moves first.
 
 ---
 
-## 3. Action Categories
+## 3. Action Categories & Syntax
+
+The engine accepts actions either as Python tuples or as JSON lists:
 
 ### 1. Pawn Movement (`MOVE`)
-- Moves 1 cell orthogonally (North, South, East, West).
-- Cannot cross active walls.
-- Cannot land on an opponent pawn or a currently blocked cell.
+- Syntax: `('MOVE', (r, c))` or `["MOVE", [r, c]]`.
+- Moves the active player's pawn exactly 1 cell orthogonally (North, South, East, West).
+- Constraints:
+  - Cannot cross active walls.
+  - Cannot land on an opponent pawn (pawn jump is governed exclusively by `HOP`).
+  - Cannot land on a currently blocked cell.
+  - Must remain within the $N \times N$ board boundaries.
 
-### 2. Path-Preservation Rule
+### 2. Path-Preservation Invariant
 - **Core Invariant**: Every action (wall placement, wall repositioning, move, or cell block) must preserve at least one valid path from each player's current position to their respective goal row:
   $$\operatorname{PathExists}(s', 0) = 1 \quad \text{and} \quad \operatorname{PathExists}(s', 1) = 1$$
+- If an action would isolate either player from their goal row, it is strictly illegal.
 
 ### 3. Modification A: Reusable Walls (`WALL`, `REPLACE`)
-- Walls are 2-cell barriers placed horizontally (`'H'`) or vertically (`'V'`).
-- Walls cannot overlap with existing walls or intersect through another wall's center.
-- **Initial Inventory**: Each player starts with a finite inventory of $M = 10$ walls ($m_i = 10$); configurable as `rules['M']` (tiny-board solving uses $M \le 1$).
+- Walls are 2-cell barriers placed along grid lines, designated by `(r, c, orient)` where:
+  - `r` $\in \{0 \dots N-2\}$
+  - `c` $\in \{0 \dots N-2\}$
+  - `orient` $\in \{'H', 'V'\}$ ('H' blocks vertical passage between $(r, c)$/$(r, c+1)$ and $(r+1, c)$/$(r+1, c+1)$; 'V' blocks horizontal passage between $(r, c)$/$(r+1, c)$ and $(r, c+1)$/$(r+1, c+1)$).
+- Walls cannot overlap with existing walls or cross perpendicular walls through their center.
+- **Initial Inventory**: Each player begins with a finite inventory $M = 10$ walls ($m_i = 10$, configurable via `rules['M']`).
 - **New Wall Placement (`WALL`)**:
+  - Syntax: `('WALL', (r, c, orient))` or `["WALL", [r, c, "H"]]`.
   - Permissible only when $m_i > 0$.
   - Consumes 1 wall from inventory ($m_i' = m_i - 1$).
   - Designates this wall as the player's single most recently placed wall ($r_i$).
   - Older walls placed prior to $r_i$ become permanent fixtures for the remainder of the match.
 - **Wall Repositioning / Replacement (`REPLACE`)**:
-  - Permissible if and only if the player has placed at least one wall ($r_i \neq \varnothing$).
+  - Syntax (both forms accepted and normalized):
+    1. Short triple: `('REPLACE', (new_r, new_c, new_orient))`
+    2. Explicit pair: `('REPLACE', (old_wall, new_wall))` where `old_wall == latest_wall[player]`.
+  - Permissible if and only if Rule A is enabled and the player has placed at least one wall ($r_i \neq \varnothing$).
   - **Recency Constraint**: Only the player's single most recently placed wall ($r_i$) can be repositioned. Older walls remain permanently fixed and cannot be moved or removed.
-  - Reuses the existing wall on the board; does **not** consume additional wall inventory ($m_i' = m_i$).
-  - When $m_i = 0$, the player cannot place new walls, but can continue repositioning $r_i$.
+  - **Budget Neutrality**: Reuses the existing wall on the board; does **not** consume wall inventory ($m_i' = m_i$).
+  - **Zero Budget Allowance**: When $m_i = 0$, a player cannot place new `WALL` actions, but **can** continue executing `REPLACE` actions with their latest wall, provided a legal reposition exists that preserves paths.
   - Must satisfy path preservation for both players.
 
 ### 4. Modification B: One-Time Hop (`HOP`)
-- A single-use ability per player.
-- Moves the pawn 2 cells orthogonally (jumping over walls and/or adjacent pawns).
-- Cannot land on an opponent pawn or a blocked cell.
+- Syntax: `('HOP', (r, c))` or `["HOP", [r, c]]`.
+- A single-use ability per player (`hop_available[player] = True` initially).
+- Moves the pawn 2 cells orthogonally (jumping over intervening walls and/or opponent pawns).
+- Cannot land on an opponent pawn, an occupied cell, or a blocked cell.
 - Must leave the hopping pawn with a path to its goal row (path-preservation invariant).
 - Permanently consumed upon execution (`hop_available[player] = False`).
 
 ### 5. Modification C: Temporary Cell Block (`BLOCK`)
-- A single-use ability per player.
-- Temporarily blocks a chosen cell for $K$ turns (default $K = 3$ plies).
+- Syntax: `('BLOCK', (r, c))` or `["BLOCK", [r, c]]`.
+- A single-use ability per player (`block_available[player] = True` initially).
+- Temporarily blocks a chosen cell for $K$ plies (default $K = 3$, configurable via `rules['K']`).
 - Cannot block an occupied pawn cell or an already blocked cell.
-- Must preserve at least one valid path to the goal for both players. Path checks (walls, repositioning, blocks) treat all currently active blocks as impassable, including one that expires on this ply.
-- The cell is impassable for exactly the next $K$ plies after the blocking ply (proposal: $\tau_{t+1}(c^*) = K$, every other timer decays by 1 per ply). With $K = 3$ the block covers the opponent's next move, the blocker's next move and the opponent's following move.
+- Must preserve at least one valid path to the goal row for both players.
 - Permanently consumed upon execution (`block_available[player] = False`).
 
 ---
 
-## 4. Termination & Winning Conditions
+## 4. Temporary Block ($K$-Ply) Timeline
 
-1. **Goal Reach**: The first pawn to reach its target goal row immediately wins the game.
-2. **Clock Depletion**: A player whose clock runs out (`time_remaining <= 0.0s`) immediately loses.
-3. **5-Fold Repetition Draw**: If an identical full game state (pawn positions, active walls, wall inventories, latest wall pointers, block timers, ability availability, and active turn indicator) occurs 5 times, the match terminates in a draw.
-4. **No Legal Action Draw**: If the side to move has no legal action in a non-terminal position, the game is a draw (team decision, 6 Nov 2026).
-5. **Step Limit Truncation**: Matches are cut off at $T_{\max} = 200$ plies. The evaluation tools report this as *truncated*, separately from rule draws, because a cap is not a proven draw (see `docs/person3_evaluation.md`).
+When Player 0 plays `BLOCK` at cell $c^*$ with $K=3$:
+
+| Ply | Active Player | Action | State of Block $c^*$ | Impassable? |
+|---|---|---|---|---|
+| **$t$** | Player 0 | `BLOCK c*` | Set to $\tau(c^*) = 3$ at end of ply | Impassable immediately |
+| **$t+1$** | Player 1 | *any legal action* | Decrements to $\tau(c^*) = 2$ at end of ply | **Yes** (Player 1 cannot enter/cross) |
+| **$t+2$** | Player 0 | *any legal action* | Decrements to $\tau(c^*) = 1$ at end of ply | **Yes** (Player 0 cannot enter/cross) |
+| **$t+3$** | Player 1 | *any legal action* | Decrements to $\tau(c^*) = 0$ $\to$ removed at end of ply | **Yes** (Player 1 cannot enter/cross) |
+| **$t+4$** | Player 0 | *any legal action* | Expired; cell $c^*$ is open | **No** (Cell is fully passable) |
+
+Summary rule: With $K = 3$, the block covers the opponent's next move ($t+1$), the blocker's subsequent move ($t+2$), and the opponent's following move ($t+3$). At the end of ply $t+3$, the timer reaches 0 and the cell becomes fully passable for ply $t+4$ onward.
+
+---
+
+## 5. Strict Validation Order and Error Contract
+
+The canonical method `apply_action(action, update_clock=True)` executes a strict, transactional pipeline. If any check fails, a `ValueError` is raised and the game state remains **completely unmodified**:
+
+1. **Terminal Guard**:
+   - If `self.is_terminal()`: raises `ValueError("Game is already over; no further actions may be applied.")`.
+2. **Normalization (`_normalize_action`)**:
+   - Checks sequence structure and types.
+   - Raises `ValueError("Malformed action: ...")` for invalid arities or unknown action types.
+3. **Legality Validation (`_validate_action`)**:
+   - Evaluates legality without modifying state:
+     - `MOVE`: raises `ValueError("Illegal move to (r, c).")` on wall collisions, blocked cells, or bounds.
+     - `HOP`: raises `ValueError("Illegal hop to (r, c).")` if Rule B disabled, hop consumed, or invalid jump.
+     - `WALL`: raises `ValueError("Player X has no walls remaining in inventory.")` if $m_i \le 0$; raises `ValueError("Illegal wall placement at ...")` if colliding or disconnecting paths.
+     - `REPLACE`: raises `ValueError("Reusable wall mechanic (Rule A) is disabled.")`, `ValueError("Player X has not placed any wall yet to reposition.")`, `ValueError("Cannot reposition older wall ...")`, or `ValueError("Illegal wall replacement ...")`.
+     - `BLOCK`: raises `ValueError("Player X has no cell block available.")` or `ValueError("Illegal cell block at ...: path preservation violated.")`.
+4. **Clock Update**:
+   - If `update_clock=True`: deducts elapsed time from active player's clock. If clock $\le 0.0$, flags timeout loss immediately.
+5. **Mutation (`_mutate`)**:
+   - Updates pawn position, wall list, inventory decrement ($m_i \leftarrow m_i - 1$), latest wall pointer, or ability flags.
+6. **Goal Win Condition Check**:
+   - If `pawns[player][0] == goals[player]`: sets `winner = player`, `terminal_reason = 'goal'`.
+7. **Block Timers Decrement**:
+   - Decrements all existing block timers by 1 ply; cleans up expired blocks ($\le 0$); sets new block timer to $K$.
+8. **Turn Transition**:
+   - Swaps active player (`current_player = 1 - current_player`) and increments `turn_count += 1`.
+9. **Step Limit Truncation Check**:
+   - If `turn_count >= max_plies`: sets `is_draw = True`, `is_truncated = True`, `terminal_reason = 'truncated'`.
+10. **No-Legal-Actions Draw Check**:
+    - If non-terminal and `has_legal_action(current_player) == False`: sets `is_draw = True`, `terminal_reason = 'no_legal_actions'`.
+11. **5-Fold Repetition Draw Check**:
+    - Appends state signature to history; if frequency $\ge 5$: sets `is_draw = True`, `terminal_reason = 'repetition'`.
+
+---
+
+## 6. Precedence of Termination Conditions
+
+When evaluating the end of a match, precedence is strictly evaluated as:
+1. **Clock Timeout**: Instantaneous forfeit upon clock expiry.
+2. **Goal Reached**: Immediate win for the player reaching their goal row.
+3. **Max Plies Truncation**: Match terminated at $T_{\max} = 200$ plies (`terminal_reason = 'truncated'`).
+4. **No Legal Actions**: Draw declared if the player to move has zero legal actions (`terminal_reason = 'no_legal_actions'`).
+5. **5-Fold Repetition**: Draw declared if the identical game state signature occurs 5 times (`terminal_reason = 'repetition'`).

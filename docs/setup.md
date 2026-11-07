@@ -8,6 +8,7 @@ This guide provides complete instructions to set up the environment, install dep
 
 - **Operating System**: Linux (Ubuntu 20.04+, Debian 11+, Fedora 38+), macOS (12+), or Windows 10/11 with WSL2.
 - **Python Version**: Python 3.10, 3.11, 3.12, 3.13, or 3.14.
+- **Node.js Version** (for Web Demo): Node.js $\ge 20.0.0$, npm $\ge 10.0.0$.
 - **Hardware Requirements**:
   - Minimum: 4 GB RAM, dual-core CPU.
   - Recommended: 16 GB RAM, 4+ CPU cores (for large state-graph solving and factorial ablations).
@@ -51,13 +52,19 @@ pip install -e .
 
 ## 3. Immediate Verification
 
-Confirm that the environment is correctly set up by running the test suite and engine performance benchmark:
+Confirm that the environment is correctly set up by running the comprehensive test suite and engine performance benchmark:
 
-### Run Full Test Suite (160 tests)
+### Run Full Pytest Test Suite
 ```bash
-python3 -m unittest discover -s tests
+.venv/bin/python -m pytest -q
 ```
-*Expected Result*: `Ran 160 tests in ~20s ... OK (0 failures, 0 errors)`.
+*Expected Result*: All 300+ unit, integration, property, and web tests pass cleanly.
+
+### Run Frontend Vitest Suite
+```bash
+npm --prefix web/frontend test -- --run
+```
+*Expected Result*: 6 passed (geometry coordinate conversions and SVG board component rendering).
 
 ### Run Engine Throughput Benchmark
 ```bash
@@ -160,7 +167,41 @@ python3 run_match.py --p0 greedy --p1 greedy --board-size 5 --abc 101 --seed 42
 
 ---
 
-## 7. Troubleshooting & FAQ
+## 7. Web Application Demo & Greedy Match Campaign
+
+### 1. Launching the Web Demo
+Build the production frontend bundle and serve it unified through the Flask backend:
+```bash
+# Production Mode (Single process on port 5000)
+npm --prefix web/frontend ci
+npm --prefix web/frontend run build
+.venv/bin/python -m web.backend.app --port 5000
+```
+Open **`http://localhost:5000`** in your browser to interact with the Play, Arena, Training, Replays, and Rules views.
+
+For development with hot module replacement:
+```bash
+# Terminal 1: Backend API
+.venv/bin/python -m web.backend.app --port 5000 --debug
+
+# Terminal 2: Vite Dev Server
+npm --prefix web/frontend run dev
+```
+
+### 2. Running the Greedy Match Campaign (720 Matches)
+To run the full greedy match campaign across $N \in \{3, 5, 9\}$ with Random, Minimax, and Self-play opponents:
+```bash
+# Quick smoke run (~1 min)
+python scripts/run_greedy_matches.py --quick
+
+# Full reproducible campaign (720 games, outputs under experiments/results/greedy/)
+python scripts/run_greedy_matches.py --seeds 42 43 44 45 46
+```
+The script automatically verifies all 720 replays, outputs `summary.json`, and updates `experiments/tables/table_greedy_matches.{md,tex}`.
+
+---
+
+## 8. Troubleshooting & FAQ
 
 ### 1. `ModuleNotFoundError: No module named 'modified_wallz'`
 Ensure the virtual environment is active and the package is installed in editable mode:

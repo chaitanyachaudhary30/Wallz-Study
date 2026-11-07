@@ -11,11 +11,17 @@ export const RulesPage: React.FC = () => {
   const [detail, setDetail] = useState<ScenarioDetail | null>(null);
   const [currentPly, setCurrentPly] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [rulesDoc, setRulesDoc] = useState<string>('');
+  const [showDoc, setShowDoc] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     api.fetchScenarios().then((list) => {
       setScenarios(list);
+    }).catch(console.error);
+
+    api.fetchRules().then((res) => {
+      setRulesDoc(res.rules);
     }).catch(console.error);
   }, []);
 
@@ -48,6 +54,14 @@ export const RulesPage: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem', alignItems: 'start' }}>
         {/* Left Column: 9 Canonical Scenarios Directory */}
         <div className="card">
+          <button
+            className="btn"
+            style={{ width: '100%', marginBottom: '1rem', fontSize: '0.8rem' }}
+            onClick={() => setShowDoc(!showDoc)}
+          >
+            {showDoc ? 'Hide Official Rules Doc' : '📖 View Rules Spec (Markdown)'}
+          </button>
+
           <div className="card-title">Rule Scenarios (9)</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {scenarios.map((s) => (
@@ -74,6 +88,15 @@ export const RulesPage: React.FC = () => {
 
         {/* Right Column: Scenario Player */}
         <div className="board-container">
+          {showDoc && (
+            <div className="card" style={{ width: '100%', marginBottom: '1.5rem', maxHeight: '500px', overflowY: 'auto' }}>
+              <div className="card-title">Official Rules Specification (docs/game_rules.md)</div>
+              <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.8rem', lineHeight: '1.4', color: 'var(--text-color)' }}>
+                {rulesDoc || 'Loading rules...'}
+              </pre>
+            </div>
+          )}
+
           {detail?.scenario && (
             <div className="card" style={{ width: '100%', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

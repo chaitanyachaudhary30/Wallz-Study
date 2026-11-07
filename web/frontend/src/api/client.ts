@@ -126,4 +126,7 @@ export const api = {
   fetchTrainingRun: (id: string) => request<any>(`/api/training/runs/${id}`),
   fetchTrainingSummary: () => request<any>('/api/training/summary'),
   fetchTrainingConfig: () => request<any>('/api/training/config'),
+
+  // Rules Documentation
+  fetchRules: () => request<{ rules: string }>('/api/rules'),
 };
