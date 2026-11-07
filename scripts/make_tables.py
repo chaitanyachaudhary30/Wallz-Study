@@ -415,10 +415,19 @@ def generate_all_tables(output_dir: str = "experiments/tables/"):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Generate Report Tables from Experiment Data.")
     parser.add_argument("--output-dir", type=str, default="experiments/tables/")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for bootstrap resampling (default: 42)")
     parser.add_argument("--ablation", type=str, default=None)
     parser.add_argument("--agreement", type=str, default=None)
     parser.add_argument("--benchmark", type=str, default=None)
     args = parser.parse_args()
+
+    import random
+    random.seed(args.seed)
+    try:
+        import numpy as np
+        np.random.seed(args.seed)
+    except ImportError:
+        pass
 
     if args.ablation or args.agreement or args.benchmark:
         out = Path(args.output_dir)

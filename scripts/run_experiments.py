@@ -15,6 +15,7 @@ import os
 import sys
 import time
 from pathlib import Path
+import random
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -25,6 +26,24 @@ from evaluation.metrics import summarize_cells, effects_with_ci  # noqa: E402
 from evaluation.replay_export import export_demo_replay  # noqa: E402
 from evaluation.retrograde import solve_config  # noqa: E402
 from evaluation.state_graph import GraphCaps  # noqa: E402
+
+
+def seed_everything(seed: int = 42) -> None:
+    """Sets random seeds across python, numpy, and torch for full determinism."""
+    random.seed(seed)
+    try:
+        import numpy as np
+        np.random.seed(seed)
+    except ImportError:
+        pass
+    try:
+        import torch
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+    except ImportError:
+        pass
+
 
 RESPONSES = ['x_goal_win', 'x_goal_loss', 'truncated', 'length_plies', 'mean_legal_actions', 'x_decision_ms']
 
@@ -50,9 +69,13 @@ def read_results(path):
 
 
 def cmd_match(args):
+    seed = getattr(args, 'seed', None)
+    if seed is None:
+        seed = getattr(args, 'opening_seed', 42)
+    seed_everything(seed)
     cfg = MatchConfig(board_size=args.N, rules=rules_from(args.abc, args.K, args.M), p0=args.p0,
                       p1=args.p1, max_plies=args.max_plies, opening_plies=args.opening_plies,
-                      opening_seed=args.opening_seed, move_time_limit=args.move_time_limit)
+                      opening_seed=seed, move_time_limit=args.move_time_limit)
     res = run_match(cfg)
     o = res['outcome']
     print(f"{res['match_id']}: {o['category']} winner={o['winner']} plies={res['length_plies']}")
@@ -63,7 +86,9 @@ def cmd_match(args):
 
 
 def cmd_ablation(args):
-    seeds = range(args.seed_start, args.seed_start + args.seeds)
+    seed_start = args.seed_start if args.seed_start != 0 or getattr(args, 'seed', None) is None else args.seed
+    seed_everything(seed_start)
+    seeds = range(seed_start, seed_start + args.seeds)
     configs = ablation_configs(args.x, args.y, board_size=args.N, K=args.K, M=args.M,
                                opening_seeds=seeds, opening_plies=args.opening_plies,
                                max_plies=args.max_plies, move_time_limit=args.move_time_limit)
@@ -94,6 +119,7 @@ def cmd_ablation(args):
 
 
 def cmd_solve(args):
+    seed_everything(getattr(args, 'seed', 42))
     caps = GraphCaps(max_states=args.max_states, max_edges=args.max_edges, max_seconds=args.max_seconds)
     if args.abc == 'all':
         def progress(row):
@@ -113,6 +139,7 @@ def cmd_solve(args):
 
 
 def cmd_agreement(args):
+    seed_everything(getattr(args, 'seed', 42))
     caps = GraphCaps(max_states=args.max_graph_states, max_seconds=args.max_seconds)
     rows = []
     if args.abc == 'all':
@@ -213,7 +240,8 @@ def main():
     p.add_argument('--p1', default='greedy')
     p.add_argument('--max-plies', type=int, default=200)
     p.add_argument('--opening-plies', type=int, default=0)
-    p.add_argument('--opening-seed', type=int, default=0)
+    p.add_argument('--opening-seed', type=int, default=42)
+    p.add_argument('--seed', type=int, default=None, help='random seed (alias for opening-seed)')
     p.add_argument('--move-time-limit', type=float, default=None)
     p.add_argument('--out')
     p.set_defaults(func=cmd_match)
@@ -224,6 +252,7 @@ def main():
     p.add_argument('--y', required=True, help='opponent agent spec')
     p.add_argument('--seeds', type=int, default=100)
     p.add_argument('--seed-start', type=int, default=0)
+    p.add_argument('--seed', type=int, default=None, help='starting seed (alias for seed-start)')
     p.add_argument('--opening-plies', type=int, default=2)
     p.add_argument('--max-plies', type=int, default=200)
     p.add_argument('--move-time-limit', type=float, default=None)
@@ -238,6 +267,7 @@ def main():
     p.add_argument('--max-states', type=int, default=default_caps().max_states)
     p.add_argument('--max-edges', type=int, default=default_caps().max_edges)
     p.add_argument('--max-seconds', type=float, default=default_caps().max_seconds)
+    p.add_argument('--seed', type=int, default=42, help='random seed (default: 42)')
     p.add_argument('--out')
     p.set_defaults(func=cmd_solve)
 
@@ -248,7 +278,7 @@ def main():
     p.add_argument('--max-states', type=int, default=300, help='sampled states per cell')
     p.add_argument('--max-graph-states', type=int, default=300_000)
     p.add_argument('--max-seconds', type=float, default=600.0)
-    p.add_argument('--seed', type=int, default=0)
+    p.add_argument('--seed', type=int, default=42, help='random seed (default: 42)')
     p.add_argument('--out')
     p.set_defaults(func=cmd_agreement)
 

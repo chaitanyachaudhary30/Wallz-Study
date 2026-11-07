@@ -126,7 +126,10 @@ def benchmark_clone_scaling(
 def run_benchmark():
     parser = argparse.ArgumentParser(description="Wallz Engine Performance Benchmarks (P9.6)")
     parser.add_argument("--out", type=str, default="experiments/results/engine/benchmark_performance.json")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for state progression (default: 42)")
     args = parser.parse_args()
+
+    random.seed(args.seed)
 
     rules_full = {'A': True, 'B': True, 'C': True, 'K': 3, 'M': 10}
 
@@ -137,7 +140,7 @@ def run_benchmark():
     print(f"9x9 Start Legal Actions: mean = {res_9x9_start['mean_ms']:.3f} ms (Target <= 3.0 ms)")
 
     # 2. 9x9 Midgame Legal Actions (Target <= 4.0 ms)
-    res_9x9_mid = benchmark_legal_actions_midgame(9, rules_full, num_states=20, evals_per_state=25)
+    res_9x9_mid = benchmark_legal_actions_midgame(9, rules_full, num_states=20, evals_per_state=25, seed=args.seed)
     print(f"9x9 Midgame Legal Actions: mean = {res_9x9_mid['mean_ms']:.3f} ms (Target <= 4.0 ms)")
 
     # 3. 5x5 Start Legal Actions (Target <= 1.0 ms)
@@ -145,7 +148,7 @@ def run_benchmark():
     print(f"5x5 Start Legal Actions: mean = {res_5x5_start['mean_ms']:.3f} ms (Target <= 1.0 ms)")
 
     # 4. Clone latency across plies (Target <= 50.0 us)
-    res_clone = benchmark_clone_scaling(9, rules_full, ply_checkpoints=[5, 20, 50], repeats=500)
+    res_clone = benchmark_clone_scaling(9, rules_full, ply_checkpoints=[5, 20, 50], repeats=500, seed=args.seed)
     max_clone_us = max(v['mean_us'] for v in res_clone.values())
     print(f"Engine Clone Latency (max across plies): {max_clone_us:.2f} us (Target <= 50.0 us)")
 

@@ -17,11 +17,12 @@ classifiers = [
 ]
 dependencies = [
     "pyyaml>=6.0",
+    "networkx>=3.0",
+    "numpy>=1.24",
 ]
 
 [project.optional-dependencies]
 dqn = [
-    "numpy>=1.24",
     "torch>=2.0",
 ]
 dev = [

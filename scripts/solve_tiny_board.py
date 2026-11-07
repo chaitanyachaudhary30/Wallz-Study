@@ -41,8 +41,15 @@ def main():
         "--show-root-actions", action="store_true",
         help="Display game-theoretic evaluation for every legal root action"
     )
+    parser.add_argument(
+        "--seed", type=int, default=42,
+        help="Random seed (default: 42)"
+    )
 
     args = parser.parse_args()
+
+    import random
+    random.seed(args.seed)
 
     rules = {
         'A': not args.no_replace,

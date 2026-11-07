@@ -1,5 +1,6 @@
 """Thin CLI and programmatic wrapper over evaluation.match_runner (P7.3)."""
 import argparse
+import random
 import sys
 import time
 from pathlib import Path
@@ -10,6 +11,23 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from evaluation.match_runner import MatchConfig, run_match as execute_match, verify_replay
 
 
+def seed_everything(seed: int = 42) -> None:
+    """Sets random seeds across python, numpy, and torch for full determinism."""
+    random.seed(seed)
+    try:
+        import numpy as np
+        np.random.seed(seed)
+    except ImportError:
+        pass
+    try:
+        import torch
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+    except ImportError:
+        pass
+
+
 def run_match(
     p0_type: str = 'minimax',
     p1_type: str = 'greedy',
@@ -18,7 +36,7 @@ def run_match(
     time_limit: Optional[float] = 1.0,
     max_steps: int = 200,
     rules: Optional[Dict[str, Any]] = None,
-    opening_seed: int = 0,
+    opening_seed: int = 42,
     opening_plies: int = 0,
     verbose: bool = True,
 ) -> Tuple[Optional[int], int, Dict[Any, Any]]:
@@ -27,6 +45,7 @@ def run_match(
     Wraps evaluation.match_runner.run_match.
     Returns (winner, total_plies, metrics).
     """
+    seed_everything(opening_seed)
     if rules is None:
         rules = {'A': True, 'B': True, 'C': True, 'K': 3, 'M': 10}
 
@@ -119,16 +138,31 @@ def run_match(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Headless Match Runner for Modified Wallz (Thin Wrapper)")
+    parser = argparse.ArgumentParser(description="Headless Match Runner for Modified Wallz")
     parser.add_argument("--p0", type=str, default="minimax", help="Player 0 agent spec or name")
     parser.add_argument("--p1", type=str, default="greedy", help="Player 1 agent spec or name")
-    parser.add_argument("--board-size", type=int, default=9, help="Board size N (default: 9)")
+    parser.add_argument("--board-size", "-N", type=int, default=9, help="Board size N (default: 9)")
     parser.add_argument("--depth", type=int, default=2, help="Minimax search depth (default: 2)")
     parser.add_argument("--time-limit", type=float, default=1.0, help="Per-turn time limit in seconds (default: 1.0)")
     parser.add_argument("--max-steps", type=int, default=200, help="Maximum steps before truncation (default: 200)")
+    parser.add_argument("--seed", type=int, default=42, help="Random seed for opening and agents (default: 42)")
+    parser.add_argument("--opening-plies", type=int, default=0, help="Randomized pawn opening plies (default: 0)")
+    parser.add_argument("--abc", type=str, default="111", help="Rule toggles A,B,C as bitstring e.g. 111 (default: 111)")
+    parser.add_argument("-K", type=int, default=3, help="Temporary block duration K (default: 3)")
+    parser.add_argument("-M", type=int, default=10, help="Wall budget M (default: 10)")
     parser.add_argument("--quiet", action="store_true", help="Suppress verbose output")
 
     args = parser.parse_args()
+
+    abc = args.abc.strip()
+    rules = {
+        'A': abc[0] == '1' if len(abc) > 0 else True,
+        'B': abc[1] == '1' if len(abc) > 1 else True,
+        'C': abc[2] == '1' if len(abc) > 2 else True,
+        'K': args.K,
+        'M': args.M,
+    }
+
     run_match(
         p0_type=args.p0,
         p1_type=args.p1,
@@ -136,6 +170,9 @@ def main():
         depth=args.depth,
         time_limit=args.time_limit,
         max_steps=args.max_steps,
+        rules=rules,
+        opening_seed=args.seed,
+        opening_plies=args.opening_plies,
         verbose=not args.quiet,
     )
 

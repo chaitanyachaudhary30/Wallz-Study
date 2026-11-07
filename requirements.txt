@@ -1,0 +1,8 @@
+# Modified Wallz - Multi-Agent System & AI Decision Baselines
+# Core dependencies for engine, baselines, MARL DQN, evaluation, and test suites.
+
+numpy>=1.24.0
+torch>=2.0.0
+networkx>=3.0.0
+pyyaml>=6.0
+hypothesis>=6.0.0

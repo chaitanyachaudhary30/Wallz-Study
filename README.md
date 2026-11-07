@@ -1,8 +1,8 @@
 # Modified Wallz — Multi-Agent System & AI Decision Baselines
 
-[![Tests](https://img.shields.io/badge/tests-160%20passed-brightgreen.svg)]()
+[![Tests](<https://img.shields.io/badge/tests-160%20passed-brightgreen.svg>)]()
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)]()
-[![Course](https://img.shields.io/badge/CS329-Foundations%20of%20AI-orange.svg)]()
+[![Course](<https://img.shields.io/badge/CS329-Foundations%20of%20AI-orange.svg>)]()
 
 This repository contains the complete game environment, decision baselines, MARL self-play framework, exact retrograde solver, and statistical evaluation pipeline for **"Multi-Agent Reinforcement Learning for Adversarial Spatial Decision-Making with Temporal Constraints"** (CS 329: Foundations of AI / Multi-Agent Systems, IIT Gandhinagar).
 
@@ -13,12 +13,14 @@ The project studies competitive multi-agent planning in **Modified Wallz**—a d
 ## 🎲 Game Rules & Mechanics
 
 The game is played on an $N \times N$ discrete grid (default $N = 9$):
+
 - **Player 0** starts at row `0` (goal: reach row `N - 1`).
 - **Player 1** starts at row `N - 1` (goal: reach row `0`).
 - Both players alternate turns taking exactly one action per turn (`MOVE`, `HOP`, `WALL`, or `BLOCK`).
 - **Path-Preservation Rule**: An action is strictly illegal if it completely blocks all remaining shortest paths from either pawn to its target goal row.
 
 ### The Three Novel Modifications
+
 1. **Modification A: Reusable Walls (`WALL`, `REPLACE`)**
    - Each player begins with a finite inventory of $M = 10$ walls. Placing a new wall consumes 1 inventory unit.
    - Only the player's single most recently placed wall ($r_i$) can be repositioned (`REPLACE`). Older walls remain permanently fixed.
@@ -29,6 +31,7 @@ The game is played on an $N \times N$ discrete grid (default $N = 9$):
    - A single-use ability temporarily blocking a selected cell for $K$ turns (default $K = 3$ plies) with turn-by-turn decay. Must preserve at least one valid goal path for both players.
 
 ### Termination & Draws
+
 - **Goal Reach**: Natural win when a pawn reaches its designated target goal row.
 - **Clock Depletion**: A player immediately loses if their chess clock runs out (`time_remaining <= 0.0s`).
 - **5-Fold Repetition**: Game ends in a draw if the identical full state occurs 5 times.
@@ -39,16 +42,16 @@ The game is played on an $N \times N$ discrete grid (default $N = 9$):
 
 ## 🚀 Implementation Status Matrix
 
-| Component | Module | Status | Verification & Gates |
-| :--- | :--- | :--- | :--- |
-| **Headless Game Engine** | `wallz_engine.py` / `src.modified_wallz` | **Production Ready** | 1.54 ms legal actions, 2.81 $\mu$s O(1) clone, canonical key, Gate X-1 & X-2 passed |
-| **Tier-1 Greedy Baseline** | `agents/greedy.py` / `greedy_agent.py` | **Production Ready** | 4-tier lexicographical tie order `(H, cat, -d_self, tie_key)`, draw scoring, seeded tie-break |
-| **Tier-2 Minimax Agent** | `agents/minimax.py` | **Production Ready** | Negamax, Alpha-Beta pruning, PV-first ordering, history heuristic, goal extension, Contract C7 |
-| **Tier-3 Exact Solver** | `agents/exact_solver.py` / `evaluation.retrograde` | **Production Ready** | Backward induction on cyclic graphs, cycle/stalemate draw separation, $K \in \{1,2,3\}$ solved |
-| **MARL Deep Q-Network** | `agents/dqn/` | **Production Ready** | Negamax Double-DQN, 14-plane spatial tensor, ActionCodec, self-play pool, released checkpoints |
-| **Evaluation Framework** | `evaluation/` / `scripts/run_experiments.py` | **Production Ready** | Paired 2³ factorial ablations, Holm-Bonferroni correction, Wilson CIs, replay verification |
-| **Report Table Generator** | `scripts/make_tables.py` | **Production Ready** | Generates 13 publication-ready Markdown and LaTeX tables across all experimental gates |
-| **Test Suite** | `tests/` | **100% Passing** | **160/160 tests passing**, Hypothesis stateful testing, NetworkX BFS validation, conformance suite |
+| Component                        | Module                                                 | Status                     | Verification & Gates                                                                                     |
+| :------------------------------- | :----------------------------------------------------- | :------------------------- | :------------------------------------------------------------------------------------------------------- |
+| **Headless Game Engine**   | `wallz_engine.py` / `src.modified_wallz`           | **Production Ready** | 1.54 ms legal actions, 2.81 $\mu$s O(1) clone, canonical key, Gate X-1 & X-2 passed                    |
+| **Tier-1 Greedy Baseline** | `agents/greedy.py` / `greedy_agent.py`             | **Production Ready** | 4-tier lexicographical tie order `(H, cat, -d_self, tie_key)`, draw scoring, seeded tie-break          |
+| **Tier-2 Minimax Agent**   | `agents/minimax.py`                                  | **Production Ready** | Negamax, Alpha-Beta pruning, PV-first ordering, history heuristic, goal extension, Contract C7           |
+| **Tier-3 Exact Solver**    | `agents/exact_solver.py` / `evaluation.retrograde` | **Production Ready** | Backward induction on cyclic graphs, cycle/stalemate draw separation, $K \in \{1,2,3\}$ solved         |
+| **MARL Deep Q-Network**    | `agents/dqn/`                                        | **Production Ready** | Negamax Double-DQN, 14-plane spatial tensor, ActionCodec, self-play pool, released checkpoints           |
+| **Evaluation Framework**   | `evaluation/` / `scripts/run_experiments.py`       | **Production Ready** | Paired 2³ factorial ablations, Holm-Bonferroni correction, Wilson CIs, replay verification              |
+| **Report Table Generator** | `scripts/make_tables.py`                             | **Production Ready** | Generates 13 publication-ready Markdown and LaTeX tables across all experimental gates                   |
+| **Test Suite**             | `tests/`                                             | **100% Passing**     | **160/160 tests passing**, Hypothesis stateful testing, NetworkX BFS validation, conformance suite |
 
 ---
 
@@ -114,12 +117,35 @@ FAI_project/
 │   └── ...                       # Engine mechanics, path preservation, abilities, replacements
 │
 └── docs/                         # Technical documentation & design decisions
+    ├── setup.md                  # Comprehensive setup, installation & reproduction guide
     ├── decisions.md              # Engineering decisions D1-D12 and rule formalizations
     ├── game_rules.md             # Formal game mechanics, abilities, and termination rules
     ├── minimax.md                # Minimax / Negamax formulation & search extensions
     ├── dqn.md                    # Deep Q-Network architecture, observation tensor, self-play
     ├── exact_solver.md           # Retrograde propagation theory for cyclic games
+    ├── implementation_status.md  # Detailed implementation and test tracker across all 10 phases
     └── architecture.md           # High-level architecture, contracts, and data flow
+```
+
+---
+
+## 📦 Installation & Quick Setup
+
+Follow these steps to set up the environment from scratch (detailed instructions available in [`docs/setup.md`](docs/setup.md)):
+
+```bash
+# 1. Clone repository
+git clone https://github.com/vedantb7/FAI_project.git
+cd FAI_project
+
+# 2. Create and activate virtual environment (Python 3.10+)
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows (cmd): .venv\Scripts\activate.bat
+
+# 3. Upgrade packaging tools and install dependencies
+pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+pip install -e .
 ```
 
 ---
@@ -133,6 +159,7 @@ python3 -m unittest discover -s tests
 ```
 
 Run specific test components:
+
 ```bash
 # Gate X-1: Hypothesis stateful property tests & legality fuzzing
 python3 -m unittest tests/test_invariants_stateful.py
@@ -155,9 +182,11 @@ Verify engine throughput and latency targets against engineering thresholds:
 
 ```bash
 python3 scripts/benchmark_engine_performance.py
+python3 scripts/benchmark_engine_performance.py --seed 42
 ```
 
 **Results:**
+
 - $9 \times 9$ start legal-action generation: **1.54 ms** (Target $\le 3.0$ ms) — **PASS**
 - $9 \times 9$ midgame legal-action generation: **2.03 ms** (Target $\le 4.0$ ms) — **PASS**
 - $5 \times 5$ start legal-action generation: **0.23 ms** (Target $\le 1.0$ ms) — **PASS**
@@ -172,12 +201,18 @@ Run head-to-head matches using `run_match.py`:
 ```bash
 # 1. Minimax (depth 2) vs Greedy on default 9x9 board
 python3 run_match.py --p0 minimax --p1 greedy --depth 2
+# 1. Minimax (depth 2) vs Greedy on default 9x9 board with seed 42
+python3 run_match.py --p0 minimax --p1 greedy --depth 2 --seed 42
 
 # 2. DQN vs Minimax on 3x3 board
 python3 run_match.py --p0 dqn:path=checkpoints/release/dqn_3x3/model.pt --p1 minimax:depth=2 --board-size 3
+# 2. DQN vs Minimax on 3x3 board with seed 42
+python3 run_match.py --p0 dqn:path=checkpoints/release/dqn_3x3/model.pt --p1 minimax:depth=2 --board-size 3 --seed 42
 
 # 3. Greedy vs Greedy on 5x5 board
 python3 run_match.py --p0 greedy --p1 greedy --board-size 5
+# 3. Greedy vs Greedy on 5x5 board with seed 42
+python3 run_match.py --p0 greedy --p1 greedy --board-size 5 --seed 42
 ```
 
 ---
@@ -195,18 +230,23 @@ python3 scripts/run_experiments.py --config configs/experiments/ablation_5x5_k3.
 
 # 3. Exact Retrograde Solve of Miniature Boards
 python3 scripts/run_experiments.py solve -N 3 -K 1 -M 0 --abc all --out experiments/results/solves/solve_N3_K1_M0.json
+python3 scripts/run_experiments.py solve -N 3 -K 1 -M 0 --abc all --out experiments/results/solves/solve_N3_K1_M0.json --seed 42
 
 # 4. Feature Study & Logistic Regression AUC Evaluation (Gate X-5)
 python3 scripts/feature_study.py --solve-file experiments/results/solves/solve_N3_K1_M0.json
+python3 scripts/feature_study.py --board-size 3 --seed 42
 ```
 
 Generate all 13 publication-ready Markdown and LaTeX tables:
+Generate all 14 publication-ready Markdown and LaTeX tables:
 
 ```bash
 python3 scripts/make_tables.py
+python3 scripts/make_tables.py --seed 42
 ```
 
 Tables are output to `experiments/tables/`:
+
 - `table_x6_agreement_*.md` / `.tex`: Optimal Action Agreement rates (Gate X-6).
 - `table_x9_benchmark_*.md` / `.tex`: Match win rates with Wilson 95% CIs (Gate X-9).
 - `table_x10a_ablation_cells.md` / `.tex`: 2³ factorial mechanics ablation cells.

@@ -9,39 +9,39 @@ This document outlines the architecture, component boundaries, engine interface,
 The platform separates game simulation, state representation, decision agents, and tournament execution into decoupled modules:
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│                       Match Runner                          │
-│          (run_match.py / scripts/run_match.py)              │
-└──────────────┬───────────────────────────────┬──────────────┘
-               │                               │
-               ▼                               ▼
-     ┌──────────────────┐            ┌──────────────────┐
-     │   GreedyAgent    │            │   MinimaxAgent   │
-     │ (agents/greedy)  │            │ (agents/minimax) │
-     └─────────┬────────┘            └─────────┬────────┘
-               │                               │
-               │ select_action(engine)         │ select_action(engine)
-               │                               │
-               ▼                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                        WallzEngine                          │
-│               (wallz_engine.py / src.modified_wallz)        │
-│                                                             │
-│   • Board state & pawn coordinates                          │
-│   • Reusable Walls & Repositioning (Modification A)         │
-│   • One-Time Hop Mechanics (Modification B)                 │
-│   • Temporary Cell Blocks & Decay (Modification C)          │
-│   • BFS Shortest-Path & Path-Preservation Validation        │
-│   • 5-Fold Repetition Hashable State History                │
-│   • Chess-Clock Per-Player Timers                           │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                               Match Runner                                  │
+│                   (run_match.py / evaluation.match_runner)                  │
+└──────┬──────────────────────┬───────────────────────┬───────────────────────┘
+       │                      │                       │
+       ▼                      ▼                       ▼
+┌──────────────┐      ┌──────────────┐        ┌──────────────┐
+│ GreedyAgent  │      │ MinimaxAgent │        │   DQNAgent   │
+│(agents/greedy│      │(agents/minima│        │ (agents/dqn) │
+└──────┬───────┘      └───────┬──────┘        └───────┬──────┘
+       │                      │                       │
+       │ select_action(engine)│ select_action(engine) │ select_action(engine)
+       │                      │                       │
+       ▼                      ▼                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                WallzEngine                                  │
+│                   (wallz_engine.py / src.modified_wallz)                    │
+│                                                                             │
+│   • Board state & pawn coordinates                                          │
+│   • Reusable Walls & Repositioning (Modification A)                         │
+│   • One-Time Hop Mechanics (Modification B)                                 │
+│   • Temporary Cell Blocks & Decay (Modification C)                          │
+│   • BFS Shortest-Path & Path-Preservation Validation                        │
+│   • 5-Fold Repetition Hashable State History (O(1) ChainMap clone)          │
+│   • Chess-Clock Per-Player Timers & Rule R3 Stalemate Termination           │
+└─────────────────────────────────────────────────────────────────────────────┘
                                ▲
                                │ Ground-Truth Policy & Values
-                               │ (scripts/solve_tiny_board.py)
-                     ┌──────────────────┐
-                     │ ExactSolverAgent │
-                     │(exact_solver.py) │
-                     └──────────────────┘
+                               │ (evaluation.retrograde)
+                      ┌──────────────────┐
+                      │ ExactSolverAgent │
+                      │(exact_solver.py) │
+                      └──────────────────┘
 ```
 
 ---
@@ -123,5 +123,9 @@ class BaseAgent:
    - Solves $3\times3$ with up to 1 wall / hop ($< 10$s) and $5\times5$ pawn races ($< 0.5$s) as ground truth.
 
 4. **MARL Self-Play Agent (`DQNAgent`)**:
-   - *(Planned / In-progress by team)* Value-based deep reinforcement learning with legal-action masking.
+   - Double-DQN with Negamax target formulation and illegal action masking.
+   - 14-plane spatial observation tensor ($14 \times N \times N$) under canonical mover perspective.
+   - Uniform FIFO replay buffer with horizontal mirror data augmentation.
+   - Self-play curriculum with historical snapshot pool and Greedy anchor.
+   - Released models in `checkpoints/release/dqn_3x3/` and `checkpoints/release/dqn_4x4/` (validated $>90\%$ sign agreement on Gate X-16).
 
