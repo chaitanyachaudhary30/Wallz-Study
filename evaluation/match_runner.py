@@ -112,8 +112,9 @@ def make_agent(spec, player_id, config, solutions=None, match_seed=0):
         depth = params.get('depth', 2)
         # Without a time limit minimax is deterministic (pure depth-limited search).
         time_limit = params.get('time_limit')
-        identity['params'] = {'depth': depth, 'time_limit': time_limit}
-        return MinimaxAgent(player_id=player_id, depth=depth, time_limit=time_limit), identity
+        extend_goal = bool(params.get('extend_goal', False))
+        identity['params'] = {'depth': depth, 'time_limit': time_limit, 'extend_goal': extend_goal}
+        return MinimaxAgent(player_id=player_id, depth=depth, time_limit=time_limit, extend_goal=extend_goal), identity
     if name == 'random':
         seed = params.get('seed', 0) * 1_000_003 + match_seed * 2 + player_id
         identity['params'] = {'seed': params.get('seed', 0), 'derived_seed': seed}

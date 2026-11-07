@@ -55,7 +55,11 @@ class MinimaxAgent:
         self.use_alpha_beta = use_alpha_beta
         self.order_moves = order_moves
         self.extend_goal = extend_goal
-        self.evaluator = evaluator
+        if evaluator is None:
+            from agents.evaluation_fn import HEvaluator
+            self.evaluator = HEvaluator()
+        else:
+            self.evaluator = evaluator
 
         # Performance & metric tracking
         self.nodes_expanded = 0

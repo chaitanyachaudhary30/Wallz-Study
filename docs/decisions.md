@@ -84,6 +84,21 @@ This document records the key architectural and algorithmic decisions made durin
   5. Draw scoring: Terminal draws (repetition or no legal action) score neutral ($H = 0.0$), ensuring draws are chosen over forced losses ($H < 0$).
 - **Rationale**: Eliminates bias toward spending walls unnecessarily, prevents skipping winning draws in losing endgames, and allows randomized multi-match exploration across tournament seeds.
 
+---
+
+### Decision 11: Rule R6 — Bounded Leaf Evaluation Transformation & Modular Evaluation Contract C7 (Phase 6)
+- **Context**: The proposal specifies heuristic $H = d_{\text{opp}} - d_{\text{self}}$, whereas the implementation uses $U(s) = \tanh(0.2 \cdot H)$. In addition, whether richer features (tempo, resources, ability availability) improve value prediction needed empirical validation (Gate X-5).
+- **Decision**:
+  1. Formalized Rule R6: $\tanh(0.2 \cdot H)$ is a strictly monotonic, odd, bounded transform of $H$. Because $\frac{d}{dx}\tanh(kx) > 0$ for all $x$, the transformation preserves exact minimax decisions across all trees ($\arg\max_a \tanh(0.2 \cdot v_a) = \arg\max_a v_a$).
+  2. The bounded $(-1, 1)$ range ensures leaf evaluations never eclipse terminal payoffs ($W_{\text{term}} - \text{ply} \ge 900 \gg 1.0$) and scales commensurately with discounted MDP value $\gamma^t \in [-1, 1]$.
+  3. Established Contract C7 (`agents/evaluation_fn.py`): Defined `@runtime_checkable` protocol `EvaluationFunction` with standard `HEvaluator` and `LinearEvaluator(weights, scale=0.5)` where $\tanh(w \cdot f / 2) = 2\sigma(w \cdot f) - 1$.
+  4. Extracted 6 canonical features ($f_1 \dots f_6$ in `evaluation/features.py`) and executed Gate X-5 feature studies on complete retrograde-solved game graphs (`scripts/feature_study.py`).
+- **Empirical Findings (Gate X-5)**:
+  - On 3×3 retrograde solved states, $H$ alone achieves 70.86% AUC, while all 6 features achieve 87.29% AUC (+16.43% improvement).
+  - On 4×4 retrograde solved states, $H$ alone achieves 87.71% AUC, while all 6 features achieve 95.51% AUC (+7.80% improvement).
+  - Both pass Gate X-5 (>70% AUC). Minimax defaults to `HEvaluator` preserving baseline behavior, with seamless pluggability for tuned evaluators via `MinimaxAgent(evaluator=...)`.
+
+
 
 
 

@@ -1,0 +1,52 @@
+{
+  "board_size": 4,
+  "rules": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "K": 1,
+    "M": 0
+  },
+  "num_samples": 5000,
+  "positive_class_ratio": 0.6924,
+  "model_h_alone": {
+    "features": [
+      "f1_distance_advantage"
+    ],
+    "weights": [
+      1.5837
+    ],
+    "bias": 1.3908,
+    "auc": 0.8771
+  },
+  "model_all_features": {
+    "features": [
+      "f1_distance_advantage",
+      "f2_tempo",
+      "f3_wall_inventory_adv",
+      "f4_hop_availability_adv",
+      "f5_block_availability_adv",
+      "f6_replaceable_wall_adv"
+    ],
+    "weights": [
+      1.841,
+      0.0,
+      0.0,
+      2.0913,
+      0.6343,
+      0.0
+    ],
+    "bias": 1.4118,
+    "auc": 0.9551
+  },
+  "feature_correlations_with_win": {
+    "f1_distance_advantage": 0.6106,
+    "f2_tempo": 0.0,
+    "f3_wall_inventory_adv": 0.0,
+    "f4_hop_availability_adv": 0.3913,
+    "f5_block_availability_adv": 0.1226,
+    "f6_replaceable_wall_adv": 0.0
+  },
+  "auc_improvement": 0.078,
+  "gate_x5_passed": true
+}
