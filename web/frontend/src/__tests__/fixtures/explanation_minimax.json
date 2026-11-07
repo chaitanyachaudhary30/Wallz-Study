@@ -1,0 +1,1448 @@
+{
+  "agent": "Minimax",
+  "spec": "minimax",
+  "player": 0,
+  "chosen": [
+    "HOP",
+    [
+      2,
+      2
+    ]
+  ],
+  "decision_seconds": 0.0154,
+  "summary": "Searched 61 positions to depth 1 (0 cutoffs); best line starts with HOP (2, 2), value +0.38.",
+  "details": {
+    "depth_requested": 1,
+    "depth_completed": 1,
+    "nodes_expanded": 61,
+    "cutoffs": 0,
+    "decision_seconds": 0.01035451889038086,
+    "root_value": 0.38,
+    "pv_first_move": [
+      "HOP",
+      [
+        2,
+        2
+      ]
+    ],
+    "root": [
+      {
+        "action": [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        "value": 0.2,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "HOP",
+          [
+            2,
+            2
+          ]
+        ],
+        "value": 0.38,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "HOP",
+          [
+            0,
+            0
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "HOP",
+          [
+            0,
+            4
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            0,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            0,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            1,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            1,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            2,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            2,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            3,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            3,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            0,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            0,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            1,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            1,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            2,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            2,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            3,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            3,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            0,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            0,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            1,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            1,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            2,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            2,
+            "V"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            3,
+            "H"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            3,
+            "V"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            0,
+            "H"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            0,
+            "V"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            1,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            1,
+            "V"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            2,
+            "H"
+          ]
+        ],
+        "value": -0.0,
+        "kind": "exact"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            2,
+            "V"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            3,
+            "H"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            3,
+            "V"
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            0,
+            0
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            0,
+            1
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            0,
+            3
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            0,
+            4
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            1,
+            0
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            1,
+            1
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            1,
+            2
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            1,
+            3
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            1,
+            4
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            2,
+            0
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            2,
+            1
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            2,
+            2
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            2,
+            3
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            2,
+            4
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            3,
+            0
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            3,
+            1
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            3,
+            2
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            3,
+            3
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            3,
+            4
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            4,
+            0
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            4,
+            1
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            4,
+            3
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      },
+      {
+        "action": [
+          "BLOCK",
+          [
+            4,
+            4
+          ]
+        ],
+        "value": null,
+        "kind": "not analysed"
+      }
+    ],
+    "features_chosen": {
+      "f1_distance_advantage": 2.0,
+      "f2_tempo": -1.0,
+      "f3_wall_inventory_adv": 0.0,
+      "f4_hop_availability_adv": -1.0,
+      "f5_block_availability_adv": 0.0,
+      "f6_replaceable_wall_adv": 0.0
+    },
+    "eval_note": "Evaluated with Negamax full-window root search"
+  },
+  "overlay": [
+    {
+      "action": [
+        "MOVE",
+        [
+          1,
+          2
+        ]
+      ],
+      "value": 0.2,
+      "label": "+0.20"
+    },
+    {
+      "action": [
+        "MOVE",
+        [
+          0,
+          1
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "MOVE",
+        [
+          0,
+          3
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "HOP",
+        [
+          2,
+          2
+        ]
+      ],
+      "value": 0.38,
+      "label": "+0.38"
+    },
+    {
+      "action": [
+        "HOP",
+        [
+          0,
+          0
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "HOP",
+        [
+          0,
+          4
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          0,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          0,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          1,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          1,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          2,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          2,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          0,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          0,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          1,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          1,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          2,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          2,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          3,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          3,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          0,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          0,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          1,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          1,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          2,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          2,
+          "V"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          3,
+          "H"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          3,
+          "V"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          0,
+          "H"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          0,
+          "V"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          1,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          1,
+          "V"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          2,
+          "H"
+        ]
+      ],
+      "value": -0.0,
+      "label": "-0.00"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          2,
+          "V"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          3,
+          "H"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          3,
+          "V"
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          0
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          1
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          3
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          4
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          0
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          1
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          2
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          3
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          4
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          0
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          1
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          2
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          3
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          4
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          0
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          1
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          2
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          3
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          4
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          0
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          1
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          3
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          4
+        ]
+      ],
+      "value": null,
+      "label": "not analysed"
+    }
+  ]
+}

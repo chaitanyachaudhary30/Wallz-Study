@@ -57,5 +57,9 @@ Thumbs.db
 .claude/
 skills-lock.json
 
+# Frontend web app artifacts
+web/frontend/node_modules/
+web/frontend/dist/
+
 # Planning docs
 /plans/

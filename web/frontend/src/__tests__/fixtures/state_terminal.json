@@ -1,0 +1,75 @@
+{
+  "n": 3,
+  "rules": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "K": 1,
+    "M": 1
+  },
+  "pawns": [
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      0
+    ]
+  ],
+  "goals": [
+    2,
+    0
+  ],
+  "walls": [],
+  "inventory": [
+    1,
+    1
+  ],
+  "hop": [
+    true,
+    true
+  ],
+  "block": [
+    true,
+    true
+  ],
+  "blocked": [],
+  "to_move": 1,
+  "turn": 3,
+  "terminal": {
+    "over": true,
+    "winner": 0,
+    "reason": "goal"
+  },
+  "paths": [
+    [
+      [
+        2,
+        1
+      ]
+    ],
+    [
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  ],
+  "legal": {
+    "MOVE": [],
+    "HOP": [],
+    "WALL": [],
+    "REPLACE": [],
+    "BLOCK": []
+  },
+  "legal_count": 0
+}

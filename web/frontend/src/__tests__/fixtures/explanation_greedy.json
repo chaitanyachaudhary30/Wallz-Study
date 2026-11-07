@@ -1,0 +1,1325 @@
+{
+  "agent": "Greedy",
+  "spec": "greedy",
+  "player": 0,
+  "chosen": [
+    "HOP",
+    [
+      2,
+      2
+    ]
+  ],
+  "decision_seconds": 0.0128,
+  "summary": "Picked the move that maximises my distance advantage H = d_opp \u2212 d_self (H = +2).",
+  "details": {
+    "objective": "H = d_opp \u2212 d_self",
+    "rows": [
+      {
+        "action": [
+          "HOP",
+          [
+            2,
+            2
+          ]
+        ],
+        "category": "HOP",
+        "priority": 2,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 2.0,
+        "d_self": 2.0,
+        "d_opp": 4.0,
+        "tie_key": -3,
+        "score": [
+          2.0,
+          2,
+          -2.0,
+          -3
+        ]
+      },
+      {
+        "action": [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        "category": "MOVE",
+        "priority": 4,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 1.0,
+        "d_self": 3.0,
+        "d_opp": 4.0,
+        "tie_key": 0,
+        "score": [
+          1.0,
+          4,
+          -3.0,
+          0
+        ]
+      },
+      {
+        "action": [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        "category": "MOVE",
+        "priority": 4,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -1,
+        "score": [
+          0.0,
+          4,
+          -4.0,
+          -1
+        ]
+      },
+      {
+        "action": [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        "category": "MOVE",
+        "priority": 4,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -2,
+        "score": [
+          0.0,
+          4,
+          -4.0,
+          -2
+        ]
+      },
+      {
+        "action": [
+          "HOP",
+          [
+            0,
+            0
+          ]
+        ],
+        "category": "HOP",
+        "priority": 2,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -4,
+        "score": [
+          0.0,
+          2,
+          -4.0,
+          -4
+        ]
+      },
+      {
+        "action": [
+          "HOP",
+          [
+            0,
+            4
+          ]
+        ],
+        "category": "HOP",
+        "priority": 2,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -5,
+        "score": [
+          0.0,
+          2,
+          -4.0,
+          -5
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            0,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -6,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -6
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            0,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -7,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -7
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            1,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -9,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -9
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            2,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -11,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -11
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            3,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -12,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -12
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            0,
+            3,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -13,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -13
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            0,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -14,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -14
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            0,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -15,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -15
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            1,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -17,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -17
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            2,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -19,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -19
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            3,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -20,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -20
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            1,
+            3,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -21,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -21
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            0,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -22,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -22
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            0,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -23,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -23
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            1,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -25,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -25
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            2,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -27,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -27
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            3,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -28,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -28
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            2,
+            3,
+            "V"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -29,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -29
+        ]
+      },
+      {
+        "action": [
+          "WALL",
+          [
+            3,
+            0,
+            "H"
+          ]
+        ],
+        "category": "WALL",
+        "priority": 1,
+        "immediate_win": false,
+        "outcome": "ongoing",
+        "H": 0.0,
+        "d_self": 4.0,
+        "d_opp": 4.0,
+        "tie_key": -30,
+        "score": [
+          0.0,
+          1,
+          -4.0,
+          -30
+        ]
+      }
+    ],
+    "tie_break_chain": [
+      "H",
+      "category priority MOVE>REPLACE>HOP>WALL>BLOCK",
+      "\u2212d_self",
+      "tie key"
+    ],
+    "immediate_win": false
+  },
+  "overlay": [
+    {
+      "action": [
+        "MOVE",
+        [
+          1,
+          2
+        ]
+      ],
+      "value": 1.0,
+      "label": "H=+1.0"
+    },
+    {
+      "action": [
+        "MOVE",
+        [
+          0,
+          1
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "MOVE",
+        [
+          0,
+          3
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "HOP",
+        [
+          2,
+          2
+        ]
+      ],
+      "value": 2.0,
+      "label": "H=+2.0"
+    },
+    {
+      "action": [
+        "HOP",
+        [
+          0,
+          0
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "HOP",
+        [
+          0,
+          4
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          0,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          0,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          1,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          1,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          2,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          2,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          0,
+          3,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          0,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          0,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          1,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          1,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          2,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          2,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          3,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          1,
+          3,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          0,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          0,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          1,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          1,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          2,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          2,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          3,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          2,
+          3,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          0,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          0,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          1,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          1,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          2,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          2,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          3,
+          "H"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "WALL",
+        [
+          3,
+          3,
+          "V"
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          0
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          1
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          3
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          0,
+          4
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          0
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          1
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          2
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          3
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          1,
+          4
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          0
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          1
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          2
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          3
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          2,
+          4
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          0
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          1
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          2
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          3
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          3,
+          4
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          0
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          1
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          3
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    },
+    {
+      "action": [
+        "BLOCK",
+        [
+          4,
+          4
+        ]
+      ],
+      "value": 0.0,
+      "label": "H=+0.0"
+    }
+  ]
+}
