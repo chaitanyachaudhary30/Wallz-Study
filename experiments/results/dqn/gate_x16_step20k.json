@@ -1,0 +1,46 @@
+{
+  "checkpoint": "checkpoints/dqn_3x3_s42/step_20032.pt",
+  "gamma": 0.99,
+  "overall_sign_agreement": 0.9576,
+  "gate_threshold": 0.9,
+  "gate_passed": true,
+  "cells": {
+    "N3_A0B0C0_K1_M0": {
+      "total_evaluated": 33,
+      "population_nonterminal": 33,
+      "decided_states": 22,
+      "sign_agreement_count": 22,
+      "sign_agreement_rate": 1.0,
+      "sign_agreement_ci95": [
+        0.8513,
+        1.0
+      ],
+      "mae_all": 0.3648,
+      "mae_win": 0.312,
+      "mae_loss": 0.3337,
+      "mae_draw": 0.4604,
+      "value_optimal_agreement": 0.9091,
+      "rank_optimal_agreement": 0.9091,
+      "solve_seconds": 0.02
+    },
+    "N3_A1B1C1_K1_M1": {
+      "total_evaluated": 1000,
+      "population_nonterminal": 173912,
+      "decided_states": 827,
+      "sign_agreement_count": 791,
+      "sign_agreement_rate": 0.9565,
+      "sign_agreement_ci95": [
+        0.9403,
+        0.9684
+      ],
+      "mae_all": 0.2762,
+      "mae_win": 0.2,
+      "mae_loss": 0.5315,
+      "mae_draw": 0.2073,
+      "value_optimal_agreement": 0.934,
+      "rank_optimal_agreement": 0.832,
+      "solve_seconds": 1.71
+    }
+  },
+  "timestamp": 1794007826.661644
+}

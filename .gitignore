@@ -21,10 +21,13 @@ checkpoints/*
 !checkpoints/release/**
 *.pt
 !checkpoints/release/*.pt
+!checkpoints/release/**/*.pt
 
 # Logs & run outputs
 experiments/logs/*
 !experiments/logs/.gitkeep
+experiments/cache/*
+!experiments/cache/.gitkeep
 *.log
 
 # Report LaTeX build artifacts
@@ -51,3 +54,6 @@ Thumbs.db
 .agents/
 .claude/
 skills-lock.json
+
+# Planning docs
+/plans/

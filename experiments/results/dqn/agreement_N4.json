@@ -1,0 +1,45 @@
+{
+  "agent": "dqn:path=checkpoints/dqn_4x4_s42/final.pt",
+  "config_label": "N4_A1B1C1_K1_M0",
+  "sampled_states": 300,
+  "population_states": 17404,
+  "rates": {
+    "all": {
+      "n": 300,
+      "value_optimal_rate": 0.9333333333333333,
+      "value_optimal_ci95": [
+        0.8992762041322797,
+        0.9564328232030161
+      ],
+      "rank_optimal_rate": 0.7066666666666667
+    },
+    "WIN": {
+      "n": 201,
+      "value_optimal_rate": 0.9253731343283582,
+      "value_optimal_ci95": [
+        0.8805344868273595,
+        0.9542568836755072
+      ],
+      "rank_optimal_rate": 0.7164179104477612
+    },
+    "LOSS": {
+      "n": 75,
+      "value_optimal_rate": 1.0,
+      "value_optimal_ci95": [
+        0.9512744540953,
+        1.0
+      ],
+      "rank_optimal_rate": 0.6533333333333333
+    },
+    "DRAW": {
+      "n": 24,
+      "value_optimal_rate": 0.7916666666666666,
+      "value_optimal_ci95": [
+        0.5952915551476452,
+        0.9075531089521192
+      ],
+      "rank_optimal_rate": 0.7916666666666666
+    }
+  },
+  "elapsed_seconds": 1.04
+}

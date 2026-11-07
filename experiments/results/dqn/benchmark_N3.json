@@ -1,0 +1,49 @@
+{
+  "dqn_spec": "dqn:path=checkpoints/dqn_3x3_s42/final.pt",
+  "board_size": 3,
+  "rules": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "K": 1,
+    "M": 1
+  },
+  "num_seeds": 100,
+  "elapsed_seconds": 7.03,
+  "results": {
+    "vs_greedy": {
+      "opponent": "greedy",
+      "total_matches": 200,
+      "wins": 124,
+      "draws": 0,
+      "losses": 76,
+      "forfeits": 0,
+      "win_rate": 0.62,
+      "draw_rate": 0.0,
+      "loss_rate": 0.38,
+      "win_rate_wilson_ci95": [
+        0.5511,
+        0.6844
+      ],
+      "mean_plies": 3.4
+    },
+    "vs_random": {
+      "opponent": "random",
+      "total_matches": 200,
+      "wins": 196,
+      "draws": 0,
+      "losses": 4,
+      "forfeits": 0,
+      "win_rate": 0.98,
+      "draw_rate": 0.0,
+      "loss_rate": 0.02,
+      "win_rate_wilson_ci95": [
+        0.9497,
+        0.9922
+      ],
+      "mean_plies": 4.9
+    }
+  },
+  "gate_vs_greedy_passed": true,
+  "timestamp": 1794008005.534754
+}
