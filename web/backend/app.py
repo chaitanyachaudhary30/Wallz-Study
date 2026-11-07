@@ -10,6 +10,7 @@ import os
 from flask import Flask, jsonify, send_from_directory
 
 from web.backend.routes_games import games_bp
+from web.backend.routes_data import data_bp
 
 
 def create_app(test_config: dict | None = None) -> Flask:
@@ -22,6 +23,7 @@ def create_app(test_config: dict | None = None) -> Flask:
 
     # Register blueprints
     app.register_blueprint(games_bp)
+    app.register_blueprint(data_bp)
 
     # Global JSON error handlers
     @app.errorhandler(400)

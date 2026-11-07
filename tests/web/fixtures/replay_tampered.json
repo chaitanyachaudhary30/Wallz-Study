@@ -1,0 +1,23 @@
+{
+  "match_id": "tampered_fixture_001",
+  "board": "N3_solver",
+  "config": {
+    "board_size": 3,
+    "A": true,
+    "B": true,
+    "C": true,
+    "K": 1,
+    "M": 1
+  },
+  "agents": {
+    "0": "human",
+    "1": "greedy"
+  },
+  "winner": 0,
+  "terminal_reason": "goal",
+  "length": 2,
+  "replay": [
+    ["MOVE", [1, 1]],
+    ["MOVE", [0, 0]]
+  ]
+}

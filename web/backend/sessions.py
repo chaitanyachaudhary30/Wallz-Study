@@ -160,3 +160,6 @@ class SessionStore:
         if gid not in self.sessions:
             raise KeyError(f"Session '{gid}' not found")
         del self.sessions[gid]
+
+
+SESSION_STORE = SessionStore(capacity=64)

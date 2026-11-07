@@ -1,0 +1,5 @@
+{"type": "episode", "episode": 1, "env_steps": 10, "epsilon": 0.99, "length": 10, "learner_won": false, "opponent": "current", "avg_loss": 0.05}
+{"type": "episode", "episode": 2, "env_steps": 25, "epsilon": 0.95, "length": 15, "learner_won": true, "opponent": "greedy", "avg_loss": 0.04}
+{"type": "eval", "env_steps": 25, "vs_greedy": 0.8, "vs_random": 1.0}
+{CORRUPT_JSON_LINE_MALFORMED
+{"type": "episode", "episode": 3, "env_steps": 40, "epsilon": 0.90, "length": 15, "learner_won": true, "opponent": "snapshot", "avg_loss": 0.03}

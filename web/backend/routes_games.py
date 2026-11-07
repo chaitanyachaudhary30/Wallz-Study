@@ -13,12 +13,11 @@ from evaluation.match_runner import parse_agent_spec
 from web.backend.explain import explain_and_choose
 from web.backend.registry import build_agent, list_agents, presets
 from web.backend.serialize import action_to_json, parse_action, state_json
-from web.backend.sessions import SessionStore
+from web.backend.sessions import SESSION_STORE
 from src.modified_wallz.config import WallzConfig
 
 
 games_bp = Blueprint("games", __name__)
-SESSION_STORE = SessionStore(capacity=64)
 
 
 @games_bp.route("/api/config/defaults", methods=["GET"])
