@@ -1,0 +1,19 @@
+experiment:
+  name: "ablation_3x3_k1"
+  command: "ablation"
+  description: "Paired 2^3 factorial ablation of A/B/C mechanics on 3x3 board at K=1"
+
+params:
+  x: "minimax:depth=2"
+  y: "greedy"
+  N: 3
+  K: 1
+  M: 1
+  seeds: 100
+  seed_start: 0
+  opening_plies: 0
+  max_plies: 100
+  move_time_limit: null
+  n_boot: 2000
+  out_dir: "experiments/results/ablation_3x3_k1"
+  log_dir: "experiments/logs"

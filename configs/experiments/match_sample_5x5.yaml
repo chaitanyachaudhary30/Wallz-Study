@@ -1,0 +1,16 @@
+experiment:
+  name: "match_sample_5x5"
+  command: "match"
+  description: "Sample match between Minimax Depth 2 and Greedy on 5x5 board"
+
+params:
+  N: 5
+  K: 3
+  M: 10
+  abc: "111"
+  p0: "minimax:depth=2"
+  p1: "greedy"
+  max_plies: 200
+  opening_plies: 2
+  opening_seed: 42
+  out: "experiments/logs/sample_match_5x5.json"

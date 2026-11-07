@@ -158,13 +158,53 @@ def cmd_export(args):
 
 
 def main():
+    # Support --config <path> to load experiment YAML configurations (P7.1)
+    if '--config' in sys.argv:
+        c_idx = sys.argv.index('--config')
+        if c_idx + 1 < len(sys.argv):
+            config_path = sys.argv[c_idx + 1]
+            sys.argv = sys.argv[:c_idx] + sys.argv[c_idx + 2:]
+            import yaml
+            with open(config_path, 'r', encoding='utf-8') as f:
+                loaded = yaml.safe_load(f) or {}
+            if 'command' in loaded:
+                cmd = loaded['command']
+            elif 'experiment' in loaded and 'command' in loaded['experiment']:
+                cmd = loaded['experiment']['command']
+            else:
+                cmd = 'ablation'
+            params = loaded.get('params', {})
+            for k, v in loaded.items():
+                if k not in ('experiment', 'params', 'command'):
+                    params[k] = v
+
+            known_cmds = {'match', 'ablation', 'solve', 'agreement', 'verify-replay', 'export-demo'}
+            has_cmd = any(arg in known_cmds for arg in sys.argv[1:])
+            if not has_cmd:
+                sys.argv.insert(1, cmd)
+
+            # Inject missing config parameters into sys.argv
+            for k, v in params.items():
+                flag = f"-{k}" if len(k) == 1 else f"--{k.replace('_', '-')}"
+                alt_flag = f"--{k}" if len(k) == 1 else f"-{k}"
+                if flag not in sys.argv and alt_flag not in sys.argv:
+                    if isinstance(v, bool):
+                        if v:
+                            sys.argv.append(flag)
+                    elif isinstance(v, list):
+                        sys.argv.append(flag)
+                        sys.argv.extend(str(x) for x in v)
+                    elif v is not None:
+                        sys.argv.extend([flag, str(v)])
+
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--config', type=str, help='Path to YAML experiment config file')
     sub = ap.add_subparsers(dest='cmd', required=True)
 
     def rule_args(p, abc_default='111', K=3, M=10):
-        p.add_argument('-N', type=int, default=5, help='board size')
-        p.add_argument('-K', type=int, default=K, help='block duration in plies')
-        p.add_argument('-M', type=int, default=M, help='wall budget per player')
+        p.add_argument('-N', '--N', type=int, default=5, help='board size')
+        p.add_argument('-K', '--K', type=int, default=K, help='block duration in plies')
+        p.add_argument('-M', '--M', type=int, default=M, help='wall budget per player')
         p.add_argument('--abc', default=abc_default, help="mechanic toggles A,B,C as bits, e.g. 101")
 
     p = sub.add_parser('match', help='play and log one match')
@@ -182,7 +222,7 @@ def main():
     rule_args(p)
     p.add_argument('--x', required=True, help='focus agent spec')
     p.add_argument('--y', required=True, help='opponent agent spec')
-    p.add_argument('--seeds', type=int, default=10)
+    p.add_argument('--seeds', type=int, default=100)
     p.add_argument('--seed-start', type=int, default=0)
     p.add_argument('--opening-plies', type=int, default=2)
     p.add_argument('--max-plies', type=int, default=200)

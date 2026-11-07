@@ -1,0 +1,11 @@
+experiment:
+  name: "solve_tiny_3x3"
+  command: "solve"
+  description: "Exact retrograde solve across all 8 A/B/C mechanic cells for 3x3 board at K=1, M=1"
+
+params:
+  N: 3
+  K: 1
+  M: 1
+  abc: "all"
+  out: "experiments/results/solves/solve_N3_K1_M1.json"

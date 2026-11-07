@@ -23,11 +23,13 @@ checkpoints/*
 !checkpoints/release/*.pt
 !checkpoints/release/**/*.pt
 
-# Logs & run outputs
+# Generated experiment artifacts & logs (exempt directory gitkeeps)
 experiments/logs/*
 !experiments/logs/.gitkeep
 experiments/cache/*
 !experiments/cache/.gitkeep
+experiments/tables/*
+!experiments/tables/.gitkeep
 *.log
 
 # Report LaTeX build artifacts

@@ -1,0 +1,17 @@
+experiment:
+  name: "agreement_3x3"
+  command: "agreement"
+  description: "Optimal action agreement benchmark for Greedy and Minimax agents on 3x3 exact solutions"
+
+params:
+  N: 3
+  K: 1
+  M: 1
+  abc: "all"
+  agents:
+    - "greedy"
+    - "minimax:depth=1"
+    - "minimax:depth=2"
+  max_states: 300
+  seed: 0
+  out: "experiments/results/agreement/agreement_3x3.json"

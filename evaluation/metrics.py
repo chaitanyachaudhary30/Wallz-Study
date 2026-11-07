@@ -62,11 +62,14 @@ def game_responses(result, spec):
     """Per-game numeric responses used for cell means and effects."""
     p = focus_player(result, spec)
     cat = outcome_for(result, p)
+    raw_cat = result['outcome']['category']
     legal = [v for v in result['mean_legal_actions'].values() if v is not None]
     return {
         'x_goal_win': 1.0 if cat == 'win' else 0.0,
         'x_goal_loss': 1.0 if cat == 'loss' else 0.0,
         'rule_draw': 1.0 if cat == 'draw' else 0.0,
+        'rule_draw_stalemate': 1.0 if raw_cat == 'draw_no_legal_actions' else 0.0,
+        'rule_draw_repetition': 1.0 if raw_cat == 'draw_repetition' else 0.0,
         'truncated': 1.0 if cat == 'truncated' else 0.0,
         'length_plies': float(result['length_plies']),
         'mean_legal_actions': mean(legal),
@@ -87,6 +90,8 @@ def summarize_cells(results, spec):
             counts[outcome_for(r, focus_player(r, spec))] += 1
         n = len(rs)
         resp = [game_responses(r, spec) for r in rs]
+        draw_stalemate = sum(1 for r in rs if r['outcome']['category'] == 'draw_no_legal_actions')
+        draw_repetition = sum(1 for r in rs if r['outcome']['category'] == 'draw_repetition')
         out[label] = {
             'n_games': n,
             'counts': counts,
@@ -94,6 +99,11 @@ def summarize_cells(results, spec):
             'x_goal_win_rate_ci95': wilson(counts['win'], n),
             'truncation_rate': counts['truncated'] / n,
             'truncation_rate_ci95': wilson(counts['truncated'], n),
+            'stalemate_rate': draw_stalemate / n,
+            'stalemate_rate_ci95': wilson(draw_stalemate, n),
+            'repetition_rate': draw_repetition / n,
+            'repetition_rate_ci95': wilson(draw_repetition, n),
+            'draw_breakdown': {'stalemate': draw_stalemate, 'repetition': draw_repetition},
             'mean_length_plies': mean([x['length_plies'] for x in resp]),
             'mean_legal_actions': mean([x['mean_legal_actions'] for x in resp]),
             'x_mean_decision_ms': mean([x['x_decision_ms'] for x in resp]),
@@ -140,8 +150,68 @@ def unit_table(results, spec, response):
     return {s: {c: sum(v) / len(v) for c, v in cells.items()} for s, cells in acc.items()}
 
 
-def effects_with_ci(results, spec, response, n_boot=2000, seed=0):
-    """Point estimates and paired-bootstrap 95% percentile intervals for all effects."""
+def holm_bonferroni(p_values, alpha=0.05):
+    """
+    Applies the Holm-Bonferroni step-down procedure to control family-wise error rate (FWER).
+
+    p_values: dict {test_name: p_value} or sequence of floats.
+    alpha: family-wise significance level (default 0.05).
+
+    Returns:
+        Same container type as input (dict or list) containing:
+        {'p_value': float, 'adjusted_p': float, 'significant': bool, 'rank': int}
+    """
+    is_dict = isinstance(p_values, dict)
+    if is_dict:
+        items = list(p_values.items())
+        keys = [k for k, _ in items]
+        raw_ps = [v for _, v in items]
+    else:
+        keys = list(range(len(p_values)))
+        raw_ps = list(p_values)
+
+    m = len(raw_ps)
+    if m == 0:
+        return {} if is_dict else []
+
+    # Sort indices by raw p-value ascending (None sorted to end)
+    sorted_indices = sorted(range(m), key=lambda i: (1.0 if raw_ps[i] is None else raw_ps[i]))
+
+    # Step-down adjusted p-values with monotonicity enforcement
+    adjusted_ps = [None] * m
+    running_max = 0.0
+    for rank, idx in enumerate(sorted_indices):
+        p = raw_ps[idx]
+        if p is None:
+            adjusted_ps[idx] = None
+        else:
+            multiplier = m - rank
+            adj = min(1.0, multiplier * p)
+            if adj < running_max:
+                adj = running_max
+            else:
+                running_max = adj
+            adjusted_ps[idx] = adj
+
+    results = {}
+    for rank, idx in enumerate(sorted_indices):
+        p = raw_ps[idx]
+        adj = adjusted_ps[idx]
+        sig = bool(adj is not None and adj <= alpha)
+        results[keys[idx]] = {
+            'p_value': p,
+            'adjusted_p': adj,
+            'significant': sig,
+            'rank': rank + 1,
+        }
+
+    if is_dict:
+        return {k: results[k] for k in keys}
+    return [results[i] for i in range(m)]
+
+
+def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05):
+    """Point estimates and paired-bootstrap 95% percentile intervals for all effects with Holm correction."""
     units = unit_table(results, spec, response)
     seeds = sorted(units)
     labels = sorted({c for u in units.values() for c in u})
@@ -162,10 +232,31 @@ def effects_with_ci(results, spec, response, n_boot=2000, seed=0):
             if est[e] is not None:
                 boots[e].append(est[e])
     out = {}
+    p_dict = {}
     for e in EFFECTS:
         b = sorted(boots[e])
         ci = (b[int(0.025 * len(b))], b[min(len(b) - 1, int(0.975 * len(b)))]) if b else (None, None)
-        out[e] = {'estimate': point[e], 'ci95': ci}
+        # Empirical two-sided bootstrap p-value against null hypothesis theta = 0
+        if b and point[e] is not None:
+            n_le_0 = sum(1 for val in b if val <= 0.0)
+            n_ge_0 = sum(1 for val in b if val >= 0.0)
+            p_val = min(1.0, 2.0 * min(n_le_0, n_ge_0) / len(b))
+            p_dict[e] = p_val
+        else:
+            p_val = None
+        out[e] = {'estimate': point[e], 'ci95': ci, 'p_value': p_val}
+
+    # Apply Holm correction across the 7 factorial effects
+    if p_dict:
+        holm = holm_bonferroni(p_dict, alpha=alpha)
+        for e, res in holm.items():
+            out[e]['adjusted_p'] = res['adjusted_p']
+            out[e]['significant_holm'] = res['significant']
+    else:
+        for e in EFFECTS:
+            out[e]['adjusted_p'] = None
+            out[e]['significant_holm'] = False
+
     return {'response': response, 'n_opening_seeds': len(seeds), 'cell_means': cell_means,
             'effects': out}
 
