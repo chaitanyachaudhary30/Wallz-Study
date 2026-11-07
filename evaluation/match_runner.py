@@ -231,6 +231,11 @@ def run_match(config, agents=None, identities=None, solutions=None):
         agents, identities = {}, {}
         for p, spec in ((0, config.p0), (1, config.p1)):
             agents[p], identities[p] = make_agent(spec, p, config, solutions, config.opening_seed)
+    else:
+        if isinstance(agents, (list, tuple)):
+            agents = {0: agents[0], 1: agents[1]}
+        if identities is None:
+            identities = {p: getattr(agents[p], 'identity', {'name': agents[p].__class__.__name__}) for p in (0, 1)}
 
     replay = [{'ply': i + 1, 'player': i % 2, 'source': 'opening', 'action': action_to_json(a)}
               for i, a in enumerate(opening)]

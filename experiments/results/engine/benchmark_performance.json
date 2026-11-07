@@ -1,0 +1,70 @@
+{
+  "benchmarks": {
+    "legal_actions_9x9_start": {
+      "board_size": 9,
+      "action_count": 213,
+      "runs": 250,
+      "mean_ms": 1.5398682322120294,
+      "min_ms": 1.3955620015622117,
+      "max_ms": 3.022136996150948,
+      "median_ms": 1.4622140006395057
+    },
+    "legal_actions_9x9_midgame": {
+      "board_size": 9,
+      "evaluated_samples": 500,
+      "mean_ms": 2.032547488124692,
+      "min_ms": 1.245129999006167,
+      "max_ms": 3.9585409977007657,
+      "median_ms": 1.95697999879485
+    },
+    "legal_actions_5x5_start": {
+      "board_size": 5,
+      "action_count": 61,
+      "runs": 250,
+      "mean_ms": 0.2285338960646186,
+      "min_ms": 0.2210140009992756,
+      "max_ms": 0.25462899793637916,
+      "median_ms": 0.22787199850426987
+    },
+    "clone_scaling": {
+      "ply_5": {
+        "mean_us": 2.6835101016331464,
+        "min_us": 2.291999408043921,
+        "max_us": 19.090002751909196
+      },
+      "ply_20": {
+        "mean_us": 2.77021192596294,
+        "min_us": 2.3709944798611104,
+        "max_us": 12.470998626668006
+      },
+      "ply_50": {
+        "mean_us": 2.8080881311325356,
+        "min_us": 2.4179971660487354,
+        "max_us": 16.69499761192128
+      }
+    }
+  },
+  "thresholds": {
+    "legal_actions_9x9_start_ms": {
+      "value": 1.5398682322120294,
+      "threshold": 3.0,
+      "pass": true
+    },
+    "legal_actions_9x9_midgame_ms": {
+      "value": 2.032547488124692,
+      "threshold": 4.0,
+      "pass": true
+    },
+    "legal_actions_5x5_start_ms": {
+      "value": 0.2285338960646186,
+      "threshold": 1.0,
+      "pass": true
+    },
+    "clone_latency_us": {
+      "value": 2.8080881311325356,
+      "threshold": 50.0,
+      "pass": true
+    }
+  },
+  "passed": true
+}

@@ -166,19 +166,51 @@ class TestExactSolver(unittest.TestCase):
         self.assertEqual(dist, float('inf'))
         self.assertEqual(val, 0.0)
 
-    def test_07_exhaustive_consistency_and_degrees(self):
-        """7. Solver must label all reachable states and satisfy game-theoretic invariants."""
-        stats = self.solver_race.get_stats()
-        self.assertEqual(stats['state_count'], 45)
-        self.assertEqual(stats['win_count'] + stats['loss_count'] + stats['draw_count'], 45)
-        self.assertTrue(stats['is_compiled'])
+    def test_07_game_theoretic_bellman_invariants(self):
+        """7. Solver must satisfy strict retrograde Bellman equilibrium invariants across all states."""
+        solver = self.solver_race
+        dummy_engine = WallzEngine(board_size=3, rules={'A': False, 'B': False, 'C': False})
 
-        # Verify that for any state labeled WIN with d > 0, there is a successor labeled LOSS with d-1
-        # and for any state labeled LOSS with d > 0, ALL legal successors are labeled WIN
-        # Note: We test this property across the solutions
-        self.assertGreater(stats['win_count'], 0)
-        self.assertGreater(stats['loss_count'], 0)
-        self.assertGreater(stats['draw_count'], 0)
+        for key, sol in solver.solutions.items():
+            status = sol['status']
+            dist = sol['distance']
+            eng = dummy_engine.restore_state_key(key)
+            legal_actions = eng.get_legal_actions()
+
+            if status == 'WIN' and dist > 0:
+                # Must have at least one action leading to opponent LOSS with distance d - 1
+                has_optimal_successor = False
+                for a in legal_actions:
+                    child = eng.clone()
+                    child.apply_action(a, update_clock=False)
+                    child_key = child._get_state_hashable_key()
+                    succ_status, succ_dist = solver.get_state_outcome(child_key)
+                    if succ_status == 'LOSS' and succ_dist == dist - 1:
+                        has_optimal_successor = True
+                        break
+                self.assertTrue(has_optimal_successor, f"WIN state {key} lacks optimal predecessor with d-1")
+
+            elif status == 'LOSS' and dist > 0:
+                # In a forced loss, all legal actions must lead to opponent WIN
+                for a in legal_actions:
+                    child = eng.clone()
+                    child.apply_action(a, update_clock=False)
+                    child_key = child._get_state_hashable_key()
+                    succ_status, succ_dist = solver.get_state_outcome(child_key)
+                    self.assertEqual(succ_status, 'WIN', f"LOSS state {key} has non-WIN successor under {a}")
+
+            elif status == 'DRAW':
+                # In a draw state, no action can lead to an opponent LOSS, and at least one preserves DRAW
+                succ_statuses = []
+                for a in legal_actions:
+                    child = eng.clone()
+                    child.apply_action(a, update_clock=False)
+                    child_key = child._get_state_hashable_key()
+                    succ_st, _ = solver.get_state_outcome(child_key)
+                    succ_statuses.append(succ_st)
+                self.assertNotIn('LOSS', succ_statuses, f"DRAW state {key} allows winning move (opp loss)")
+                if legal_actions:
+                    self.assertIn('DRAW', succ_statuses, f"DRAW state {key} has no draw-preserving move")
 
     def test_08_agreement_with_minimax_at_terminal_depth(self):
         """8. Minimax with sufficient depth to reach terminal states must agree with Exact Solver."""

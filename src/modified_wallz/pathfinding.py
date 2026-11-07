@@ -70,6 +70,30 @@ def bfs_distance_and_path(
     return float(dist), edges, vertices
 
 
+def bfs_distance(
+    start: CellTuple,
+    target_row: int,
+    board_size: int,
+    board,
+    blocked_cells: Dict[CellTuple, int] | Set[CellTuple],
+) -> float:
+    """Computes shortest path distance to target_row."""
+    dist, _, _ = bfs_distance_and_path(start, target_row, board_size, board, blocked_cells)
+    return dist
+
+
+def shortest_path_edges(
+    start: CellTuple,
+    target_row: int,
+    board_size: int,
+    board,
+    blocked_cells: Dict[CellTuple, int] | Set[CellTuple],
+) -> Set[UndirectedEdge]:
+    """Computes set of undirected edges along one shortest path to target_row."""
+    _, edges, _ = bfs_distance_and_path(start, target_row, board_size, board, blocked_cells)
+    return edges
+
+
 def has_path_to_goal(
     start: CellTuple,
     target_row: int,
