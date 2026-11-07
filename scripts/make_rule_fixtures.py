@@ -101,6 +101,53 @@ def generate_hop_path(seed_start: int, max_tries: int) -> Dict[str, Any]:
     sys.exit(2)
 
 
+def generate_no_legal(max_seconds: int = 120, search_from_initial: bool = True) -> Dict[str, Any]:
+    """Search StateGraph for first edge leading to DRAW_NO_LEGAL_ACTIONS and full game from initial."""
+    from evaluation.state_graph import StateGraph, GraphCaps, DRAW_NO_LEGAL_ACTIONS
+    from evaluation.match_runner import run_match, MatchConfig
+
+    configs = [
+        (3, {"A": False, "B": False, "C": True, "K": 2, "M": 0}),
+        (3, {"A": True, "B": True, "C": True, "K": 2, "M": 0}),
+        (3, {"A": False, "B": False, "C": True, "K": 3, "M": 0}),
+        (3, {"A": True, "B": True, "C": True, "K": 1, "M": 1}),
+    ]
+
+    for n, rules in configs:
+        sg = StateGraph(n, rules, canonical=False)
+        sg.build(GraphCaps(max_seconds=max_seconds))
+        if sg.terminal.count(DRAW_NO_LEGAL_ACTIONS) > 0:
+            for parent_idx, edges in enumerate(sg.succ):
+                for act, child_idx in edges:
+                    if sg.terminal[child_idx] == DRAW_NO_LEGAL_ACTIONS:
+                        parent_key = sg.keys[parent_idx]
+                        child_key = sg.keys[child_idx]
+
+                        full_game_info = None
+                        if search_from_initial:
+                            for s in range(10000):
+                                cfg = MatchConfig(board_size=n, rules=rules, p0="random", p1="random", opening_seed=s)
+                                res = run_match(cfg)
+                                if res["outcome"]["category"] == "draw_no_legal_actions":
+                                    full_game_info = {"p0": "random", "p1": "random", "seed": s}
+                                    break
+
+                        act_val = list(act[1]) if isinstance(act[1], (tuple, list)) else act[1]
+                        return {
+                            "board_size": n,
+                            "rules": rules,
+                            "parent_key": key_to_json(parent_key),
+                            "action": [act[0], act_val],
+                            "child_key": key_to_json(child_key),
+                            "seed": None,
+                            "source": "StateGraph first-hit",
+                            "full_game": full_game_info,
+                        }
+
+    print("Error: no-legal search exhausted all configs without finding a DRAW_NO_LEGAL_ACTIONS state", file=sys.stderr)
+    sys.exit(2)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate frozen rule test fixtures for Modified Wallz.")
     parser.add_argument("subcommand", choices=["r7", "hop-path", "no-legal"], help="Fixture type to generate")
@@ -124,8 +171,7 @@ def main():
     elif args.subcommand == "hop-path":
         fixture_data = generate_hop_path(args.seed, args.tries)
     elif args.subcommand == "no-legal":
-        print("no-legal fixture generator is deferred to Phase 4 (P04).", file=sys.stderr)
-        sys.exit(1)
+        fixture_data = generate_no_legal()
     else:
         raise ValueError(f"Unknown subcommand {args.subcommand}")
 

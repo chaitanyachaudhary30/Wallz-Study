@@ -17,7 +17,7 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from src.modified_wallz.config import WallzConfig
-from tests.helpers import illegal_action_pool, make_engine, random_reachable, snapshot
+from tests.helpers import illegal_action_pool, key_from_json, make_engine, random_reachable, snapshot
 from wallz_engine import WallzEngine
 
 
@@ -156,17 +156,24 @@ def _build_truncated_terminal_engine() -> WallzEngine:
     return e
 
 
+def _build_no_legal_actions_terminal_engine() -> WallzEngine:
+    """Build engine in no_legal_actions draw terminal state from fixture."""
+    import json
+    with open("tests/fixtures/no_legal_draw.json") as f:
+        data = json.load(f)
+    raw_key = key_from_json(data["child_key"])
+    e = WallzEngine(board_size=data["board_size"], rules=data["rules"]).restore_state_key(raw_key)
+    assert e.is_terminal() and e.terminal_reason == "no_legal_actions"
+    return e
+
+
 @pytest.mark.parametrize(
     "engine_builder",
     [
         _build_goal_terminal_engine,
         _build_repetition_terminal_engine,
         _build_truncated_terminal_engine,
-        pytest.param(
-            lambda: None,
-            marks=pytest.mark.skip(reason="fixture in P04"),
-            id="no_legal_actions",
-        ),
+        _build_no_legal_actions_terminal_engine,
     ],
 )
 def test_actions_rejected_after_terminal(engine_builder):
