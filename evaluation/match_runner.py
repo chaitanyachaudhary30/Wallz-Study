@@ -236,6 +236,7 @@ def run_match(config, agents=None, identities=None, solutions=None):
     times = {0: [], 1: []}
     legal_counts = {0: [], 1: []}
     nodes = {0: [], 1: []}
+    depths = {0: [], 1: []}
     outcome = None
 
     while outcome is None:
@@ -265,7 +266,11 @@ def run_match(config, agents=None, identities=None, solutions=None):
         times[player].append(elapsed)
         legal_counts[player].append(len(legal))
         if hasattr(agents[player], 'get_stats'):
-            nodes[player].append(agents[player].get_stats().get('nodes_expanded'))
+            st = agents[player].get_stats()
+            nodes[player].append(st.get('nodes_expanded'))
+            d_comp = st.get('depth_completed')
+            if d_comp is not None:
+                depths[player].append(d_comp)
 
         if config.move_time_limit is not None and elapsed > config.move_time_limit:
             outcome = _forfeit('timeout', player, f"{elapsed:.3f}s > {config.move_time_limit}s")
@@ -306,6 +311,8 @@ def run_match(config, agents=None, identities=None, solutions=None):
                                if legal_counts[p] else None for p in (0, 1)},
         'mean_nodes_expanded': {str(p): (sum(nodes[p]) / len(nodes[p])) if nodes[p] else None
                                 for p in (0, 1)},
+        'mean_depth_completed': {str(p): (sum(depths[p]) / len(depths[p])) if depths[p] else None
+                                 for p in (0, 1)},
     }
     if config.record_replay:
         result['replay'] = replay

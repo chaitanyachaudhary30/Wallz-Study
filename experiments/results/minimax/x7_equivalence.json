@@ -1,0 +1,9 @@
+{
+  "num_positions_requested": 500,
+  "positions_tested": 479,
+  "search_depth": 2,
+  "ab_value_agreement_rate": 1.0,
+  "ordered_value_agreement_rate": 1.0,
+  "gate_x7_passed": true,
+  "elapsed_seconds": 10.05
+}
