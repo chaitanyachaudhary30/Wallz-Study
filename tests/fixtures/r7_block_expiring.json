@@ -1,0 +1,51 @@
+{
+  "board_size": 3,
+  "rules": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "K": 1,
+    "M": 10
+  },
+  "raw_key": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      1
+    ],
+    [],
+    [],
+    10,
+    10,
+    null,
+    null,
+    true,
+    true,
+    false,
+    true,
+    [
+      [
+        [
+          0,
+          2
+        ],
+        1
+      ]
+    ],
+    1
+  ],
+  "player": 1,
+  "wall": [
+    0,
+    0,
+    "H"
+  ],
+  "expiring_cell": [
+    0,
+    2
+  ],
+  "seed": 0
+}
