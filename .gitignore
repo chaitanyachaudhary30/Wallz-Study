@@ -1,65 +1,46 @@
-# Byte-compiled / cache files
+# Python
 __pycache__/
 *.py[cod]
-
-# Distribution & build
+*.egg-info/
 build/
 dist/
-*.egg-info/
-
-# Virtual Environments
 .venv/
-venv/
-
-# Testing & Linters
 .pytest_cache/
+.hypothesis/
 
-# Model checkpoints & weights (exempt release models)
+# Checkpoints: only release models are tracked
 checkpoints/*
 !checkpoints/.gitkeep
 !checkpoints/release/
-!checkpoints/release/**
-*.pt
-!checkpoints/release/*.pt
-!checkpoints/release/**/*.pt
 
-# Generated experiment artifacts & logs (exempt directory gitkeeps)
+# Generated experiment artifacts (regenerable)
 experiments/logs/*
-!experiments/logs/.gitkeep
 experiments/cache/*
-!experiments/cache/.gitkeep
 experiments/tables/*
-!experiments/tables/.gitkeep
+!experiments/*/.gitkeep
 *.log
 
-# Report LaTeX build artifacts
+# Frontend
+web/frontend/node_modules/
+web/frontend/dist/
+
+# LaTeX build output
 report/*.aux
 report/*.bbl
 report/*.blg
-report/*.log
 report/*.out
 report/*.toc
 report/*.synctex.gz
 
-# Course guidelines
-Multi_Agent_Systems_Project_Guidelines.pdf
-
-# IDE & OS files
+# Local tooling / editor / OS
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
-*.swp
-*~
-
-# AI agent & tooling artifacts
-.agents/
 .claude/
+.agents/
 skills-lock.json
+.DS_Store
+*.swp
 
-# Frontend web app artifacts
-web/frontend/node_modules/
-web/frontend/dist/
-
-# Planning docs
+# Local-only docs
 /plans/
+Multi_Agent_Systems_Project_Guidelines.pdf

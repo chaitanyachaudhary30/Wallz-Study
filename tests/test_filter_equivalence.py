@@ -23,7 +23,7 @@ def brute_force_legal_actions(engine: WallzEngine, player: int = None):
             actions.append(('MOVE', (r + dr, c + dc)))
 
     # Hops
-    for dr, dc in ((-2, 0), (2, 0), (0, -2), (0, 2)):
+    for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):   # hop: across an opponent wall
         if engine._is_valid_hop(player, (r + dr, c + dc)):
             actions.append(('HOP', (r + dr, c + dc)))
 

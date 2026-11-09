@@ -62,7 +62,7 @@ $$|\mathcal{A}| = 8 + 4(N - 1)^2 + N^2$$
 
 ### Action ID Allocation
 1. **MOVE (4 actions)**: IDs $0 \dots 3$ corresponding to relative directions `FWD`, `BACK`, `RIGHT`, `LEFT`.
-2. **HOP (4 actions)**: IDs $4 \dots 7$ corresponding to 2-cell jumps in `FWD`, `BACK`, `RIGHT`, `LEFT`.
+2. **HOP (4 actions)**: IDs $4 \dots 7$: one-cell hops across an opponent's wall in `FWD`, `BACK`, `RIGHT`, `LEFT` (2-cell jumps before the 2026-11-08 rule change; checkpoints trained earlier must be retrained).
 3. **WALL ($2(N-1)^2$ actions)**: IDs $8 \dots 8 + 2(N-1)^2 - 1$ mapped as $8 + 2(r(N-1) + c) + [o == \text{'V'}]$.
 4. **REPLACE ($2(N-1)^2$ actions)**: Offset by $+2(N-1)^2$ following the WALL block.
 5. **BLOCK ($N^2$ actions)**: IDs mapped as $+r \cdot N + c$ across all grid cells.

@@ -28,11 +28,11 @@ class TestGreedyAgent(unittest.TestCase):
     def test_immediate_hop_win_chosen(self):
         """Immediate goal-reaching hop is chosen."""
         e = WallzEngine(board_size=5)
-        e.pawns[0] = (2, 2)
+        e.pawns[0] = (3, 2)
         e.pawns[1] = (4, 0)
-        e.current_player = 0
-        # Block orthogonal step with a wall
-        e.apply_action(('WALL', (2, 2, 'H')), update_clock=False)
+        # Opponent wall H(3,2) blocks (3,2)-(4,2): only a hop reaches the goal this ply
+        e.walls[1] = [(3, 2, 'H')]
+        e.latest_wall[1] = (3, 2, 'H')
         e.current_player = 0
         agent = GreedyAgent(player_id=0)
         action = agent.select_action(e)

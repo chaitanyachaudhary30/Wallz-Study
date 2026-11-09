@@ -148,7 +148,9 @@ When `/step` or `/analyze` is called, the backend generates an explanation envel
 1. **Minimax Interactive Latency**:
    - On boards with $N \ge 7$, search depth is restricted to $D \le 2$ in interactive play to maintain response times $< 1.5$ seconds per move. Depths $D \ge 3$ are marked unavailable with an explanatory reason.
 2. **Exact Solver Tractability**:
-   - The retrograde solver is restricted to $N \le 4$ with small wall and block budgets ($M \le 1, K \le 2$). On larger boards, the solver is marked unavailable.
+   - The retrograde solver is offered only for $N \le 4$ with $M \le 1$; otherwise it is marked unavailable with the reason.
+   - Solves never block a request. Each runs in a separate process (one at a time) and is written to `experiments/cache/exact/<config>__<source-hash>.pkl`. Until it finishes the agent shows "solving in background". The server pre-solves the preset configs at start-up (disable with `--no-warmup`). On later starts a cached solution is available immediately and loads in about 0.5 s when first used. The source hash covers the engine and solver files, so a rule change automatically invalidates old caches.
+   - Before 2026-11-09 the warm-up ran on a thread inside the server. Its pure-Python search held the GIL and made the first page load take about 47 s.
 3. **DQN Compatibility Gate**:
    - Checkpoints are strictly validated against board size and rules (`meta.N == config.N` and `meta.rules == config.rules`). Incompatible models are disabled with a message indicating the configuration they were trained for.
 4. **Arena Batch Caps**:

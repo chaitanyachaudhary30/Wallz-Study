@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
-import { ArenaPage } from './pages/Arena';
 import { PlayPage } from './pages/Play';
-import { ReplaysPage } from './pages/Replays';
-import { RulesPage } from './pages/Rules';
-import { TrainingPage } from './pages/Training';
+
+// Only the Play page is in the initial bundle; the other pages (and recharts, used by
+// Training) load on first visit, which keeps the first paint fast.
+const ArenaPage = lazy(() => import('./pages/Arena').then((m) => ({ default: m.ArenaPage })));
+const ReplaysPage = lazy(() => import('./pages/Replays').then((m) => ({ default: m.ReplaysPage })));
+const RulesPage = lazy(() => import('./pages/Rules').then((m) => ({ default: m.RulesPage })));
+const TrainingPage = lazy(() => import('./pages/Training').then((m) => ({ default: m.TrainingPage })));
 
 export const App: React.FC = () => {
   return (
@@ -36,6 +39,7 @@ export const App: React.FC = () => {
           </nav>
         </header>
 
+        <Suspense fallback={<div className="main-content">Loading…</div>}>
         <Routes>
           <Route path="/" element={<PlayPage />} />
           <Route path="/arena" element={<ArenaPage />} />
@@ -55,6 +59,7 @@ export const App: React.FC = () => {
             }
           />
         </Routes>
+        </Suspense>
       </div>
     </BrowserRouter>
   );

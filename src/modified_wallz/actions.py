@@ -16,11 +16,13 @@ CANONICAL_DIRECTIONS = [
     (0, -1),  # 3: LEFT
 ]
 
+# A hop crosses an opponent's wall into the adjacent cell (proposal LegalHop), so its
+# deltas equal the MOVE deltas; ids 4-7 stay reserved for HOP (layout unchanged).
 CANONICAL_HOP_DIRECTIONS = [
-    (2, 0),   # 4: HOP FWD
-    (-2, 0),  # 5: HOP BACK
-    (0, 2),   # 6: HOP RIGHT
-    (0, -2),  # 7: HOP LEFT
+    (1, 0),   # 4: HOP FWD
+    (-1, 0),  # 5: HOP BACK
+    (0, 1),   # 6: HOP RIGHT
+    (0, -1),  # 7: HOP LEFT
 ]
 
 

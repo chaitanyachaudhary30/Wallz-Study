@@ -56,6 +56,7 @@ This document records the key architectural and algorithmic decisions made durin
 - **Context**: The proposal's `LegalHop` condition 2 specified "bypasses an opponent's wall".
 - **Decision**: Implemented team rule R1: The hop is a 2-cell orthogonal jump over anything. No obstacle is required. The pawn must land on a free, unblocked cell on the board, and must retain an open path to its goal row (a hop into a sealed pocket is illegal).
 - **Rationale**: Simplifies spatial geometry, avoids ambiguities in defining what constitutes "bypassing" in complex wall lattices, and acts as a one-time tactical sprint.
+- **Superseded (2026-11-08)**: In play, greedy and minimax used R1 as a free 2-cell sprint on their first move, which players reported as "the AI moves two steps in one turn". The team adopted the proposal's `LegalHop`: the hop steps into the orthogonally adjacent cell **across a wall placed by the opponent**. The landing cell must be free and not blocked, the mover must keep a path to goal, and the hop is still single-use. Consequences: wall ownership is part of the canonical position while a hop is unused (`WallzEngine.canonicalize_key`); `ActionCodec` HOP ids 4–7 decode to 1-cell deltas; DQN checkpoints, ablation pilots and minimax benchmarks produced under R1 are stale (see `docs/implementation_status.md` H-4 to H-6).
 
 ---
 

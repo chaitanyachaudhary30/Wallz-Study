@@ -103,3 +103,21 @@ def test_make_greedy_table_formats():
     assert r"\begin{table}" in tex
     assert r"\caption{Greedy Baseline Match Campaign Performance Across Configs}" in tex
     assert r"\end{table}" in tex
+
+
+def test_summary_reports_real_decision_time():
+    """Mean greedy decision time comes from run_match's decision_seconds (regression: the
+    summary read a non-existent metrics.move_times key and always reported 0.0 ms)."""
+    import json
+    from scripts.run_greedy_matches import summarise
+
+    with open("experiments/results/greedy/greedy_vs_random_N5_final.jsonl") as fh:
+        results = [json.loads(line) for line in fh if line.strip()][:10]
+    row = summarise(results, "greedy_vs_random", "N5_final")
+    expected_total = expected_n = 0
+    for r in results:
+        p = next(int(k) for k, a in r["agents"].items() if a["name"] == "greedy")
+        expected_total += r["decision_seconds"][str(p)]["total"]
+        expected_n += r["decision_seconds"][str(p)]["n"]
+    assert row["mean_greedy_decision_sec"] > 0
+    assert abs(row["mean_greedy_decision_sec"] - expected_total / expected_n) < 1e-4

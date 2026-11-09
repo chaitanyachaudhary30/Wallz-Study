@@ -82,7 +82,7 @@ Alpha-Beta efficiency depends heavily on exploring high-quality actions first. `
 
 1. **Immediate Winning Moves**: Actions (`MOVE` / `HOP`) that directly land on the target goal row (`act_val[0] == goal`).
 2. **Favorable Spatial Progress**: Pawn moves (`MOVE` / `HOP`) sorted by direct progress towards the goal, reducing $d_{\text{self}}$ and maximizing $H$.
-3. **Pawn Action Precedence**: `HOP` (2-step jump) preferred over standard `MOVE` (1-step).
+3. **Pawn Action Precedence**: pawn actions (`MOVE`, and `HOP` across an opponent's wall) are ordered by distance-to-goal progress.
 4. **Wall Placements (`WALL`)**: Defensive and obstruction barriers placed after direct pawn advances.
 5. **Temporary Cell Blocks (`BLOCK`)**: Transient blocks explored after wall placements.
 6. **Deterministic Tie-Breaking**: Broken deterministically by lower original action index (`-idx`) matching the baseline conventions.

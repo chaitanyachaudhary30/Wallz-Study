@@ -148,32 +148,38 @@ class WallzEngine:
 
         return self.get_state()
 
+    @staticmethod
+    def canonicalize_key(raw_key: Tuple, rules: Dict[str, Any]) -> Tuple:
+        """
+        Canonical position identity (P3.2) of a raw key from _get_state_hashable_key().
+
+        Merges what cannot influence future play:
+        * the placement order of walls that can no longer move (all walls without Rule A,
+          every wall except each player's latest one with Rule A);
+        * wall ownership, but only while no hop can be played: a hop may only cross an
+          *opponent's* wall (proposal LegalHop), so while either player still holds an
+          unused hop (and Rule B is on) fixed walls are kept as (wall, owner) pairs.
+
+        Shapes: 13-tuple with Rule A, 11-tuple without (see restore_state_key).
+        """
+        p0, p1, w0, w1, i0, i1, l0, l1, h0, h1, b0, b1, blocks, to_move = raw_key
+        hop_relevant = bool(rules['B']) and bool(h0 or h1)
+        if rules['A']:
+            fixed0 = [w for w in w0 if w != l0]
+            fixed1 = [w for w in w1 if w != l1]
+        else:
+            fixed0, fixed1 = list(w0), list(w1)
+        if hop_relevant:
+            fixed = frozenset([(w, 0) for w in fixed0] + [(w, 1) for w in fixed1])
+        else:
+            fixed = frozenset(fixed0 + fixed1)
+        if rules['A']:
+            return (p0, p1, fixed, l0, l1, i0, i1, h0, h1, b0, b1, blocks, to_move)
+        return (p0, p1, fixed, i0, i1, h0, h1, b0, b1, blocks, to_move)
+
     def position_key(self) -> Tuple:
-        """
-        Canonical position identity (P3.2).
-        Matches state_graph.canonical_key: merges order and ownership of non-latest walls.
-        """
-        w0 = self.walls[0]
-        w1 = self.walls[1]
-        l0 = self.latest_wall[0]
-        l1 = self.latest_wall[1]
-        blocks = tuple(sorted(self.blocked_cells.items()))
-        if self.rules['A']:
-            fixed = frozenset(w for w in (w0 + w1) if w != l0 and w != l1)
-            return (
-                self.pawns[0], self.pawns[1], fixed, l0, l1,
-                self.wall_inventory[0], self.wall_inventory[1],
-                self.hop_available[0], self.hop_available[1],
-                self.block_available[0], self.block_available[1],
-                blocks, self.current_player
-            )
-        return (
-            self.pawns[0], self.pawns[1], frozenset(w0 + w1),
-            self.wall_inventory[0], self.wall_inventory[1],
-            self.hop_available[0], self.hop_available[1],
-            self.block_available[0], self.block_available[1],
-            blocks, self.current_player
-        )
+        """Canonical position identity; equals state_graph.canonical_key of the raw key."""
+        return self.canonicalize_key(self._get_state_hashable_key(), self.rules)
 
     def _get_state_hashable_key(self) -> Tuple:
         """Generates raw hashable key tuple preserving walls in placement order."""
@@ -217,6 +223,18 @@ class WallzEngine:
     def is_terminal(self) -> bool:
         return self.winner is not None or self.is_draw
 
+    @staticmethod
+    def _split_fixed_walls(fixed) -> Tuple[List, List]:
+        """Owner lists from a canonical fixed-wall set: (wall, owner) pairs keep ownership;
+        plain walls (ownership irrelevant, see canonicalize_key) are all given to player 0."""
+        w0, w1 = [], []
+        for item in sorted(fixed, key=repr):
+            if isinstance(item[0], tuple):
+                (w0 if item[1] == 0 else w1).append(item[0])
+            else:
+                w0.append(item)
+        return w0, w1
+
     def restore_state_key(self, key: Tuple) -> WallzEngine:
         """
         Loads a position produced by _get_state_hashable_key() or position_key()
@@ -234,18 +252,16 @@ class WallzEngine:
             # Canonical key with Rule A
             (p0, p1, fixed, latest0, latest1, inv0, inv1,
              hop0, hop1, blk_av0, blk_av1, blocks, current_player) = key
-            w0 = list(fixed)
+            w0, w1 = self._split_fixed_walls(fixed)
             if latest0 is not None and latest0 not in w0:
                 w0.append(latest0)
-            w1 = []
-            if latest1 is not None:
+            if latest1 is not None and latest1 not in w1:
                 w1.append(latest1)
         elif len(key) == 11:
             # Canonical key without Rule A
             (p0, p1, fixed, inv0, inv1,
              hop0, hop1, blk_av0, blk_av1, blocks, current_player) = key
-            w0 = list(fixed)
-            w1 = []
+            w0, w1 = self._split_fixed_walls(fixed)
             latest0, latest1 = None, None
         else:
             raise ValueError(f"Invalid key length {len(key)}.")
@@ -410,9 +426,9 @@ class WallzEngine:
             if self._is_valid_move(player, cell):
                 actions.append(('MOVE', cell))
 
-        # One-time hop
+        # One-time hop across an opponent's wall
         if self.rules['B'] and self.hop_available[player]:
-            for dr, dc in ((-2, 0), (2, 0), (0, -2), (0, 2)):
+            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
                 cell = (r + dr, c + dc)
                 if self._is_valid_hop(player, cell):
                     actions.append(('HOP', cell))
@@ -641,7 +657,7 @@ class WallzEngine:
                 return True
         # Fast hop check
         if self.rules['B'] and self.hop_available[player]:
-            for dr, dc in ((-2, 0), (2, 0), (0, -2), (0, 2)):
+            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
                 if self._is_valid_hop(player, (r + dr, c + dc)):
                     return True
 
@@ -679,17 +695,37 @@ class WallzEngine:
             return False
         return cell != self.pawns[1 - player]
 
+    def wall_owner_on_edge(self, cell1: Tuple[int, int], cell2: Tuple[int, int]) -> Optional[int]:
+        """Owner (0 or 1) of the wall blocking the edge cell1-cell2, or None if the edge is open.
+        Walls cannot overlap, so at most one wall blocks an edge."""
+        edge = {cell1, cell2}
+        for owner in (0, 1):
+            for (wr, wc, wo) in self.walls[owner]:
+                for a, b in self.board.wall_edges(wr, wc, wo):
+                    if {a, b} == edge:
+                        return owner
+        return None
+
     def _is_valid_hop(self, player: int, cell: Tuple[int, int]) -> bool:
+        """One-time hop (Modification B, proposal LegalHop): step to an orthogonally adjacent
+        cell *across a wall placed by the opponent*. The landing cell must be on the board,
+        not temporarily blocked and not the opponent's cell, and the mover must still have a
+        path to its goal row from there."""
         if not (self.rules['B'] and self.hop_available[player]):
             return False
         r, c = self.pawns[player]
         nr, nc = cell
-        if (abs(nr - r), abs(nc - c)) not in ((2, 0), (0, 2)):
+        if abs(nr - r) + abs(nc - c) != 1:
             return False
         if not (0 <= nr < self.board_size and 0 <= nc < self.board_size):
             return False
         if cell in self.blocked_cells or cell == self.pawns[1 - player]:
             return False
+        self._sync_board()
+        if not self.board.is_edge_blocked((r, c), cell):
+            return False  # nothing to hop over: use MOVE
+        if self.wall_owner_on_edge((r, c), cell) != 1 - player:
+            return False  # only an opponent's wall may be bypassed
         old = self.pawns[player]
         self.pawns[player] = cell
         valid = self.is_path_open(player)

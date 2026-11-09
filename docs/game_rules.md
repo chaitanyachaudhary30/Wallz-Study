@@ -27,7 +27,7 @@ The engine accepts actions either as Python tuples or as JSON lists:
 - Moves the active player's pawn exactly 1 cell orthogonally (North, South, East, West).
 - Constraints:
   - Cannot cross active walls.
-  - Cannot land on an opponent pawn (pawn jump is governed exclusively by `HOP`).
+  - Cannot land on an opponent pawn (there is no pawn jump).
   - Cannot land on a currently blocked cell.
   - Must remain within the $N \times N$ board boundaries.
 
@@ -62,10 +62,23 @@ The engine accepts actions either as Python tuples or as JSON lists:
 ### 4. Modification B: One-Time Hop (`HOP`)
 - Syntax: `('HOP', (r, c))` or `["HOP", [r, c]]`.
 - A single-use ability per player (`hop_available[player] = True` initially).
-- Moves the pawn 2 cells orthogonally (jumping over intervening walls and/or opponent pawns).
-- Cannot land on an opponent pawn, an occupied cell, or a blocked cell.
-- Must leave the hopping pawn with a path to its goal row (path-preservation invariant).
+- Bypasses **a wall placed by the opponent** (proposal `LegalHop`): the pawn moves into the
+  orthogonally adjacent cell on the other side of that wall. Legal only if all hold:
+  1. Rule B is on and the player's hop is unused (`hop_available[player]`);
+  2. the target cell is orthogonally adjacent and on the board;
+  3. the edge between the pawn and the target is blocked by a wall owned by the opponent
+     (`engine.wall_owner_on_edge(...) == 1 - player`); an open edge, the player's own wall,
+     an adjacent pawn or a blocked cell does **not** allow a hop;
+  4. the target is not the opponent's cell and not temporarily blocked;
+  5. the hopping pawn still has a path to its goal row afterwards (path preservation).
 - Permanently consumed upon execution (`hop_available[player] = False`).
+- Wall ownership survives `REPLACE` (the moved wall still belongs to its placer). Because
+  ownership now affects legality, `position_key()` keeps fixed walls as `(wall, owner)`
+  pairs while either player still has a hop, and merges ownership only once no hop remains.
+- History: until 2026-11-08 the engine used team rule R1 (a 2-cell jump needing no
+  obstacle). Agents used it as a free sprint on move 1, so the team switched to the
+  proposal's definition. Results produced under R1 (DQN checkpoints, ablation pilots)
+  do not describe this rule.
 
 ### 5. Modification C: Temporary Cell Block (`BLOCK`)
 - Syntax: `('BLOCK', (r, c))` or `["BLOCK", [r, c]]`.

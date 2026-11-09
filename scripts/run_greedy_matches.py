@@ -105,7 +105,8 @@ def summarise(results: List[Dict[str, Any]], pairing_name: str, board_name: str)
     draws = 0
     losses = 0
     plies_list = []
-    greedy_times = []
+    greedy_time_total = 0.0
+    greedy_moves = 0
     categories: Dict[str, int] = {}
     colour_stats = {0: {"games": 0, "wins": 0, "draws": 0, "losses": 0}, 1: {"games": 0, "wins": 0, "draws": 0, "losses": 0}}
     seed_wins: Dict[int, List[int]] = {}
@@ -154,9 +155,12 @@ def summarise(results: List[Dict[str, Any]], pairing_name: str, board_name: str)
         cat = res["outcome"]["category"]
         categories[cat] = categories.get(cat, 0) + 1
 
-        durations = res.get("metrics", {}).get("move_times", {}).get(str(greedy_p), [])
-        if durations:
-            greedy_times.extend(durations)
+        # run_match records per-player {"n", "mean", "max", "total"} under decision_seconds
+        # (the old lookup of metrics.move_times did not exist, so every mean was 0.0 ms)
+        ds = (res.get("decision_seconds") or {}).get(str(greedy_p)) or {}
+        if ds.get("n"):
+            greedy_time_total += ds.get("total", 0.0)
+            greedy_moves += ds["n"]
 
     win_rate = wins / total_games
     draw_rate = draws / total_games
@@ -167,7 +171,7 @@ def summarise(results: List[Dict[str, Any]], pairing_name: str, board_name: str)
     var_plies = sum((x - mean_plies) ** 2 for x in plies_list) / max(1, total_games - 1)
     sd_plies = math.sqrt(var_plies)
 
-    mean_time = sum(greedy_times) / max(1, len(greedy_times))
+    mean_time = greedy_time_total / max(1, greedy_moves)
 
     # Per-seed win rates
     seed_rates = {s: sum(arr) / len(arr) for s, arr in seed_wins.items()}

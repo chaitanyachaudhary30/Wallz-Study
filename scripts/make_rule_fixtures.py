@@ -79,11 +79,14 @@ def generate_hop_path(seed_start: int, max_tries: int) -> Dict[str, Any]:
                 continue
 
             r, c = eng.pawns[p]
-            for dr, dc in ((-2, 0), (2, 0), (0, -2), (0, 2)):
+            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
                 nr, nc = r + dr, c + dc
                 if not (0 <= nr < n and 0 <= nc < n):
                     continue
                 if (nr, nc) in eng.blocked_cells or (nr, nc) == eng.pawns[1 - p]:
+                    continue
+                # Hop geometry: the edge must be blocked by an opponent's wall
+                if eng.wall_owner_on_edge((r, c), (nr, nc)) != 1 - p:
                     continue
 
                 # Geometrically valid hop candidate. Now check legality:

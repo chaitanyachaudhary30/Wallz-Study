@@ -252,7 +252,8 @@ class TestEngineGraphs(unittest.TestCase):
     def test_capped_rank_queries_never_wrong(self):
         rules = {'A': True, 'B': True, 'C': True, 'K': 1, 'M': 0}
         full = solve_config(3, rules)
-        for cap in (200, 500, 1034, 1500, 2442):
+        total = len(full.graph.keys)
+        for cap in sorted({total * f // 10 for f in (2, 4, 6)}):
             part = solve_config(3, rules, GraphCaps(max_states=cap))
             self.assertFalse(part.exact)
             for u, k in enumerate(part.graph.keys):

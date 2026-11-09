@@ -1,6 +1,6 @@
 {
   "source": {
-    "commit": "6fbed99a14b79a050a238b66816eeb7f73b3d584",
+    "commit": "b4eb0a9726313ba9a5b7055b58ce07ef1624ef1b",
     "dirty": true
   },
   "caps": {
@@ -31,7 +31,7 @@
       "terminal_draw_no_legal_actions": 0,
       "mean_branching": 2.484848484848485,
       "max_branching": 4,
-      "build_seconds": 0.005,
+      "build_seconds": 0.003,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
@@ -93,7 +93,7 @@
       "terminal_draw_no_legal_actions": 40,
       "mean_branching": 2.7612574341546305,
       "max_branching": 11,
-      "build_seconds": 0.252,
+      "build_seconds": 0.261,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
@@ -146,21 +146,21 @@
       "canonical_positions": true,
       "complete": true,
       "stop_reason": null,
-      "states": 186,
-      "edges": 398,
-      "expanded_nonterminal": 132,
+      "states": 45,
+      "edges": 82,
+      "expanded_nonterminal": 33,
       "unexpanded": 0,
-      "terminal_win_p0": 27,
-      "terminal_win_p1": 27,
+      "terminal_win_p0": 6,
+      "terminal_win_p1": 6,
       "terminal_draw_no_legal_actions": 0,
-      "mean_branching": 3.015151515151515,
+      "mean_branching": 2.484848484848485,
       "max_branching": 4,
-      "build_seconds": 0.013,
+      "build_seconds": 0.003,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
-        "WIN": 92,
-        "LOSS": 83,
+        "WIN": 17,
+        "LOSS": 17,
         "DRAW": 11,
         "UNKNOWN": 0
       },
@@ -170,9 +170,9 @@
         "total": 11
       },
       "root_to_move": 0,
-      "root_status": "LOSS",
+      "root_status": "WIN",
       "root_draw_type": null,
-      "root_rank": 2,
+      "root_rank": 3,
       "root_rank_is_upper_bound": false,
       "root_rank_optimal_actions": [
         [
@@ -180,20 +180,6 @@
           [
             1,
             1
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            2
           ]
         ]
       ],
@@ -203,20 +189,6 @@
           [
             1,
             1
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            2
           ]
         ]
       ],
@@ -236,82 +208,40 @@
       "canonical_positions": true,
       "complete": true,
       "stop_reason": null,
-      "states": 10504,
-      "edges": 29960,
-      "expanded_nonterminal": 9512,
+      "states": 2586,
+      "edges": 6500,
+      "expanded_nonterminal": 2354,
       "unexpanded": 0,
-      "terminal_win_p0": 456,
-      "terminal_win_p1": 456,
-      "terminal_draw_no_legal_actions": 80,
-      "mean_branching": 3.1497056349873844,
+      "terminal_win_p0": 96,
+      "terminal_win_p1": 96,
+      "terminal_draw_no_legal_actions": 40,
+      "mean_branching": 2.7612574341546305,
       "max_branching": 11,
-      "build_seconds": 1.093,
+      "build_seconds": 0.271,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
-        "WIN": 6044,
-        "LOSS": 3696,
-        "DRAW": 764,
+        "WIN": 1189,
+        "LOSS": 717,
+        "DRAW": 680,
         "UNKNOWN": 0
       },
       "draw_counts": {
-        "no_legal_actions": 80,
-        "cycle": 684,
-        "total": 764
+        "no_legal_actions": 40,
+        "cycle": 640,
+        "total": 680
       },
       "root_to_move": 0,
-      "root_status": "LOSS",
+      "root_status": "WIN",
       "root_draw_type": null,
-      "root_rank": 4,
+      "root_rank": 5,
       "root_rank_is_upper_bound": false,
       "root_rank_optimal_actions": [
         [
-          "BLOCK",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            0,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
+          "MOVE",
           [
             1,
             1
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            2
           ]
         ]
       ],
@@ -322,72 +252,9 @@
             1,
             1
           ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            0,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            1
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            2
-          ]
         ]
       ],
-      "solve_seconds": 0.009,
+      "solve_seconds": 0.002,
       "config_label": "N3_A0B1C1_K2_M0"
     },
     {
@@ -474,7 +341,7 @@
       "terminal_draw_no_legal_actions": 40,
       "mean_branching": 2.7612574341546305,
       "max_branching": 11,
-      "build_seconds": 0.253,
+      "build_seconds": 0.263,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
@@ -527,21 +394,21 @@
       "canonical_positions": true,
       "complete": true,
       "stop_reason": null,
-      "states": 186,
-      "edges": 398,
-      "expanded_nonterminal": 132,
+      "states": 45,
+      "edges": 82,
+      "expanded_nonterminal": 33,
       "unexpanded": 0,
-      "terminal_win_p0": 27,
-      "terminal_win_p1": 27,
+      "terminal_win_p0": 6,
+      "terminal_win_p1": 6,
       "terminal_draw_no_legal_actions": 0,
-      "mean_branching": 3.015151515151515,
+      "mean_branching": 2.484848484848485,
       "max_branching": 4,
-      "build_seconds": 0.013,
+      "build_seconds": 0.003,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
-        "WIN": 92,
-        "LOSS": 83,
+        "WIN": 17,
+        "LOSS": 17,
         "DRAW": 11,
         "UNKNOWN": 0
       },
@@ -551,9 +418,9 @@
         "total": 11
       },
       "root_to_move": 0,
-      "root_status": "LOSS",
+      "root_status": "WIN",
       "root_draw_type": null,
-      "root_rank": 2,
+      "root_rank": 3,
       "root_rank_is_upper_bound": false,
       "root_rank_optimal_actions": [
         [
@@ -561,20 +428,6 @@
           [
             1,
             1
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            2
           ]
         ]
       ],
@@ -584,20 +437,6 @@
           [
             1,
             1
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            2
           ]
         ]
       ],
@@ -617,82 +456,40 @@
       "canonical_positions": true,
       "complete": true,
       "stop_reason": null,
-      "states": 10504,
-      "edges": 29960,
-      "expanded_nonterminal": 9512,
+      "states": 2586,
+      "edges": 6500,
+      "expanded_nonterminal": 2354,
       "unexpanded": 0,
-      "terminal_win_p0": 456,
-      "terminal_win_p1": 456,
-      "terminal_draw_no_legal_actions": 80,
-      "mean_branching": 3.1497056349873844,
+      "terminal_win_p0": 96,
+      "terminal_win_p1": 96,
+      "terminal_draw_no_legal_actions": 40,
+      "mean_branching": 2.7612574341546305,
       "max_branching": 11,
-      "build_seconds": 1.121,
+      "build_seconds": 0.275,
       "model": "position game: history-free, clock-free; goal row wins; no legal action = draw; infinite play = draw; values from side-to-move perspective",
       "exact": true,
       "value_counts": {
-        "WIN": 6044,
-        "LOSS": 3696,
-        "DRAW": 764,
+        "WIN": 1189,
+        "LOSS": 717,
+        "DRAW": 680,
         "UNKNOWN": 0
       },
       "draw_counts": {
-        "no_legal_actions": 80,
-        "cycle": 684,
-        "total": 764
+        "no_legal_actions": 40,
+        "cycle": 640,
+        "total": 680
       },
       "root_to_move": 0,
-      "root_status": "LOSS",
+      "root_status": "WIN",
       "root_draw_type": null,
-      "root_rank": 4,
+      "root_rank": 5,
       "root_rank_is_upper_bound": false,
       "root_rank_optimal_actions": [
         [
-          "BLOCK",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            0,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
+          "MOVE",
           [
             1,
             1
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            2
           ]
         ]
       ],
@@ -703,101 +500,38 @@
             1,
             1
           ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "MOVE",
-          [
-            0,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            0,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            0,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            1
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            1,
-            2
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            0
-          ]
-        ],
-        [
-          "BLOCK",
-          [
-            2,
-            2
-          ]
         ]
       ],
-      "solve_seconds": 0.009,
+      "solve_seconds": 0.002,
       "config_label": "N3_A1B1C1_K2_M0"
     }
   ],
   "factorial_effects": {
     "log10_states": {
       "A": 0.0,
-      "B": 0.6125133114898098,
-      "C": 1.7556288878162691,
+      "B": 0.0,
+      "C": 1.7594160067690316,
       "AB": 0.0,
       "AC": 0.0,
-      "BC": -0.003787118952762736,
+      "BC": 0.0,
       "ABC": 0.0
     },
     "mean_branching": {
       "A": 0.0,
-      "B": 0.4593756155678923,
-      "C": 0.2054815345710077,
+      "B": 0.0,
+      "C": 0.2764089493061457,
       "AB": 0.0,
       "AC": 0.0,
-      "BC": -0.07092741473513842,
+      "BC": 0.0,
       "ABC": 0.0
     },
     "draw_fraction": {
       "A": 0.0,
-      "B": -0.1877624163422716,
-      "C": 0.01605216839439988,
+      "B": 0.0,
+      "C": 0.018509925238463537,
       "AB": 0.0,
       "AC": 0.0,
-      "BC": -0.0024577568440636854,
+      "BC": 0.0,
       "ABC": 0.0
     }
   }

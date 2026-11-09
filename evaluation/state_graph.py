@@ -28,17 +28,14 @@ DRAW_NO_LEGAL_ACTIONS = 'draw_no_legal_actions'
 def canonical_key(key, rules):
     """
     Position identity for solving (P3.2). Delegates to engine.position_key() if passed
-    an engine instance, or canonicalises raw 14-tuples to canonical position keys.
+    an engine instance; raw 14-tuples go through WallzEngine.canonicalize_key (single
+    implementation shared with the engine's repetition detection).
     """
     if hasattr(key, 'position_key'):
         return key.position_key()
     if isinstance(key, tuple) and len(key) in (11, 13):
         return key  # Already canonical
-    p0, p1, w0, w1, i0, i1, l0, l1, h0, h1, b0, b1, blocks, to_move = key
-    if rules['A']:
-        fixed = frozenset(w for w in w0 + w1 if w != l0 and w != l1)
-        return (p0, p1, fixed, l0, l1, i0, i1, h0, h1, b0, b1, blocks, to_move)
-    return (p0, p1, frozenset(w0 + w1), i0, i1, h0, h1, b0, b1, blocks, to_move)
+    return WallzEngine.canonicalize_key(key, rules)
 
 
 def state_id(key):

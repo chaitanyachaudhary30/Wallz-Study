@@ -91,7 +91,7 @@ $$s = (p_0, p_1, W_0, W_1, m_0, m_1, r_0, r_1, h_0, h_1, b_0, b_1, B_{\text{cell
 ### Action Representation
 An action is a tuple `(action_type, action_payload)`:
 - `('MOVE', (r, c))`: Orthogonal pawn advance by 1 step.
-- `('HOP', (r, c))`: Orthogonal 2-step jump bypassing intervening barriers.
+- `('HOP', (r, c))`: one-time step into the adjacent cell across an opponent's wall.
 - `('WALL', (r, c, 'H' | 'V'))`: New wall placement (consumes 1 wall from inventory).
 - `('REPLACE', (r, c, 'H' | 'V'))`: Wall repositioning of the player's latest wall (does not consume inventory).
 - `('BLOCK', (r, c))`: Temporary cell blockage for $K=3$ turns (preserves path to goal).

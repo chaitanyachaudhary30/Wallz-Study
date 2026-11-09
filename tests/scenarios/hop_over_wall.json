@@ -1,7 +1,7 @@
 {
   "name": "hop_over_wall",
-  "title": "One-Time Hop Over Obstacles (Rule B)",
-  "description": "Each player may execute a one-time orthogonal hop of distance 2, leaping over intervening walls, pawns, or blocks. Once used, hop is consumed for the rest of the game.",
+  "title": "One-Time Hop Over an Opponent's Wall (Rule B)",
+  "description": "Once per game a player may hop over a wall placed by the opponent, stepping into the adjacent cell on the other side. A hop needs an opponent's wall: it cannot be used as a free sprint, over open edges, over pawns, or over the player's own walls. Once used, the hop is gone for the rest of the game.",
   "config": {
     "board_size": 5,
     "A": false,
@@ -11,27 +11,41 @@
   },
   "start": "initial",
   "script": [
-    ["WALL", [0, 2, "H"]],
-    ["MOVE", [3, 2]],
+    ["MOVE", [1, 2]],
+    ["WALL", [1, 2, "H"]],
     ["HOP", [2, 2]],
-    ["MOVE", [3, 1]]
+    ["MOVE", [4, 1]]
   ],
   "expect": [
+    {
+      "after_ply": 0,
+      "illegal": ["HOP", [2, 2]],
+      "error_contains": "Illegal hop to",
+      "note": "No hop at the start: there is no wall to hop over"
+    },
+    {
+      "after_ply": 1,
+      "legal_excludes": [["HOP", [2, 2]], ["HOP", [3, 2]]],
+      "note": "Moving next to empty space does not create a hop"
+    },
     {
       "after_ply": 2,
       "to_move": 0,
       "legal_includes": [["HOP", [2, 2]]],
-      "legal_excludes": [["MOVE", [1, 2]]]
+      "legal_excludes": [["MOVE", [2, 2]]],
+      "note": "Player 1's wall blocks the step forward; Player 0 can hop over it"
     },
     {
       "after_ply": 3,
-      "hop": [false, true]
+      "hop": [false, true],
+      "note": "Hop consumed"
     },
     {
       "after_ply": 4,
       "to_move": 0,
-      "illegal": ["HOP", [4, 2]],
-      "error_contains": "Illegal hop to"
+      "illegal": ["HOP", [3, 2]],
+      "error_contains": "Illegal hop to",
+      "note": "A second hop is not allowed"
     }
   ],
   "final": {

@@ -4,8 +4,9 @@ Verifies:
 1. Exact K-ply block duration timelines and independent multi-block timers.
 2. Rule R7: expiring cell block counts in path preservation until the ply after it expires.
 3. Block placement constraints, rejections, and position key uniqueness.
-4. Modification B (Hop) rules: jumping over walls, pawns, blocks, landing restrictions, consumption, and goal wins.
-5. Path preservation during Hop (frozen fixture).
+4. Modification B (Hop) rules: crossing an opponent's wall into the adjacent cell, ownership, landing
+   restrictions, consumption and goal wins.
+5. Path preservation during Hop (sealed pocket).
 6. Modification A (REPLACE) rules: equivalence of single triple and pair formats, latest-wall restriction, inventory invariance, order preservation.
 """
 from __future__ import annotations
@@ -190,105 +191,125 @@ def test_blocks_in_position_key():
 # Hop (Modification B) Tests
 # ============================================================================
 
-def test_hop_over_wall_legal():
-    """A pawn can hop over a wall directly blocking its path."""
-    engine = make_engine(n=5, B=True)
-    # Place wall at (0, 2, 'H') between (0, 2) and (1, 2)
-    engine.apply_action(("WALL", (0, 2, "H")), update_clock=False)
-    engine.apply_action(("MOVE", (3, 2)), update_clock=False)
+def _opponent_wall_engine(n=5, mover=0, mover_cell=(1, 2), wall=(1, 2, "H"), owner=None, **rules):
+    """Engine where `wall` (default: owned by the mover's opponent) sits next to the mover."""
+    e = make_engine(n=n, B=True, **rules)
+    e.pawns[mover] = mover_cell
+    e.pawns[1 - mover] = (n - 1, 0) if mover == 0 else (0, 0)
+    owner = (1 - mover) if owner is None else owner
+    e.walls[owner] = [wall]
+    e.latest_wall[owner] = wall
+    e.current_player = mover
+    return e
 
-    assert ("MOVE", (1, 2)) not in engine.get_legal_actions(0)
+
+def test_hop_across_opponent_wall_legal():
+    """HOP steps into the adjacent cell across a wall placed by the opponent (proposal LegalHop)."""
+    engine = _opponent_wall_engine()          # H(1,2) blocks (1,2)-(2,2); owned by P1
+    assert ("MOVE", (2, 2)) not in engine.get_legal_actions(0)
     assert ("HOP", (2, 2)) in engine.get_legal_actions(0)
-
     engine.apply_action(("HOP", (2, 2)), update_clock=False)
     assert engine.pawns[0] == (2, 2)
     assert engine.hop_available[0] is False
 
 
-def test_hop_over_pawn_and_over_block_legal():
-    """A pawn can hop over an opponent pawn or a blocked intermediate cell."""
-    # Hop over opponent pawn
-    e1 = make_engine(n=5, B=True)
-    e1.pawns[0] = (0, 2)
-    e1.pawns[1] = (1, 2)
-    assert ("HOP", (2, 2)) in e1.get_legal_actions(0)
-    e1.apply_action(("HOP", (2, 2)), update_clock=False)
-    assert e1.pawns[0] == (2, 2)
-
-    # Hop over blocked cell
-    e2 = make_engine(n=5, B=True, C=True)
-    e2.pawns[0] = (0, 2)
-    e2.pawns[1] = (4, 2)
-    e2.blocked_cells[(1, 2)] = 3
-    assert ("HOP", (2, 2)) in e2.get_legal_actions(0)
-    e2.apply_action(("HOP", (2, 2)), update_clock=False)
-    assert e2.pawns[0] == (2, 2)
-
-
-def test_hop_landing_restrictions():
-    """Landing on opponent, on a blocked cell, out of bounds, or diagonally is strictly illegal."""
-    engine = make_engine(n=5, B=True, C=True)
-    engine.pawns[0] = (0, 2)
-    engine.pawns[1] = (2, 2)
-    engine.blocked_cells[(0, 4)] = 2
-
-    # Cannot land on opponent
-    assert not engine._is_valid_hop(0, (2, 2))
-    # Cannot land on blocked cell
-    assert not engine._is_valid_hop(0, (0, 4))
-    # Out of bounds
-    assert not engine._is_valid_hop(0, (-2, 2))
-    # Diagonal jump
-    assert not engine._is_valid_hop(0, (1, 1))
-
-    with pytest.raises(ValueError):
+def test_hop_across_own_wall_illegal():
+    """A player cannot hop over their own wall."""
+    engine = _opponent_wall_engine(owner=0)
+    assert ("HOP", (2, 2)) not in engine.get_legal_actions(0)
+    s_before = snapshot(engine)
+    with pytest.raises(ValueError, match=r"Illegal hop"):
         engine.apply_action(("HOP", (2, 2)), update_clock=False)
+    assert snapshot(engine) == s_before
+
+
+def test_hop_needs_a_wall():
+    """Without an opponent wall there is nothing to hop: no HOP actions, and the former
+    2-cell sprint is rejected (regression: AI moved two cells on its first turn)."""
+    engine = make_engine(n=5, B=True)
+    assert not any(a[0] == "HOP" for a in engine.get_legal_actions(0))
+    for target in [(1, 2), (2, 2), (0, 4)]:
+        with pytest.raises(ValueError):
+            engine.apply_action(("HOP", target), update_clock=False)
+
+
+def test_hop_does_not_jump_pawns_or_blocks():
+    """An adjacent pawn or blocked cell is not a wall: no hop over them; landing on the
+    opponent or a blocked cell across an opponent wall is illegal too."""
+    e1 = make_engine(n=5, B=True)
+    e1.pawns[0], e1.pawns[1] = (1, 2), (2, 2)
+    assert not e1._is_valid_hop(0, (2, 2)) and not e1._is_valid_hop(0, (3, 2))
+
+    e2 = _opponent_wall_engine(C=True)
+    e2.blocked_cells[(2, 2)] = 2
+    assert not e2._is_valid_hop(0, (2, 2))
+
+    e3 = _opponent_wall_engine()
+    e3.pawns[1] = (2, 2)
+    assert not e3._is_valid_hop(0, (2, 2))
+
+
+def test_hop_geometry_restrictions():
+    """Only orthogonally adjacent cells: no 2-cell, diagonal or off-board hops."""
+    engine = _opponent_wall_engine()
+    for target in [(3, 2), (2, 3), (2, 1), (-1, 2), (1, 2)]:
+        assert not engine._is_valid_hop(0, target), target
 
 
 def test_hop_consumed():
     """Using a HOP consumes hop_available and rejects subsequent HOP attempts."""
-    engine = make_engine(n=5, B=True)
+    engine = _opponent_wall_engine()
     engine.apply_action(("HOP", (2, 2)), update_clock=False)
     assert engine.hop_available[0] is False
-
+    engine.walls[1].append((2, 2, "H"))   # another opponent wall right below P0
     engine.apply_action(pass_move(engine), update_clock=False)  # P1 turn
-    # P0 turn: no HOP actions
     assert not any(a[0] == "HOP" for a in engine.get_legal_actions(0))
     with pytest.raises(ValueError):
-        engine.apply_action(("HOP", (4, 2)), update_clock=False)
+        engine.apply_action(("HOP", (3, 2)), update_clock=False)
 
 
 def test_hop_to_goal_wins():
-    """A HOP directly landing on the player's goal row immediately triggers a goal win."""
-    engine = make_engine(n=3, B=True, C=False, M=0)
-    engine.apply_action(("MOVE", (0, 2)), update_clock=False)
-    engine.apply_action(("MOVE", (2, 0)), update_clock=False)
-
-    assert ("HOP", (2, 2)) in engine.get_legal_actions(0)
-    engine.apply_action(("HOP", (2, 2)), update_clock=False)
-
+    """A HOP onto the goal row wins immediately."""
+    engine = _opponent_wall_engine(n=3, mover_cell=(1, 1), wall=(1, 0, "H"), C=False, M=0)
+    assert ("HOP", (2, 1)) in engine.get_legal_actions(0)
+    engine.apply_action(("HOP", (2, 1)), update_clock=False)
     assert engine.is_terminal()
     assert engine.winner == 0
     assert engine.terminal_reason == "goal"
 
 
-def test_hop_path_violation_rejected():
-    """A HOP target that satisfies geometry but cuts off the player's path to goal is rejected."""
-    with open("tests/fixtures/hop_path_violation.json") as f:
-        data = json.load(f)
-
-    raw_key = key_from_json(data["raw_key"])
-    engine = WallzEngine(board_size=data["board_size"], rules=data["rules"]).restore_state_key(raw_key)
-    player = data["player"]
-    hop_target = tuple(data["hop"])
-
-    assert ("HOP", hop_target) not in engine.get_legal_actions(player)
-    assert engine._is_valid_hop(player, hop_target) is False
-
+def test_hop_into_sealed_pocket_rejected():
+    """A hop across an opponent wall into a pocket with no route to goal is illegal.
+    Pocket {(0,0),(1,0)}: V(0,0) seals its right side, H(1,0) its bottom."""
+    engine = make_engine(n=5, B=True, C=False)
+    engine.pawns[0], engine.pawns[1] = (0, 1), (4, 2)
+    engine.walls[1] = [(0, 0, "V"), (1, 0, "H")]
+    engine.latest_wall[1] = (1, 0, "H")
+    assert engine.is_path_open(0) and engine.is_path_open(1)
+    assert engine.wall_owner_on_edge((0, 1), (0, 0)) == 1
+    assert ("HOP", (0, 0)) not in engine.get_legal_actions(0)
     s_before = snapshot(engine)
     with pytest.raises(ValueError, match=r"Illegal hop"):
-        engine.apply_action(("HOP", hop_target), update_clock=False)
+        engine.apply_action(("HOP", (0, 0)), update_clock=False)
     assert snapshot(engine) == s_before
+
+
+def test_hop_ownership_in_position_key():
+    """While a hop is unused, wall ownership changes future legality and must stay in the
+    canonical key; once no hop is left it may be merged (smaller solver graphs)."""
+    a = _opponent_wall_engine()
+    b = _opponent_wall_engine(owner=0)
+    a.latest_wall = {0: None, 1: None}; b.latest_wall = {0: None, 1: None}
+    assert a.position_key() != b.position_key()
+    for e in (a, b):
+        e.hop_available = {0: False, 1: False}
+    assert a.position_key() == b.position_key()
+    # restore_state_key round-trips the ownership-tagged canonical key
+    c = _opponent_wall_engine()
+    c.latest_wall = {0: None, 1: None}
+    r = make_engine(n=5, B=True).restore_state_key(c.position_key())
+    assert r.walls[1] == [(1, 2, "H")] and r.walls[0] == []
+    assert ("HOP", (2, 2)) in r.get_legal_actions(0)
 
 
 def test_hop_disabled():

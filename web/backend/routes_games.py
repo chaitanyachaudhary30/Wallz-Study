@@ -5,6 +5,7 @@ player actions, AI stepping, atomic undo, and session deletion.
 """
 from __future__ import annotations
 
+import functools
 import time
 from typing import Any, Dict
 from flask import Blueprint, jsonify, request
@@ -18,6 +19,19 @@ from src.modified_wallz.config import WallzConfig
 
 
 games_bp = Blueprint("games", __name__)
+
+
+def _session_locked(handler):
+    """Run a per-game handler while holding that game's lock (see GameSession.lock)."""
+    @functools.wraps(handler)
+    def wrapper(gid: str, *args, **kwargs):
+        try:
+            session = SESSION_STORE.get(gid)
+        except KeyError:
+            return jsonify({"error": f"Game '{gid}' not found"}), 404
+        with session.lock:
+            return handler(gid, *args, **kwargs)
+    return wrapper
 
 
 @games_bp.route("/api/config/defaults", methods=["GET"])
@@ -156,6 +170,7 @@ def create_game():
 
 
 @games_bp.route("/api/games/<gid>", methods=["GET"])
+@_session_locked
 def get_game(gid: str):
     try:
         session = SESSION_STORE.get(gid)
@@ -165,6 +180,7 @@ def get_game(gid: str):
 
 
 @games_bp.route("/api/games/<gid>/action", methods=["POST"])
+@_session_locked
 def post_action(gid: str):
     try:
         session = SESSION_STORE.get(gid)
@@ -205,6 +221,7 @@ def post_action(gid: str):
 
 
 @games_bp.route("/api/games/<gid>/step", methods=["POST"])
+@_session_locked
 def step_game(gid: str):
     try:
         session = SESSION_STORE.get(gid)
@@ -245,7 +262,10 @@ def step_game(gid: str):
     if action is None:
         return jsonify({"error": "Agent returned no action"}), 500
 
-    session.engine.apply_action(action, update_clock=False)
+    try:
+        session.engine.apply_action(action, update_clock=False)
+    except ValueError as err:
+        return jsonify({"error": f"Agent '{spec}' chose an illegal action {action}: {err}"}), 500
     session.history.append({
         "ply": session.engine.turn_count,
         "player": curr_p,
@@ -263,6 +283,7 @@ def step_game(gid: str):
 
 
 @games_bp.route("/api/games/<gid>/analyze", methods=["POST"])
+@_session_locked
 def analyze_game(gid: str):
     try:
         session = SESSION_STORE.get(gid)
@@ -287,6 +308,7 @@ def analyze_game(gid: str):
 
 
 @games_bp.route("/api/games/<gid>/undo", methods=["POST"])
+@_session_locked
 def undo_game(gid: str):
     try:
         session = SESSION_STORE.get(gid)

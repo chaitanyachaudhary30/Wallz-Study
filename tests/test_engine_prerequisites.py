@@ -57,15 +57,20 @@ class TestWallBudget(unittest.TestCase):
 
 
 class TestHopAndMoveValidation(unittest.TestCase):
-    def test_hop_needs_no_obstacle(self):
-        # Team rule (docs/game_rules.md): 2-cell orthogonal jump, obstacle not required.
+    def test_hop_requires_opponent_wall(self):
+        # Proposal LegalHop (docs/game_rules.md): a hop bypasses an opponent's wall.
         e = WallzEngine(board_size=5)
-        self.assertIn(('HOP', (2, 2)), e.get_legal_actions())
+        self.assertFalse([a for a in e.get_legal_actions() if a[0] == 'HOP'])
+        e.walls[1] = [(0, 2, 'H')]          # opponent wall between (0,2) and (1,2)
+        self.assertIn(('HOP', (1, 2)), e.get_legal_actions())
+        e.walls = {0: [(0, 2, 'H')], 1: []}  # own wall: no hop
+        self.assertNotIn(('HOP', (1, 2)), e.get_legal_actions())
 
     def test_hop_into_sealed_pocket_is_illegal(self):
         e = WallzEngine(board_size=5, rules={'C': False})
-        # Seal corner (0, 0): no edges out of it (injected directly for the test)
-        e.walls[1] = [(0, 0, 'H'), (0, 0, 'V')]
+        e.pawns[0] = (0, 1)
+        # Pocket {(0,0),(1,0)} sealed by opponent walls V(0,0) and H(1,0)
+        e.walls[1] = [(0, 0, 'V'), (1, 0, 'H')]
         self.assertTrue(e.is_path_open(0) and e.is_path_open(1))
         self.assertNotIn(('HOP', (0, 0)), e.get_legal_actions())
         with self.assertRaises(ValueError):

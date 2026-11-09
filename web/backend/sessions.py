@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections import OrderedDict
 from dataclasses import dataclass, field
+import threading
 import time
 from typing import Any, Dict, List, Optional
 import uuid
@@ -28,6 +29,10 @@ class GameSession:
     # Raw state key of the starting position when the game did not start from the
     # initial position (e.g. scenario fixtures); undo replays history from here.
     start_key: Optional[tuple] = None
+    # Serialises all requests on this game. Flask serves requests on threads; without it two
+    # concurrent /step calls raced on one engine (500 errors, half-applied searches), and a
+    # GET could read the engine while legality checks temporarily mutate it.
+    lock: threading.RLock = field(default_factory=threading.RLock, repr=False, compare=False)
 
     def to_json(self) -> Dict[str, Any]:
         return {

@@ -22,11 +22,10 @@ class TestMinimaxAgent(unittest.TestCase):
 
     def test_immediate_winning_move_hop(self):
         """Minimax must select an immediate winning hop if it bridges to the goal row."""
-        # Row 2 to Row 4 is 2 steps (hop), opponent out of the way
-        self.engine5.pawns[0] = (2, 2)
+        # P0 one row from goal behind an opponent wall: only the hop wins this ply
+        self.engine5.pawns[0] = (3, 2)
         self.engine5.pawns[1] = (4, 0)
-        # Block row 3 with a horizontal wall so only hop or detours are possible
-        self.engine5.walls[1].append((2, 2, 'H'))
+        self.engine5.walls[1].append((3, 2, 'H'))
         agent = MinimaxAgent(player_id=0, depth=1)
         action = agent.select_action(self.engine5)
         self.assertEqual(action, ('HOP', (4, 2)))

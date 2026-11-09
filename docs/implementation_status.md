@@ -95,6 +95,9 @@ An automated AST and regex scan (`tests/test_rules_draw_budget.py::test_no_hardc
 | **H-1** | **Member 1** | Request public `MinimaxAgent.analyze_root(engine, depth) -> list[(action, value)]` with full-window values; until then `web/backend/explain.py` uses private `_negamax` read-only. |
 | **H-2** | **Member 3** | `docs/person3_evaluation.md` §7 and `evaluation/replay_export.py` target the legacy demo; the new web demo replays `run_match` JSON directly. |
 | **H-3** | **Member 4** | Verify DQN conformance tests (`tests/test_action_codec.py`, `tests/test_dqn_*`) pass under `_validate_action` / `_mutate` lifecycle ordering (all green). |
+| **H-4** | **Member 4** | Hop rule changed (2026-11-08) from R1 (2-cell sprint) to the proposal's opponent-wall hop. `ActionCodec` HOP ids 4–7 now decode to 1-cell deltas (layout and `CODEC_VERSION` unchanged). The release/run checkpoints were trained under R1 and must be retrained. The 14-plane observation has no wall-ownership plane (only the latest walls), so non-latest wall ownership, which now decides hop legality, is invisible to the network. The legal mask keeps play legal, but consider an observation version bump with owner planes. |
+| **H-5** | **Member 3** | Hop rule change: `canonical_key` now delegates to `WallzEngine.canonicalize_key` (ownership is kept while a hop is unused). `experiments/results/solves/*` were regenerated. Ablation pilots in `experiments/results/person3_pilot` and the factorial tables were produced under R1 and need re-running. |
+| **H-6** | **Member 1** | Minimax results/benchmarks produced before the hop rule change (R1) are stale; agents previously opened with a 2-cell hop. |
 
 ---
 

@@ -312,3 +312,55 @@ def test_undo_in_scenario_game_keeps_scenario_start(client):
     assert redo.status_code == 200
     assert redo.get_json()["state"]["pawns"] == before["pawns"]
     assert redo.get_json()["state"]["terminal"] == before["terminal"]
+
+
+def test_concurrent_steps_apply_exactly_one_ai_move(client):
+    """Concurrent /step calls on one game: one AI move, the rest 409, never a 500
+    (regression: unsynchronised requests raced on the shared engine)."""
+    import threading
+    from web.backend.app import create_app
+
+    app = create_app()
+    for spec in ("greedy", "minimax:depth=2", "random:seed=0"):
+        c0 = app.test_client()
+        gid = c0.post("/api/games", json={"config": {"board_size": 5}, "p0": spec, "p1": "human"}).get_json()["id"]
+        codes = []
+
+        def hit():
+            codes.append(app.test_client().post(f"/api/games/{gid}/step", json={"explain": True}).status_code)
+
+        threads = [threading.Thread(target=hit) for _ in range(4)]
+        [t.start() for t in threads]
+        [t.join() for t in threads]
+        g = c0.get(f"/api/games/{gid}").get_json()
+        assert sorted(codes) == [200, 409, 409, 409], (spec, codes)
+        assert [h["player"] for h in g["history"]] == [0]
+        assert g["state"]["to_move"] == 1
+
+
+def test_requests_stay_fast_while_exact_solve_runs(client):
+    """Exact solves run in a child process: API calls made while one runs must stay fast
+    (regression: an in-process solver thread held the GIL and the first /api/agents call
+    at startup took ~47 s)."""
+    import time
+    from web.backend import registry
+
+    registry.exact_status(4, {"A": True, "B": True, "C": True, "K": 2, "M": 0})  # starts a solve if not cached
+    worst = 0.0
+    for _ in range(5):
+        t0 = time.perf_counter()
+        assert client.get("/api/agents?N=5&K=3&M=10").status_code == 200
+        res = client.post("/api/games", json={"config": {"board_size": 5}, "p0": "human", "p1": "greedy"})
+        assert res.status_code == 201
+        worst = max(worst, time.perf_counter() - t0)
+        time.sleep(0.2)
+    assert worst < 1.0, worst
+
+
+def test_exact_cache_key_tracks_rule_source():
+    """Cached solutions are keyed by a hash of engine/solver source, so a rule change
+    (like the 2026-11-08 hop change) can never serve a stale solution."""
+    from web.backend import registry
+    path = registry._cache_path("N3_A1B1C1_K1_M0")
+    assert registry._source_fingerprint() in path
+    assert path.startswith(registry.EXACT_CACHE_DIR)
