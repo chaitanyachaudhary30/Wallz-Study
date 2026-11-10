@@ -54,8 +54,10 @@ forced-loss claims at depth 2 was wrong (`exact_draws_3x3.json`).
 
 Actions are tried in this order: the previous iteration's best root move, moves that reach the
 goal, pawn moves by row progress, walls on the opponent's current shortest path, other walls and
-REPLACE, blocks; ties go to a history score raised by `depth²` on each cutoff. Ordering never
-changes the result, only the number of nodes.
+REPLACE, blocks; ties go to a history score raised by `depth²` on each cutoff. In a fixed-depth
+search ordering never changes the root value (equal in all 50 positions at each depth,
+`ordering.json`). It can change which of several equal-valued moves is played, and under a time
+limit it can change the depth reached and so the move.
 
 ## 6. Time management
 

@@ -102,7 +102,7 @@ Why minimax follows the frozen rules by construction: it reads legality only fro
 `apply_action(update_clock=False)` (`:287-288,363-364`) and reads terminal state from
 `engine.winner` / `engine.is_draw` (`:330`). Blocks, HOP ownership, the wall budget and both draw
 rules therefore come from the engine. Its only own rule-like code is the opponent-path BFS used
-for ordering (`:140-146`), which does not affect legality.
+for ordering (`:141-147`), which does not affect legality.
 
 ## Task 2: audit
 
@@ -110,7 +110,7 @@ for ordering (`:140-146`), which does not affect legality.
 |---|---|---|
 | Negamax perspective | **correct** | Leaf value is for `engine.current_player` (`minimax.py:90,104`); a finished game is `-(1000-ply)` for the side to move, which is the loser (`:93-97`); every child value is negated (`:290,366`). Full-width search agrees exactly (below). |
 | Alpha-beta updates | **correct** (fail-hard) | Child window `(-beta, -alpha)` (`:293-294,369-370`); `alpha = max(alpha, val)` and cut at `beta <= alpha` (`:305-306,380-381`); interior nodes return `alpha` (`:385,387`), the root keeps the exact best value. 118 positions, 5 suites (N 3-5, depth 2-4): root value of AB+ordering and AB unordered equals full-width minimax, max difference `0.0`; unordered AB picked the same move as full width in 118/118 (`alphabeta_equivalence.json`). |
-| Move ordering | **works but weak** | Order: root PV, immediate goal moves, pawn moves by row progress, walls on the opponent's shortest path, other walls, blocks (`:155-184`). Pawn "BFS progress" is really row distance (`:166`; comment at `:160-165` says BFS); `cur_d_self` (`:137`) is computed and never used. The history table is shared by both players (`:308,384`). The engine already lists pawn moves first, so the unordered baseline is not random. Measured gain is small (Task 4). |
+| Move ordering | **works but weak** | Order: root PV, immediate goal moves, pawn moves by row progress, walls on the opponent's shortest path, other walls, blocks (`:149-187`). Pawn "BFS progress" is really row distance (`:166`; comment at `:160-165` says BFS); `cur_d_self` (`:137`) is computed and never used. The history table is shared by both players (`:308,384`). The engine already lists pawn moves first, so the unordered baseline is not random. Measured gain is small (Task 4). |
 | Evaluation function | **distance only** | Default `HEvaluator`: `tanh(0.2 * (d_opp - d_self))` (`evaluation_fn.py:35-43`). Walls left, REPLACE, hop and block are **not** scored. Blocks enter only through BFS distance (an expiring block counts as a full obstacle). `LinearEvaluator` (`:46-61`) uses more features but is not the default and is not used in the runs here. Range (-1, 1) stays far below win scores (`1000-ply`). |
 | Draw never scored as forced win/loss | **correct** | Engine draws (`no_legal_actions`, repetition) score `0.0` (`minimax.py:99-100`). Against exact retrograde solutions of three 3x3 configs (4,812 / 12,821 / 188,172 states): depth 2 on every non-terminal state with more than one legal action and depth 4 on a random sample of DRAW states. 0 DRAW states claimed as a forced win or loss; 0 wrong forced-win or forced-loss claims among 46,260 win and 9,565 loss claims (`exact_draws_3x3.json`). |
 | Time management | **correct, small overshoot** | Deadline checked at every node and before every child (`:237,283,326,359`); `SearchTimeout` aborts the depth (`:251`). N=9, 15 positions, limits 0.1/0.25/0.5/1.0 s: mean overshoot 1.0-1.2 ms, max 2.8 ms (`timing_N9.json`). The match runner times with `perf_counter`, the agent with `time.time`. |
@@ -250,3 +250,24 @@ the pruned nodes (34.9 ms off vs 38.4 ms on at depth 2).
 - Exact equality of alpha-beta and full width holds on N 3-5 positions tested
   (`alphabeta_equivalence.json`). This is a check of the search code, not a claim about play strength.
 - Larger boards (N=5, N=9): match results and node counts are empirical; see Tasks 3 and 4.
+
+## Independent break attempt
+
+A fresh subagent saw only the diff, the two markdown files and the result files, and tried to
+find one wrong number or one unsound audit claim. It ran short python checks from the worktree root.
+
+| What it tried | Result |
+|---|---|
+| 24 number groups against the cited JSON: N5 main counts, all Wilson intervals (recomputed with `evaluation/metrics.py` `wilson()`), lengths, decisions, nodes, times; depth-1/3 diagnostics; hop stats; 46,260 / 9,565 exact claims; 118-position equivalence and node counts; overshoot and depth at N9; ordering totals, reductions, CIs, per-position spread, times, timed depth; N9 counts, distinct games (8 openings, 16 games, 11/16) and per-seat intervals; 2-ply and 4-ply distinct counts | all matched |
+| 14 audit claims against `agents/minimax.py` lines (fail-hard return, child window, cut test, deadline checks, ID keeps last depth, fallback, draw = 0, terminal loss value, ordering categories, unused `cur_d_self`, row progress, shared history, single-action shortcut, ordering off) | all held |
+| Agent and engine unchanged vs `main` | held (`git diff` of `agents/` and `wallz_engine.py` empty) |
+| "Deeper is worse" not claimed for the main run | held |
+| `python -m unittest tests.test_minimax_final_compat` | 14 tests OK |
+
+**Found and fixed:** (1) the report section said ordering "never changes the result". That holds
+for the root value only; ordering can change which of several equal-valued moves is played, and
+under a time limit the depth reached. Reworded. (2) Two line ranges in this report were off by
+one (`:140-146`, `:155-184`); corrected to `:141-147` and `:149-187`.
+
+Not checked by the reviewer: the other test files, replay verification, and the shell-only scan
+counts for 6-ply openings.
