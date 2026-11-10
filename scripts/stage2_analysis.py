@@ -88,6 +88,22 @@ def power(n_units, alpha, sd_unit=0.5):
     return (z + Z80) * sd_unit / math.sqrt(2 * n_units)
 
 
+def opening_counts():
+    """Distinct pawn openings drawn by seed ranges on N=5 (same generator as the runner)."""
+    from wallz_engine import WallzEngine
+    from evaluation.match_runner import opening_actions
+
+    def distinct(plies, seeds):
+        return len({tuple(opening_actions(WallzEngine(board_size=5, rules={'K': 3, 'M': 10}), plies, s))
+                    for s in seeds})
+    return {
+        'plies2_seeds0-9 (pilot)': distinct(2, range(10)),
+        'plies2_seeds0-29 (final_eval open2)': distinct(2, range(30)),
+        'plies2_seeds0-1999 (all that exist)': distinct(2, range(2000)),
+        'plies6_seeds10-49 (final_eval open6)': distinct(6, range(10, 50)),
+    }
+
+
 def ablation_block(path):
     s = load(path)
     win = s['effects']['x_goal_win']
@@ -138,6 +154,7 @@ def main():
         out['solve_tables'][name] = [solve_row(c) for c in new]
         out['pilot_comparison'][name] = [compare(c, old[c['config_label']]) for c in new]
         out['exact_effects'][name] = exact_effects(new)
+    out['opening_counts_N5'] = opening_counts()
     out['ablations'] = {}
     for d in sorted(os.listdir(FINAL)):
         p = os.path.join(FINAL, d, 'summary.json')

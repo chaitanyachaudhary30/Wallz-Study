@@ -24,7 +24,7 @@ uncommitted changes, so the exact code cannot be recovered from git.
 | `person3_pilot/solve_N4_K1_M1_capped.json` | `7e2d6da` | B-off cells valid (complete ones); B-on cells stale | old HOP; 5 of 8 cells were capped (UNKNOWN) |
 | `person3_pilot/agreement_N3_K1_M0.json` | `7e2d6da` | stale | Greedy change, Minimax fix, old HOP |
 | `person3_pilot/agreement_N3_K1_M1.json` | `7e2d6da` | stale | Greedy change, Minimax fix, old HOP |
-| `person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json` | `7e2d6da` | stale | Greedy change, Minimax fix, old HOP; also only 9 distinct openings behind its 10 seeds (see `docs/reports/stage2_solver_stats.md`) |
+| `person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json` | `7e2d6da` | stale | Greedy change, Minimax fix, old HOP; also its 10 seeds (0-9, 2 opening plies) drew only 8 distinct openings, and both agents are deterministic, so 2 seeds were exact replicas (see `docs/reports/stage2_solver_stats.md`) |
 | `person3_pilot/sample_match_N5_ABC_minimax2_greedy.json` | `7e2d6da` | stale | its replay is illegal under the final rules (`verify-replay`: 0/1) |
 | `person3_pilot/sample_match_N9_C_greedy.json` | `7e2d6da` | stale (agent) | replay still legal (`verify-replay`: 1/1, B off), but Greedy changed since |
 | `person3_pilot/sample_match_N9_C_greedy.demo.json` | `7e2d6da` | stale (agent) | demo export of the file above |
