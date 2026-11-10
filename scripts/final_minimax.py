@@ -150,7 +150,7 @@ def cmd_vs_greedy(args):
         seeds, scanned = distinct_seeds(args.N, rules, args.opening_plies, args.seeds, args.seed_start)
     else:
         seeds = list(range(args.seed_start, args.seed_start + args.seeds))
-    openings = {s: [list(map(list, a)) for a in opening_of(args.N, rules, args.opening_plies, s)] for s in seeds}
+    openings = {s: [[a[0], list(a[1])] for a in opening_of(args.N, rules, args.opening_plies, s)] for s in seeds}
     n_distinct = len({json.dumps(o) for o in openings.values()})
     configs = []
     for s in seeds:
@@ -405,6 +405,24 @@ def cmd_timing(args):
     write_new(f'timing_N{args.N}.json', out)
 
 
+def cmd_openings(args):
+    """Seed -> opening map and distinct counts for the logged vs-greedy runs (from the match logs)."""
+    report = {}
+    for tag in args.tags:
+        rs = load_results(str(OUT / f'vs_greedy_{tag}.jsonl'))
+        cfg = rs[0]['config']
+        seeds = sorted({r['opening']['seed'] for r in rs})
+        seq = {s: next(r['opening']['actions'] for r in rs if r['opening']['seed'] == s) for s in seeds}
+        games = {json.dumps([r['agents']['0']['spec'], [st['action'] for st in r['replay']]]) for r in rs}
+        report[tag] = {'board_size': cfg['board_size'], 'opening_plies': cfg['opening_plies'],
+                       'seeds': seeds, 'distinct_openings': len({json.dumps(v) for v in seq.values()}),
+                       'matches': len(rs), 'distinct_games': len(games), 'seed_to_opening': seq}
+        print(f"  {tag}: {report[tag]['distinct_openings']} distinct openings, {len(games)} distinct games")
+    out = provenance({'tags': args.tags}, None)
+    out['results'] = report
+    write_new('opening_maps.json', out)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -421,6 +439,9 @@ def main():
                    help='--seeds counts distinct openings: keep the first seed of each distinct opening')
     p.add_argument('--tag', required=True)
     p.set_defaults(func=cmd_vs_greedy)
+    p = sub.add_parser('openings')
+    p.add_argument('tags', nargs='+')
+    p.set_defaults(func=cmd_openings)
     p = sub.add_parser('ordering')
     p.add_argument('--positions', type=int, default=50)
     p.add_argument('--board-size', type=int, default=5)
