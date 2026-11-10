@@ -423,6 +423,29 @@ def cmd_openings(args):
     write_new('opening_maps.json', out)
 
 
+def cmd_hops(args):
+    """Greedy goal wins that contain a Greedy HOP (a HOP can only cross a minimax-owned wall)."""
+    report = {}
+    for tag in args.tags:
+        rs = load_results(str(OUT / f'vs_greedy_{tag}.jsonl'))
+        row = {'matches': len(rs), 'greedy_goal_wins': 0, 'greedy_wins_with_greedy_hop': 0,
+               'greedy_hops': 0, 'minimax_walls_placed': 0}
+        for r in rs:
+            seat = 0 if r['agents']['0']['spec'] != 'greedy' else 1
+            acts = [st for st in r['replay'] if st['source'] == 'agent']
+            row['minimax_walls_placed'] += sum(st['player'] == seat and st['action'][0] == 'WALL' for st in acts)
+            hops = sum(st['player'] != seat and st['action'][0] == 'HOP' for st in acts)
+            row['greedy_hops'] += hops
+            if r['outcome']['category'] == 'goal' and r['outcome']['winner'] != seat:
+                row['greedy_goal_wins'] += 1
+                row['greedy_wins_with_greedy_hop'] += hops > 0
+        report[tag] = row
+        print(f"  {tag}: {row}")
+    out = provenance({'tags': args.tags}, None)
+    out['results'] = report
+    write_new('hop_stats.json', out)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -442,6 +465,9 @@ def main():
     p = sub.add_parser('openings')
     p.add_argument('tags', nargs='+')
     p.set_defaults(func=cmd_openings)
+    p = sub.add_parser('hops')
+    p.add_argument('tags', nargs='+')
+    p.set_defaults(func=cmd_hops)
     p = sub.add_parser('ordering')
     p.add_argument('--positions', type=int, default=50)
     p.add_argument('--board-size', type=int, default=5)
