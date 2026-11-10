@@ -3,12 +3,14 @@
 - **Base:** `main` = `70e2351` (Stage 1 engine freeze). No engine rule was changed.
 - **Branch:** `bot3-chaitanya/solver-stats`.
 - **Commits that produced results:** `f930e8e` (N = 3 and N = 4, M = 0 solves), `8944f16`
-  (M = 1 solves, cross-checks, both match ablations). Every result JSON records its
-  `source.commit`, `dirty` (all `false`), the command, Python version (3.12.5), platform and
-  UTC date (`run` block). Solver code is identical in both commits; later commits only add
-  analysis code and docs.
+  (M = 1 solves, cross-checks, both match ablations), `0f7825b` (`analysis.json`). Every
+  result JSON records the commit and a dirty flag (all `false`) in `run.source` (and in
+  `source` for solver, cross-check and ablation files), plus the command, Python version
+  (3.12.5), platform and UTC date. Solver code is identical in all three commits; later commits
+  only add analysis code and docs.
 - **Machine:** Windows 11, Python 3.12.5, numpy 2.2.0, pytest 9.2.0. Heavy jobs ran under the
-  shared `HEAVY.lock`; the largest solve cell peaked at about 1.0 GB resident.
+  shared `HEAVY.lock`. Peak memory of the largest solve cell was about 1.0 GB resident, read
+  from the OS process list during the run (not recorded in a result file).
 - **Rule of this report:** exact small-board results (Sections 1-2) and 5x5 match results
   (Section 4) are kept apart. No cell the solver did not finish is called exact.
 
@@ -372,7 +374,18 @@ So Task 5 must point `make_tables.py` at `final_eval/ablation_N5_K3_M10_open6/su
 | `tests.test_agents` | pass |
 | `pytest tests/test_edge_invariants.py` | 4 pass |
 
-## 7. Not done, and limits
+## 7. Independent check of this report
+
+A fresh reviewer that saw only `git diff 70e2351..HEAD` and `final_eval/` tried to find one
+number that does not follow from the files, or one unsupported significance claim. It
+re-read every table in Sections 2 and 4 against the JSON, recomputed all 16 pilot-vs-final
+diffs and the four MDE values from the formula, checked the Holm flags, the replica counts,
+the capped-cell labels and that `truncated` is never merged into draws. **No wrong number and
+no unsupported claim found.** It flagged two wording points, both fixed here: where the commit
+is stored in `analysis.json`, and that the 1.0 GB peak memory is not in a file. Not checked by
+it: the `logs/*.jsonl` match logs and a rerun of the bootstrap.
+
+## 8. Not done, and limits
 
 - Task 3 not run (DQN training; waiting on the conductor). Task 5 not started (later item).
 - Agent-vs-exact agreement (`agreement` subcommand) was not rerun; the pilot agreement files stay stale.
