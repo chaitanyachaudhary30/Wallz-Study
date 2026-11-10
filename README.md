@@ -95,9 +95,9 @@ FAI_project/
 │   ├── evaluation_fn.py          # Contract C7 modular evaluation functions (HEvaluator, LinearEvaluator)
 │   └── dqn/                      # MARL Deep Q-Network package
 │       ├── agent.py              # DQNAgent implementation & checkpoint loader
-│       ├── network.py            # Residual Convolutional Q-Network
+│       ├── network.py            # Convolutional Q-Network (plain 4-conv stack + MLP head)
 │       ├── encoding.py           # 14-plane spatial observation encoder (C4)
-│       ├── codec.py              # Discrete action codec and mirror permutations (C3)
+│       ├── (codec)               # Action codec lives in src/modified_wallz/actions.py (C3)
 │       ├── replay_buffer.py      # Uniform FIFO replay buffer with mirror augmentation
 │       ├── trainer.py            # Negamax Double-DQN learner
 │       └── self_play.py          # Self-play curriculum & opponent pool
@@ -304,9 +304,9 @@ python3 run_match.py --p0 minimax --p1 greedy --depth 2
 python3 run_match.py --p0 minimax --p1 greedy --depth 2 --seed 42
 
 # 2. DQN vs Minimax on 3x3 board
-python3 run_match.py --p0 dqn:path=checkpoints/release/dqn_3x3/model.pt --p1 minimax:depth=2 --board-size 3
-# 2. DQN vs Minimax on 3x3 board with seed 42
-python3 run_match.py --p0 dqn:path=checkpoints/release/dqn_3x3/model.pt --p1 minimax:depth=2 --board-size 3 --seed 42
+python3 run_match.py --p0 dqn:path=checkpoints/release/dqn_3x3/model.pt --p1 minimax:depth=2 --board-size 3 -K 1 -M 1
+# 2. DQN vs Minimax on 3x3 board with seed 42 (-K/-M must match the checkpoint's meta.json)
+python3 run_match.py --p0 dqn:path=checkpoints/release/dqn_3x3/model.pt --p1 minimax:depth=2 --board-size 3 -K 1 -M 1 --seed 42
 
 # 3. Greedy vs Greedy on 5x5 board
 python3 run_match.py --p0 greedy --p1 greedy --board-size 5
@@ -378,10 +378,10 @@ Train self-play Double-DQN agents across board dimensions:
 
 ```bash
 # Train on 3x3 board
-python3 scripts/train_dqn.py --config configs/training.yaml --board 3x3 --seed 42
+python3 -m scripts.train_dqn --config configs/training.yaml --board-size 3 --seed 42 --output-dir checkpoints/final/3x3_s42
 
 # Train on 4x4 board
-python3 scripts/train_dqn.py --config configs/training.yaml --board 4x4 --seed 42
+python3 -m scripts.train_dqn --config configs/training.yaml --board-size 4 --seed 42 --output-dir checkpoints/final/4x4_s42
 ```text
 FAI_project/
 ├── pyproject.toml                # Project packaging configuration

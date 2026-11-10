@@ -44,6 +44,7 @@ def evaluate_seed_vs_baselines(
     for opp in ['greedy', 'random']:
         wins = 0
         draws = 0
+        truncated = 0
         losses = 0
         plies_list = []
 
@@ -77,17 +78,20 @@ def evaluate_seed_vs_baselines(
                         wins += 1
                     else:
                         losses += 1
-                elif 'draw' in cat or cat == 'truncated':
+                elif cat == 'truncated':
+                    truncated += 1  # runner cap: own column, never a draw (team decision)
+                elif cat.startswith('draw'):
                     draws += 1
                 else:
                     losses += 1
 
-        total = wins + draws + losses
+        total = wins + draws + truncated + losses
         win_rate = wins / total if total > 0 else 0.0
         results[opp] = {
             'total_matches': total,
             'wins': wins,
             'draws': draws,
+            'truncated': truncated,
             'losses': losses,
             'win_rate': round(win_rate, 4),
             'ci95': [round(x, 4) for x in wilson(wins, total)],
@@ -155,11 +159,14 @@ def run_multi_seed_study(
 
         # Validate Gate X-16 sign agreement
         print(f"Validating Gate X-16 for Seed {seed}...")
-        from scripts.validate_dqn import validate_cell
-        cell_res = validate_cell(final_pt, 3, rules_3x3, sol=sol)
+        # validate_cell never existed in scripts/validate_dqn.py; use the Gate X-16 cell check.
+        from scripts.validate_dqn import evaluate_cell_x16
+        from agents.dqn.agent import load_checkpoint
+        cell_res = evaluate_cell_x16(sol, load_checkpoint(final_pt, expected_board_size=3),
+                                     max_states=1000, seed=42)
 
-        sign_agreement = cell_res['sign_agreement']
-        mae = cell_res['mae']
+        sign_agreement = cell_res['sign_agreement_rate']
+        mae = cell_res['mae_all']
         print(f"  Seed {seed} Sign Agreement: {sign_agreement * 100:.2f}% | MAE: {mae:.4f}")
 
         # Evaluate vs Baselines
