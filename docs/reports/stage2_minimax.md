@@ -3,8 +3,17 @@
 - **Engine and agent tested:** branch `bot1-vedant/minimax-validation`, based on `main` = `70e2351`
   (Stage 1 engine freeze). Code under test is unchanged from `main`: `agents/minimax.py`,
   `agents/evaluation_fn.py`, `wallz_engine.py`.
-- **Commit that produced every result:** `4023eac` (tree clean; recorded as `source.commit` /
-  `source.dirty` in each JSON). That commit only adds the test file and `scripts/final_minimax.py`.
+- **Commits that produced the results** (tree clean each time; recorded as `source.commit` /
+  `source.dirty` in every JSON). Later commits only changed `scripts/final_minimax.py` (seed
+  selection and reporting), never the agent or engine:
+
+  | Commit | Results |
+  |---|---|
+  | `4023eac` | `alphabeta_equivalence.json`, `exact_draws_3x3.json`, `ordering.json`, `timing_N9.json`, superseded `vs_greedy_N5*`, `vs_greedy_N5_depth{1,3}_diag*` |
+  | `f5aa757` | `vs_greedy_N5_open4_distinct*` (main run), `vs_greedy_N9_timed*` |
+  | `d46fc5c` | `vs_greedy_N5_open4_depth{1,3}_diag*` |
+  | `8589a55` | `hop_stats.json` |
+  | `f755a3a` | `opening_maps.json` (read from the match logs; plays nothing) |
 - **Added:** `tests/test_minimax_final_compat.py` (14 tests), `scripts/final_minimax.py`
   (experiment driver), results in `experiments/results/final_minimax/`, this report,
   `docs/report_sections/member1_minimax.md`.
@@ -32,8 +41,24 @@ python scripts/final_minimax.py equivalence
 python scripts/final_minimax.py exact-draws
 python scripts/final_minimax.py ordering
 python scripts/final_minimax.py timing
-TASK3_COMMANDS
+python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --spec minimax:depth=2 --tag N5            # superseded
+python scripts/final_minimax.py vs-greedy -N 5 --seeds 10 --spec minimax:depth=1 --tag N5_depth1_diag # superseded
+python scripts/final_minimax.py vs-greedy -N 5 --seeds 10 --spec minimax:depth=3 --tag N5_depth3_diag # superseded
+python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=2 --tag N5_open4_distinct
+python scripts/final_minimax.py vs-greedy -N 9 --seeds 10 --opening-plies 2 --spec minimax:depth=2,time_limit=1.0 --tag N9_timed
+python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=1 --tag N5_open4_depth1_diag
+python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=3 --tag N5_open4_depth3_diag
+python scripts/final_minimax.py hops N5_open4_distinct N5_open4_depth1_diag N5_open4_depth3_diag N9_timed
+python scripts/final_minimax.py openings N5 N5_open4_distinct N9_timed N5_depth1_diag N5_depth3_diag N5_open4_depth1_diag N5_open4_depth3_diag
+python scripts/run_experiments.py verify-replay experiments/results/final_minimax/vs_greedy_N5.jsonl
+python scripts/run_experiments.py verify-replay experiments/results/final_minimax/vs_greedy_N5_open4_distinct.jsonl
+python scripts/run_experiments.py verify-replay experiments/results/final_minimax/vs_greedy_N9_timed.jsonl
 ```
+
+Distinct-opening counts per `opening_plies` (N=5): 2 plies give 9 distinct openings in seeds
+0-49 (and still 9 after scanning 2,000 seeds); 4 plies reach 50 distinct after 80 seeds; 6 plies
+after 51 seeds. These counts come from a one-off scan in the shell; the chosen 4-ply seed list
+and its scan length are recorded in `vs_greedy_N5_open4_distinct_summary.json` (`config.seed_selection`).
 
 `scripts/benchmark_ordering_x8.py` was **not** run directly: it always writes to
 `experiments/results/minimax/x8_node_reduction.json` and would overwrite the committed result.
@@ -99,50 +124,95 @@ Other notes (no change made):
 
 ## Task 3: Minimax vs Greedy on the final engine
 
+**Design change (Mr. CEO, from Bot 3's finding).** `minimax:depth=2` without a time limit and
+`greedy` are both deterministic, so a match is fixed by its opening. With `opening_plies=2`
+on N=5, seeds 0-49 give only **9 distinct openings** (18 distinct games out of 100;
+`opening_maps.json`). The main run therefore uses `opening_plies=4`, the smallest tried value
+that reaches 50 distinct openings: seeds were scanned from 0 upward and the first seed of each
+distinct opening kept (seeds 0-79 scanned; 50 kept). `opening_plies=6` was not needed.
+All rates below are over distinct games only.
+
 ### Main run: N=5, A1B1C1, K=3, M=10, `minimax:depth=2` vs `greedy`
 
-Opening seeds 0-49, 2 random pawn-move opening plies, each opening played with minimax as P0
-and as P1 (100 matches), runner cap 200 plies, no time limit, deterministic.
-Files: `experiments/results/final_minimax/vs_greedy_N5_summary.json` (summary) and
-`vs_greedy_N5.jsonl` (100 matches with replays). `verify-replay`: 100/100 verified.
+50 distinct 4-ply pawn-move openings, each played with minimax as P0 and as P1 (100 matches,
+100 distinct games), runner cap 200 plies, no time limit, deterministic.
+Files: `experiments/results/final_minimax/vs_greedy_N5_open4_distinct_summary.json`
+(summary, seed list), `vs_greedy_N5_open4_distinct.jsonl` (matches with replays),
+seed -> opening map in `opening_maps.json`. `verify-replay`: 100/100 verified.
 
 | | Minimax as P0 | Minimax as P1 | Overall |
 |---|---|---|---|
-| Matches | 50 | 50 | 100 |
-| Minimax goal wins | 25 | 10 | 35 |
-| Greedy goal wins | 25 | 40 | 65 |
-| Draws: repetition / no legal action | 0 / 0 | 0 / 0 | 0 / 0 |
+| Matches (distinct games) | 50 | 50 | 100 |
+| Minimax goal wins | 20 | 19 | 39 |
+| Greedy goal wins | 29 | 31 | 60 |
+| Draws: repetition / no legal action | 1 / 0 | 0 / 0 | 1 / 0 |
 | Truncated (200-ply cap) | 0 | 0 | 0 |
 | Forfeits | 0 | 0 | 0 |
-| Minimax win rate (95% Wilson) | 50% (36.6-63.4%) | 20% (11.2-33.0%) | **35% (26.4-44.7%)** |
-| Draw rate / truncation rate | 0% / 0% | 0% / 0% | 0% / 0% |
-| Mean game length, plies (incl. 2 opening) | 11.66 | 11.56 | 11.61 |
-| Minimax decisions | 254 | 219 | 473 |
-| Mean depth completed | 2.00 | 2.00 | 2.00 |
-| Mean nodes per decision | 204.3 | 193.7 | 199.4 |
-| Mean decision time | 27.6 ms | 24.2 ms | 26.0 ms |
+| Minimax win rate (95% Wilson) | 40% (27.6-53.8%) | 38% (25.9-51.8%) | **39% (30.0-48.8%)** |
+| Draw rate / truncation rate | 2% / 0% | 0% / 0% | 1% / 0% |
+| Mean game length, plies (incl. 4 opening) | 17.56 | 19.38 | 18.47 |
+| Minimax decisions | 349 | 369 | 718 |
+| Mean depth completed | 2.000 | 1.995 | 1.997 |
+| Mean nodes per decision | 174.9 | 180.5 | 177.8 |
+| Mean decision time | 28.7 ms | 29.1 ms | 28.9 ms |
 
-Depth-2 minimax **loses** to Greedy overall on the final engine. Mean depth is exactly 2.00
-because no decision in these games had a single legal action.
+Depth-2 minimax **loses** to Greedy on the final engine (39 vs 60). Mean depth is below 2
+because a decision with a single legal action is returned without search and counted as depth 1.
 
-**Diagnostic, not part of the main run** (opening seeds 0-9, both seatings, 20 matches each;
-`vs_greedy_N5_depth1_diag_summary.json`, `vs_greedy_N5_depth3_diag_summary.json`):
+**Same 50 openings, other depths (diagnostic, not the main run;**
+`vs_greedy_N5_open4_depth1_diag_summary.json`, `vs_greedy_N5_open4_depth3_diag_summary.json`):
 
-| Spec | Minimax wins | Greedy wins | Draws | Truncated |
-|---|---|---|---|---|
-| `minimax:depth=1` | 10 | 8 | 2 (repetition) | 0 |
-| `minimax:depth=3` | 5 | 15 | 0 | 0 |
+| Spec | Minimax wins | Greedy wins | Draws (all repetition) | Truncated | Win rate (95% Wilson) |
+|---|---|---|---|---|---|
+| `minimax:depth=1` | 45 | 46 | 9 | 0 | 45% (35.6-54.8%) |
+| `minimax:depth=2` (main) | 39 | 60 | 1 | 0 | 39% (30.0-48.8%) |
+| `minimax:depth=3` | 45 | 48 | 7 | 0 | 45% (35.6-54.8%) |
 
-Deeper search does worse. Replays show why: the deeper search spends early plies on walls in
-front of Greedy's goal row, and Greedy then crosses one of them with its HOP, which is legal
-exactly because minimax owns the wall (e.g. `vs_greedy_N5_depth3_diag.jsonl`, seed 0 with
-minimax as P0: walls at plies 5 and 7, a block at ply 9, Greedy's HOP to row 0 at ply 12). The leaf
-evaluation measures `d_opp` by BFS and ignores the opponent's unused HOP, so each own wall looks
-more useful than it is. This is an evaluation weakness under the new HOP rule, not a search bug
-(the search is exact against full width). It was not changed here: changing the evaluation is a
-design decision for the team.
+No depth beats Greedy, and the intervals overlap, so this does **not** show that deeper search is worse.
 
-N9_SECTION
+**Observed weakness.** HOP may only cross a wall the opponent owns, so every Greedy HOP in these
+games crosses a minimax wall. At depth 2, 30 of Greedy's 60 wins contain a Greedy HOP; minimax
+placed 207 walls over the 100 games (`hop_stats.json`). The leaf evaluation measures `d_opp` by
+BFS and ignores the opponent's unused HOP, so it overrates its own walls while that HOP is
+unused. This is an evaluation limit under the new HOP rule, not a search bug (the search is exact
+against full width). It was not changed: the evaluation is a team design decision.
+
+**Superseded first run (kept, not used for claims).** Before the design change I ran the brief's
+original design (`opening_plies=2`, seeds 0-49, 100 matches; `vs_greedy_N5_summary.json`): 35
+minimax wins, 65 Greedy wins. Its 100 matches are only 18 distinct games, so its counts and
+interval are not valid samples. The 20-match depth-1/depth-3 checks on seeds 0-9
+(`vs_greedy_N5_depth1_diag_summary.json`, `vs_greedy_N5_depth3_diag_summary.json`) are also
+only 16 distinct games each, and are superseded by the table above. In these summaries the
+`seed_to_opening` field spells `MOVE` as a list of letters (fixed in `d46fc5c`); use
+`opening_maps.json` instead.
+
+### Larger board: N=9, A1B1C1, K=3, M=10, `minimax:depth=2,time_limit=1.0` vs `greedy`
+
+Opening seeds 0-9, `opening_plies=2`, both seatings, 20 matches, cap 200 plies.
+**Timed play is not deterministic**: the depth reached depends on machine load (two other bots
+were running), so a rerun can differ. Seeds 0-9 give **8 distinct openings** (seed 3 = seed 1,
+seed 8 = seed 4), and those repeats produced the same games here, so the 20 matches are
+**16 distinct games** (`opening_maps.json`).
+Files: `vs_greedy_N9_timed_summary.json`, `vs_greedy_N9_timed.jsonl`. `verify-replay`: 20/20 verified.
+
+| | Minimax as P0 | Minimax as P1 | Overall |
+|---|---|---|---|
+| Matches | 10 | 10 | 20 |
+| Minimax goal wins | 8 | 6 | 14 |
+| Greedy goal wins | 2 | 4 | 6 |
+| Draws / truncated / forfeits | 0 / 0 / 0 | 0 / 0 / 0 | 0 / 0 / 0 |
+| Minimax win rate, all 20 (95% Wilson) | 80% (49.0-94.3%) | 60% (31.3-83.2%) | 70% (48.1-85.5%) |
+| Minimax win rate, 16 distinct games (95% Wilson) | 6/8 (40.9-92.9%) | 5/8 (30.6-86.3%) | **11/16 (44.4-85.8%)** |
+| Mean game length, plies (incl. 2 opening) | 18.4 | 25.4 | 21.9 |
+| Minimax decisions | 86 | 115 | 201 |
+| Mean depth completed | 1.91 | 1.95 | 1.93 |
+| Mean nodes per decision | 890.0 | 877.6 | 882.9 |
+| Mean decision time | 403 ms | 325 ms | 359 ms |
+
+The distinct-game row is `distinct_game_results` for `N9_timed` in `opening_maps.json`
+(repeated games dropped; Greedy won 5 of the 16). With 16 games the interval is wide;
+this is a larger-board indication, not an exact finding. All 6 Greedy wins contain a Greedy HOP
+(`hop_stats.json`).
 
 ## Task 4: search efficiency (move ordering on vs off)
 

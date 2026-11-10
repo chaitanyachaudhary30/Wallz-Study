@@ -1,7 +1,8 @@
 # Member 1: Minimax Search with Alpha-Beta Pruning
 
-All numbers below come from files in `experiments/results/final_minimax/`, produced at commit
-`4023eac` on the frozen Stage 1 engine (`main` = `70e2351`). Older minimax numbers (made under
+All numbers below come from files in `experiments/results/final_minimax/`, produced on the
+frozen Stage 1 engine (`main` = `70e2351`) with the agent unchanged; each file records its own
+commit (see `docs/reports/stage2_minimax.md`). Older minimax numbers (made under
 the previous 2-cell HOP rule) are not used.
 
 ## 1. Algorithm
@@ -66,27 +67,36 @@ was 1.87 (`timing_N9.json`).
 
 ## 7. Results against Greedy
 
-N=5, all three modifications on, K=3, M=10, `minimax:depth=2` vs `greedy`, 50 openings
-(2 random pawn moves each) played with both seatings, 100 matches, no time limit
-(`vs_greedy_N5_summary.json`; all 100 replays verified):
+**Main result (exact game count).** N=5, all three modifications on, K=3, M=10,
+`minimax:depth=2` vs `greedy`, no time limit. Both agents are deterministic, so a game is fixed
+by its opening; 50 distinct 4-ply pawn-move openings were each played with both seatings,
+giving 100 distinct games (`vs_greedy_N5_open4_distinct_summary.json`; seed -> opening map in
+`opening_maps.json`; all 100 replays verified):
 
 | | Minimax as P0 | Minimax as P1 | Overall |
 |---|---|---|---|
-| Minimax wins / Greedy wins | 25 / 25 | 10 / 40 | 35 / 65 |
-| Draws / truncated | 0 / 0 | 0 / 0 | 0 / 0 |
-| Minimax win rate (95% Wilson) | 50% (37-63%) | 20% (11-33%) | 35% (26-45%) |
-| Mean game length (plies, incl. opening) | 11.7 | 11.6 | 11.6 |
-| Mean nodes / mean time per decision | 204 / 27.6 ms | 194 / 24.2 ms | 199 / 26.0 ms |
+| Minimax wins / Greedy wins | 20 / 29 | 19 / 31 | 39 / 60 |
+| Draws (repetition) / truncated | 1 / 0 | 0 / 0 | 1 / 0 |
+| Minimax win rate (95% Wilson) | 40% (28-54%) | 38% (26-52%) | 39% (30-49%) |
+| Mean game length (plies, incl. opening) | 17.6 | 19.4 | 18.5 |
+| Mean nodes / mean time per decision | 175 / 28.7 ms | 181 / 29.1 ms | 178 / 28.9 ms |
 
-Every game ended with a goal. Depth-2 minimax is weaker than the one-ply Greedy baseline, most
-of all as the second player. A small diagnostic (20 matches each) gave 10-8 with 2 draws at
-depth 1 and 5-15 at depth 3 (`vs_greedy_N5_depth1_diag_summary.json`,
-`vs_greedy_N5_depth3_diag_summary.json`), so deeper search plays worse. The replays point to
-the evaluation: the deeper search builds walls in front of Greedy's goal, and Greedy crosses one
-with its one-time HOP, which is allowed precisely because the wall is minimax's. The distance
-term ignores the opponent's unused HOP and so overrates own walls.
+Depth-2 minimax is weaker than the one-ply Greedy baseline on N=5. On the same 100 games,
+depth 1 scored 45-46 with 9 draws and depth 3 scored 45-48 with 7 draws, both 45% (36-55%)
+(`vs_greedy_N5_open4_depth1_diag_summary.json`, `vs_greedy_N5_open4_depth3_diag_summary.json`).
+No depth tested beats Greedy, and the three intervals overlap.
 
-N9_SECTION7
+A likely cause is the evaluation. A HOP may only cross a wall the opponent owns, so every Greedy
+HOP crosses a minimax wall. At depth 2, 30 of Greedy's 60 wins contain a Greedy HOP, and minimax
+placed 207 walls in the 100 games (`hop_stats.json`). The distance term ignores the opponent's
+unused HOP and so overrates its own walls.
+
+**Larger board (empirical, not deterministic).** N=9, same rules, `minimax:depth=2,time_limit=1.0`,
+opening seeds 0-9 with 2-ply openings, both seatings: 20 matches but only 8 distinct openings and
+16 distinct games (`opening_maps.json`). Minimax won 14 of 20 (8 of 10 as P0, 6 of 10 as P1;
+`vs_greedy_N9_timed_summary.json`), 11 of the 16 distinct games (95% Wilson 44-86%;
+`distinct_game_results` in `opening_maps.json`). It finished depth 2 in most decisions (mean 1.93)
+at 359 ms per decision. Timed search depends on machine load, so a rerun can give other games.
 
 ## 8. Search efficiency
 
