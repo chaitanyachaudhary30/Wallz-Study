@@ -1,0 +1,2 @@
+canon_no_owner: 4 of 18 tests fail: ['test_canonical_merge_keeps_value_and_rank', 'test_legacy_exact_solver_agrees', 'test_matches_bellman_reference', 'test_owner_kept_in_key_only_while_a_hop_remains']
+hop_any_wall: 3 of 18 tests fail: ['test_canonical_merge_keeps_value_and_rank', 'test_hop_edges_cross_an_opponent_wall_once', 'test_hop_needs_unused_hop_and_opponent_wall']

@@ -1,0 +1,24 @@
+test_every_edge_is_an_engine_transition (tests.test_solver_final_rules.TestEngineIsTheOnlyRuleSource.test_every_edge_is_an_engine_transition) ... ok
+test_solver_code_has_no_rule_logic (tests.test_solver_final_rules.TestEngineIsTheOnlyRuleSource.test_solver_code_has_no_rule_logic)
+state_graph reads no engine internals (it only restores, lists, applies and ... ok
+test_canonical_merge_keeps_value_and_rank (tests.test_solver_final_rules.TestIndependentChecks.test_canonical_merge_keeps_value_and_rank) ... ok
+test_legacy_exact_solver_agrees (tests.test_solver_final_rules.TestIndependentChecks.test_legacy_exact_solver_agrees) ... ok
+test_matches_bellman_reference (tests.test_solver_final_rules.TestIndependentChecks.test_matches_bellman_reference) ... ok
+test_block_active_on_last_ply_then_expires (tests.test_solver_final_rules.TestMechanics.test_block_active_on_last_ply_then_expires) ... ok
+test_block_timers_on_every_edge (tests.test_solver_final_rules.TestMechanics.test_block_timers_on_every_edge) ... ok
+test_hop_edges_cross_an_opponent_wall_once (tests.test_solver_final_rules.TestMechanics.test_hop_edges_cross_an_opponent_wall_once) ... ok
+test_hop_needs_unused_hop_and_opponent_wall (tests.test_solver_final_rules.TestMechanics.test_hop_needs_unused_hop_and_opponent_wall) ... ok
+test_latest_wall_replace (tests.test_solver_final_rules.TestMechanics.test_latest_wall_replace) ... ok
+test_no_walls_means_no_hop (tests.test_solver_final_rules.TestMechanics.test_no_walls_means_no_hop) ... ok
+test_owner_kept_in_key_only_while_a_hop_remains (tests.test_solver_final_rules.TestMechanics.test_owner_kept_in_key_only_while_a_hop_remains) ... ok
+test_wall_inventory (tests.test_solver_final_rules.TestMechanics.test_wall_inventory) ... ok
+test_cyclic_draws (tests.test_solver_final_rules.TestTerminalAndDraws.test_cyclic_draws) ... ok
+test_no_legal_action_draw (tests.test_solver_final_rules.TestTerminalAndDraws.test_no_legal_action_draw) ... ok
+test_terminal_loss_state (tests.test_solver_final_rules.TestTerminalAndDraws.test_terminal_loss_state) ... ok
+test_terminal_win_state (tests.test_solver_final_rules.TestTerminalAndDraws.test_terminal_win_state) ... ok
+test_win_in_one_and_forced_loss_in_two (tests.test_solver_final_rules.TestTerminalAndDraws.test_win_in_one_and_forced_loss_in_two) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 21.068s
+
+OK
