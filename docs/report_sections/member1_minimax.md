@@ -99,7 +99,9 @@ opening seeds 0-9 with 2-ply openings, both seatings: 20 matches but only 8 dist
 `vs_greedy_N9_timed_summary.json`), 11 of the 16 distinct games (95% Wilson 44-86%;
 `distinct_game_results` in `opening_maps.json`). It finished depth 2 in most decisions (mean 1.93)
 at 359 ms per decision. Other bots' jobs shared the machine during the run, so these decision
-times are load-affected. Timed search depends on machine load, so a rerun can give other games.
+times are load-affected. A rerun beside another bot's DQN training, with the load logged at both
+ends, was slower (522 ms, mean depth 1.89) but produced the same 20 games move for move
+(`vs_greedy_N9_timed_r2_summary.json`, `n9_r2_load.json`). Timed search depends on machine load, so a rerun can give other games.
 
 ## 8. Search efficiency
 

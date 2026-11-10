@@ -1,0 +1,111 @@
+{
+  "source": {
+    "commit": "72f99b4e15ed8d101b3292a3c3d3eb01dfba4811",
+    "dirty": false
+  },
+  "date": "2026-11-11T04:39:06+05:30",
+  "python": "3.12.5",
+  "run": "vs_greedy_N9_timed_r2",
+  "start": {
+    "time": "2026-11-11T04:36:36",
+    "free_mb": 4280,
+    "heavy_lock": "bot2 2026-11-11T04:36:07 train dqn 3x3 s42",
+    "other_python_jobs": [
+      "\"C:\\Users\\Chaitanya\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m scripts.train_dqn --board-size 3 --seed 42 --threads 2 --max-minutes 25 --resume --ou"
+    ]
+  },
+  "end": {
+    "time": "2026-11-11T04:38:36",
+    "free_mb": 4233,
+    "heavy_lock": "bot2 2026-11-11T04:36:07 train dqn 3x3 s42",
+    "other_python_jobs": [
+      "\"C:\\Users\\Chaitanya\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" -m scripts.train_dqn --board-size 3 --seed 42 --threads 2 --max-minutes 25 --resume --ou"
+    ]
+  },
+  "resource_status": {
+    "start": "posture ample, 4.2 GB available, 16 cores (04:36)",
+    "end": "posture ample, 4.1 GB available (just after the run)"
+  },
+  "bot3_running": "no Bot 3 job in the process list at start or end; HEAVY.lock held by Bot 2 (DQN training) throughout",
+  "note": "decision times and depth reached are load-affected",
+  "games_identical_to_first_run": "20 of 20 matches (same match_id, same action sequence)",
+  "distinct_openings": 8,
+  "distinct_games": 16,
+  "distinct_game_results": {
+    "minimax_as_p0": {
+      "matches": 8,
+      "minimax_goal_wins": 6,
+      "greedy_goal_wins": 2,
+      "draws_by_type": {},
+      "draws_total": 0,
+      "truncated": 0,
+      "forfeits_won_by_minimax": 0,
+      "forfeits_won_by_greedy": 0,
+      "categories": {
+        "goal": 8
+      },
+      "minimax_win_rate": 0.75,
+      "minimax_win_rate_wilson95": [
+        0.40926987910258916,
+        0.9285223111419724
+      ],
+      "draw_rate": 0.0,
+      "truncation_rate": 0.0,
+      "mean_length_plies_incl_opening": 18.25,
+      "minimax_decisions": 68,
+      "minimax_mean_depth_completed": 1.8235294117647058,
+      "minimax_mean_nodes_expanded": 874.4705882352941,
+      "minimax_mean_decision_seconds": 0.5641917485421907
+    },
+    "minimax_as_p1": {
+      "matches": 8,
+      "minimax_goal_wins": 5,
+      "greedy_goal_wins": 3,
+      "draws_by_type": {},
+      "draws_total": 0,
+      "truncated": 0,
+      "forfeits_won_by_minimax": 0,
+      "forfeits_won_by_greedy": 0,
+      "categories": {
+        "goal": 8
+      },
+      "minimax_win_rate": 0.625,
+      "minimax_win_rate_wilson95": [
+        0.30573785458380187,
+        0.863158240538479
+      ],
+      "draw_rate": 0.0,
+      "truncation_rate": 0.0,
+      "mean_length_plies_incl_opening": 24.875,
+      "minimax_decisions": 90,
+      "minimax_mean_depth_completed": 1.9333333333333333,
+      "minimax_mean_nodes_expanded": 868.7444444444444,
+      "minimax_mean_decision_seconds": 0.4904484866781988
+    },
+    "overall": {
+      "matches": 16,
+      "minimax_goal_wins": 11,
+      "greedy_goal_wins": 5,
+      "draws_by_type": {},
+      "draws_total": 0,
+      "truncated": 0,
+      "forfeits_won_by_minimax": 0,
+      "forfeits_won_by_greedy": 0,
+      "categories": {
+        "goal": 16
+      },
+      "minimax_win_rate": 0.6875,
+      "minimax_win_rate_wilson95": [
+        0.4440393186673406,
+        0.8583556494803894
+      ],
+      "draw_rate": 0.0,
+      "truncation_rate": 0.0,
+      "mean_length_plies_incl_opening": 21.5625,
+      "minimax_decisions": 158,
+      "minimax_mean_depth_completed": 1.8860759493670887,
+      "minimax_mean_nodes_expanded": 871.2088607594936,
+      "minimax_mean_decision_seconds": 0.5221860930500434
+    }
+  }
+}

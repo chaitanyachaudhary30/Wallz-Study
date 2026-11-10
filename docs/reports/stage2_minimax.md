@@ -14,6 +14,7 @@
   | `d46fc5c` | `vs_greedy_N5_open4_depth{1,3}_diag*` |
   | `8589a55` | `hop_stats.json` |
 | `bc15ce5` | `hop_examples.json` (replays the match logs; plays nothing) |
+| `72f99b4` | `vs_greedy_N9_timed_r2*`, `n9_r2_load.json` |
   | `f755a3a` | `opening_maps.json` (read from the match logs; plays nothing) |
 - **Added:** `tests/test_minimax_final_compat.py` (14 tests), `scripts/final_minimax.py`
   (experiment driver), results in `experiments/results/final_minimax/`, this report,
@@ -47,6 +48,7 @@ python scripts/final_minimax.py vs-greedy -N 5 --seeds 10 --spec minimax:depth=1
 python scripts/final_minimax.py vs-greedy -N 5 --seeds 10 --spec minimax:depth=3 --tag N5_depth3_diag # superseded
 python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=2 --tag N5_open4_distinct
 python scripts/final_minimax.py vs-greedy -N 9 --seeds 10 --opening-plies 2 --spec minimax:depth=2,time_limit=1.0 --tag N9_timed
+python scripts/final_minimax.py vs-greedy -N 9 --seeds 10 --opening-plies 2 --spec minimax:depth=2,time_limit=1.0 --tag N9_timed_r2   # rerun, load logged (n9_r2_load.json)
 python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=1 --tag N5_open4_depth1_diag
 python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=3 --tag N5_open4_depth3_diag
 python scripts/final_minimax.py hop-examples N5_open4_depth1_diag N5_open4_distinct N5_open4_depth3_diag
@@ -244,7 +246,32 @@ Files: `vs_greedy_N9_timed_summary.json`, `vs_greedy_N9_timed.jsonl`. `verify-re
 | Mean nodes per decision | 890.0 | 877.6 | 882.9 |
 | Mean decision time | 403 ms | 325 ms | 359 ms |
 
-**Load during the timed run (decision times are load-affected).** `resource_status` just before
+**Rerun with the load recorded (Mr. CEO's run-beside rules; no `HEAVY.lock` taken).** Same
+command with `--tag N9_timed_r2`, started 04:36:36, ended 04:38:36 IST. Files:
+`vs_greedy_N9_timed_r2_summary.json`, `vs_greedy_N9_timed_r2.jsonl` (20/20 replays verified),
+load record `n9_r2_load.json`.
+
+| Load | Start | End |
+|---|---|---|
+| `resource_status` posture | ample, 4.2 GB | ample, 4.1 GB |
+| Free memory (OS) | 4,280 MB | 4,233 MB |
+| Bot 3 running | no | no |
+| Other job | Bot 2 DQN training (`scripts.train_dqn --board-size 3 --threads 2`), holding `HEAVY.lock` | same |
+
+| | First run (`N9_timed`) | Rerun (`N9_timed_r2`) |
+|---|---|---|
+| Minimax / Greedy wins (20 matches) | 14 / 6 | 14 / 6 |
+| Distinct games; minimax wins among them | 16; 11 (Wilson 44.4-85.8%) | 16; 11 (Wilson 44.4-85.8%) |
+| Games identical to the first run | - | 20 of 20 |
+| Mean depth completed (load-affected) | 1.93 | 1.89 |
+| Mean decision time (load-affected) | 359 ms | 522 ms |
+| Mean nodes per decision | 882.9 | 877.3 |
+
+The rerun was slower and reached depth 2 slightly less often, but every game was move-for-move
+the same. On these 20 matches the extra load did not change a move; this is not a guarantee for
+other loads or seeds.
+
+**Load during the first timed run (decision times are load-affected).** `resource_status` just before
 the N9 run (about 04:11 IST): posture `ample`, 4.9 GB free, 16 cores. No `resource_status` was
 taken at the end, and I did not record which other bots' jobs were running during it. At 03:23
 Bot 3's exact solve (`run_experiments.py solve -N 4 ...`) and Bot 2's DQN training were both
