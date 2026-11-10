@@ -1,0 +1,287 @@
+{
+  "source": {
+    "commit": "72f99b4e15ed8d101b3292a3c3d3eb01dfba4811",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py vs-greedy -N 9 --seeds 10 --opening-plies 2 --spec minimax:depth=2,time_limit=1.0 --tag N9_timed_r2",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T04:38:35+05:30",
+  "config": {
+    "board_size": 9,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "minimax_spec": "minimax:depth=2,time_limit=1.0",
+    "opponent": "greedy",
+    "max_plies": 200,
+    "opening_plies": 2,
+    "seatings": "both per opening seed",
+    "move_time_limit": null,
+    "seed_selection": "consecutive seeds",
+    "distinct_openings": 8,
+    "seed_to_opening": {
+      "0": [
+        [
+          "MOVE",
+          [
+            0,
+            5
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            3
+          ]
+        ]
+      ],
+      "1": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            5
+          ]
+        ]
+      ],
+      "2": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            7,
+            4
+          ]
+        ]
+      ],
+      "3": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            5
+          ]
+        ]
+      ],
+      "4": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            3
+          ]
+        ]
+      ],
+      "5": [
+        [
+          "MOVE",
+          [
+            1,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            3
+          ]
+        ]
+      ],
+      "6": [
+        [
+          "MOVE",
+          [
+            1,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            7,
+            4
+          ]
+        ]
+      ],
+      "7": [
+        [
+          "MOVE",
+          [
+            0,
+            5
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            7,
+            4
+          ]
+        ]
+      ],
+      "8": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            3
+          ]
+        ]
+      ],
+      "9": [
+        [
+          "MOVE",
+          [
+            0,
+            5
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            8,
+            5
+          ]
+        ]
+      ]
+    },
+    "deterministic": false,
+    "note": "timed search: depth reached depends on machine load, so results are not reproducible move-for-move"
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "match_log": "experiments/results/final_minimax/vs_greedy_N9_timed_r2.jsonl",
+  "wall_seconds": 117.4,
+  "replay_verification": {
+    "checked": 20,
+    "failed": []
+  },
+  "results": {
+    "minimax_as_p0": {
+      "matches": 10,
+      "minimax_goal_wins": 8,
+      "greedy_goal_wins": 2,
+      "draws_by_type": {},
+      "draws_total": 0,
+      "truncated": 0,
+      "forfeits_won_by_minimax": 0,
+      "forfeits_won_by_greedy": 0,
+      "categories": {
+        "goal": 10
+      },
+      "minimax_win_rate": 0.8,
+      "minimax_win_rate_wilson95": [
+        0.49015684672072335,
+        0.9433190520193067
+      ],
+      "draw_rate": 0.0,
+      "truncation_rate": 0.0,
+      "mean_length_plies_incl_opening": 18.4,
+      "minimax_decisions": 86,
+      "minimax_mean_depth_completed": 1.813953488372093,
+      "minimax_mean_nodes_expanded": 877.453488372093,
+      "minimax_mean_decision_seconds": 0.5670639244395547
+    },
+    "minimax_as_p1": {
+      "matches": 10,
+      "minimax_goal_wins": 6,
+      "greedy_goal_wins": 4,
+      "draws_by_type": {},
+      "draws_total": 0,
+      "truncated": 0,
+      "forfeits_won_by_minimax": 0,
+      "forfeits_won_by_greedy": 0,
+      "categories": {
+        "goal": 10
+      },
+      "minimax_win_rate": 0.6,
+      "minimax_win_rate_wilson95": [
+        0.3126695474501864,
+        0.8318224187964902
+      ],
+      "draw_rate": 0.0,
+      "truncation_rate": 0.0,
+      "mean_length_plies_incl_opening": 25.4,
+      "minimax_decisions": 115,
+      "minimax_mean_depth_completed": 1.9391304347826086,
+      "minimax_mean_nodes_expanded": 877.1217391304348,
+      "minimax_mean_decision_seconds": 0.4876168965281028
+    },
+    "overall": {
+      "matches": 20,
+      "minimax_goal_wins": 14,
+      "greedy_goal_wins": 6,
+      "draws_by_type": {},
+      "draws_total": 0,
+      "truncated": 0,
+      "forfeits_won_by_minimax": 0,
+      "forfeits_won_by_greedy": 0,
+      "categories": {
+        "goal": 20
+      },
+      "minimax_win_rate": 0.7,
+      "minimax_win_rate_wilson95": [
+        0.4810232237710206,
+        0.854524726031006
+      ],
+      "draw_rate": 0.0,
+      "truncation_rate": 0.0,
+      "mean_length_plies_incl_opening": 21.9,
+      "minimax_decisions": 201,
+      "minimax_mean_depth_completed": 1.8855721393034826,
+      "minimax_mean_nodes_expanded": 877.2636815920398,
+      "minimax_mean_decision_seconds": 0.5216091572265349
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "source": {
+    "commit": "8589a557b5ebf430ad66086c0e87f2ad6b9eb286",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py hops N5_open4_distinct N5_open4_depth1_diag N5_open4_depth3_diag N9_timed",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T04:18:54+05:30",
+  "config": {
+    "tags": [
+      "N5_open4_distinct",
+      "N5_open4_depth1_diag",
+      "N5_open4_depth3_diag",
+      "N9_timed"
+    ]
+  },
+  "seeds": null,
+  "results": {
+    "N5_open4_distinct": {
+      "matches": 100,
+      "greedy_goal_wins": 60,
+      "greedy_wins_with_greedy_hop": 30,
+      "greedy_hops": 39,
+      "minimax_walls_placed": 207
+    },
+    "N5_open4_depth1_diag": {
+      "matches": 100,
+      "greedy_goal_wins": 46,
+      "greedy_wins_with_greedy_hop": 16,
+      "greedy_hops": 39,
+      "minimax_walls_placed": 181
+    },
+    "N5_open4_depth3_diag": {
+      "matches": 100,
+      "greedy_goal_wins": 48,
+      "greedy_wins_with_greedy_hop": 33,
+      "greedy_hops": 61,
+      "minimax_walls_placed": 211
+    },
+    "N9_timed": {
+      "matches": 20,
+      "greedy_goal_wins": 6,
+      "greedy_wins_with_greedy_hop": 6,
+      "greedy_hops": 10,
+      "minimax_walls_placed": 48
+    }
+  }
+}

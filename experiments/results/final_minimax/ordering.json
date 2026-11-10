@@ -1,0 +1,6434 @@
+{
+  "source": {
+    "commit": "4023eaca86a45d2b6d2a4c9022c5c0f3dffc52f6",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py ordering",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T03:08:59+05:30",
+  "config": {
+    "board_size": 5,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "positions": 50,
+    "position_generator": "benchmark_ordering_x8 (random.seed(42), 2-6 random plies of any action)",
+    "depths": [
+      1,
+      2,
+      3
+    ],
+    "time_limit": 0.5,
+    "timed_positions": 50,
+    "use_alpha_beta": true,
+    "note": "ordering on = static order + PV (root, across ID iterations) + history within one call"
+  },
+  "seeds": {
+    "position_rng": 42,
+    "bootstrap_rng": 0
+  },
+  "results": {
+    "fixed_depth_1": {
+      "total_nodes_unordered": 2892,
+      "total_nodes_ordered": 2892,
+      "aggregate_node_reduction_pct": 0.0,
+      "aggregate_reduction_bootstrap95_pct": [
+        0.0,
+        0.0
+      ],
+      "per_position_reduction_pct": {
+        "n": 50,
+        "mean": 0.0,
+        "median": 0.0,
+        "stdev": 0.0,
+        "p10": 0.0,
+        "p90": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "positions_where_ordering_used_more_nodes": 0,
+      "root_values_equal": true,
+      "seconds_unordered": {
+        "n": 50,
+        "mean": 0.005421908004209399,
+        "median": 0.005268799955956638,
+        "stdev": 0.0015844217993250874,
+        "p10": 0.0029332299949601293,
+        "p90": 0.007552159950137138,
+        "min": 0.002599200000986457,
+        "max": 0.007911100052297115
+      },
+      "seconds_ordered": {
+        "n": 50,
+        "mean": 0.005529551981016994,
+        "median": 0.005324950092472136,
+        "stdev": 0.001729328161856723,
+        "p10": 0.0029209800297394393,
+        "p90": 0.007570260111242533,
+        "min": 0.0027157000731676817,
+        "max": 0.010559799848124385
+      },
+      "rows": [
+        {
+          "position": 0,
+          "unordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004638999933376908,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004579399945214391,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 1,
+          "unordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005785299930721521,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006044500041753054,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 2,
+          "unordered": {
+            "nodes": 80,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006173300091177225,
+            "value": 0.3799489622552249,
+            "action": [
+              "WALL",
+              [
+                0,
+                3,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 80,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.010559799848124385,
+            "value": 0.3799489622552249,
+            "action": [
+              "WALL",
+              [
+                0,
+                3,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 3,
+          "unordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004822300048545003,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0051633999682962894,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 4,
+          "unordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004071300150826573,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.002834299812093377,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 5,
+          "unordered": {
+            "nodes": 47,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004729199921712279,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 47,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0048738999757915735,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 6,
+          "unordered": {
+            "nodes": 73,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007622000062838197,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 73,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007470600074157119,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 7,
+          "unordered": {
+            "nodes": 73,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006693899864330888,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 73,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006825199816375971,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 8,
+          "unordered": {
+            "nodes": 79,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0066529999021440744,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 79,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.00689929979853332,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 9,
+          "unordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.00526420003734529,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005218100035563111,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 10,
+          "unordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0032591999042779207,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.003195999888703227,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 11,
+          "unordered": {
+            "nodes": 47,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004881500033661723,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 47,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.00495330011472106,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 12,
+          "unordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004980699857696891,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                1,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004890299867838621,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                1,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 13,
+          "unordered": {
+            "nodes": 84,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007090799976140261,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 84,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0077569999266415834,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 14,
+          "unordered": {
+            "nodes": 76,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007348199840635061,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 76,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0077726999297738075,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 15,
+          "unordered": {
+            "nodes": 76,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007689299993216991,
+            "value": 0.3799489622552249,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 76,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007794300094246864,
+            "value": 0.3799489622552249,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 16,
+          "unordered": {
+            "nodes": 68,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006405399879440665,
+            "value": 0.3799489622552249,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 68,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0068598000798374414,
+            "value": 0.3799489622552249,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 17,
+          "unordered": {
+            "nodes": 49,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004837000044062734,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 49,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.00467310007661581,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 18,
+          "unordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005001800134778023,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006179400021210313,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 19,
+          "unordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005170000018551946,
+            "value": 0.3799489622552249,
+            "action": [
+              "WALL",
+              [
+                1,
+                1,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005511400057002902,
+            "value": 0.3799489622552249,
+            "action": [
+              "WALL",
+              [
+                1,
+                1,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 20,
+          "unordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.003269299864768982,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0030958999413996935,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 21,
+          "unordered": {
+            "nodes": 50,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004506900208070874,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 50,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004647699883207679,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 22,
+          "unordered": {
+            "nodes": 75,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007911100052297115,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 75,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007481500040739775,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 23,
+          "unordered": {
+            "nodes": 69,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007067800033837557,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 69,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006387799978256226,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 24,
+          "unordered": {
+            "nodes": 54,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0045668999664485455,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 54,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005092700012028217,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 25,
+          "unordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0044633999932557344,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005285500083118677,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 26,
+          "unordered": {
+            "nodes": 32,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.002599200000986457,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 32,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0028766999021172523,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 27,
+          "unordered": {
+            "nodes": 85,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006572400219738483,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 85,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007154099876061082,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 28,
+          "unordered": {
+            "nodes": 32,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0027396001387387514,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 32,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.002844299888238311,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 29,
+          "unordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005400300025939941,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 56,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005373700056225061,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 30,
+          "unordered": {
+            "nodes": 33,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0026394000742584467,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 33,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0027157000731676817,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 31,
+          "unordered": {
+            "nodes": 41,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.003955399850383401,
+            "value": 0.3799489622552249,
+            "action": [
+              "REPLACE",
+              [
+                2,
+                1,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 41,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.003923200070858002,
+            "value": 0.3799489622552249,
+            "action": [
+              "REPLACE",
+              [
+                2,
+                1,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 32,
+          "unordered": {
+            "nodes": 54,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005289700115099549,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 54,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005364400101825595,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 33,
+          "unordered": {
+            "nodes": 49,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0049680001102387905,
+            "value": 0.5370495669980353,
+            "action": [
+              "REPLACE",
+              [
+                3,
+                2,
+                "V"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 49,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0049304000567644835,
+            "value": 0.5370495669980353,
+            "action": [
+              "REPLACE",
+              [
+                3,
+                2,
+                "V"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 34,
+          "unordered": {
+            "nodes": 48,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0052733998745679855,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 48,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004696199903264642,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 35,
+          "unordered": {
+            "nodes": 54,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004793999949470162,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 54,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004916900070384145,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 36,
+          "unordered": {
+            "nodes": 77,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0075443999376147985,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "V"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 77,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007585200015455484,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "V"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 37,
+          "unordered": {
+            "nodes": 84,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007425900083035231,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 84,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006551400059834123,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 38,
+          "unordered": {
+            "nodes": 83,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.00790190021507442,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 83,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007568600121885538,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 39,
+          "unordered": {
+            "nodes": 73,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007186900125816464,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 73,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006403899984434247,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 40,
+          "unordered": {
+            "nodes": 55,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005289599997922778,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 55,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005656699882820249,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 41,
+          "unordered": {
+            "nodes": 46,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0046762998681515455,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 46,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0047639000695198774,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 42,
+          "unordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.005463199922814965,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 57,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.004713099915534258,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 43,
+          "unordered": {
+            "nodes": 74,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006198799936100841,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 74,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006654399912804365,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 44,
+          "unordered": {
+            "nodes": 33,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0029366000089794397,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 33,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0029259000439196825,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 45,
+          "unordered": {
+            "nodes": 84,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007157399784773588,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 84,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0069345999509096146,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 46,
+          "unordered": {
+            "nodes": 35,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.002902899868786335,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 35,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.002961300080642104,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 47,
+          "unordered": {
+            "nodes": 79,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006957600126042962,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 79,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.006719799945130944,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 48,
+          "unordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.0026452001184225082,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 31,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.002822499955072999,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 49,
+          "unordered": {
+            "nodes": 78,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007674500113353133,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 78,
+            "cutoffs": 0,
+            "depth": 1,
+            "seconds": 0.007373799802735448,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "fixed_depth_2": {
+      "total_nodes_unordered": 10349,
+      "total_nodes_ordered": 9477,
+      "aggregate_node_reduction_pct": 8.425934872934581,
+      "aggregate_reduction_bootstrap95_pct": [
+        3.527248146489375,
+        14.23886012929883
+      ],
+      "per_position_reduction_pct": {
+        "n": 50,
+        "mean": 5.695403563953071,
+        "median": 0.8889591276347752,
+        "stdev": 10.895108666199354,
+        "p10": 0.0,
+        "p90": 22.188334277162046,
+        "min": -0.5102040816326481,
+        "max": 45.83963691376702
+      },
+      "positions_where_ordering_used_more_nodes": 1,
+      "root_values_equal": true,
+      "seconds_unordered": {
+        "n": 50,
+        "mean": 0.034914246001280846,
+        "median": 0.032415400026366115,
+        "stdev": 0.01235614766807782,
+        "p10": 0.02267876002006233,
+        "p90": 0.04915659010875971,
+        "min": 0.013343000086024404,
+        "max": 0.0810531999450177
+      },
+      "seconds_ordered": {
+        "n": 50,
+        "mean": 0.038357700002379716,
+        "median": 0.03677325008902699,
+        "stdev": 0.012309568814390636,
+        "p10": 0.02387263991404325,
+        "p90": 0.05702459008898586,
+        "min": 0.015035399934276938,
+        "max": 0.06544420006684959
+      },
+      "rows": [
+        {
+          "position": 0,
+          "unordered": {
+            "nodes": 148,
+            "cutoffs": 56,
+            "depth": 2,
+            "seconds": 0.020789300091564655,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 148,
+            "cutoffs": 56,
+            "depth": 2,
+            "seconds": 0.024789100047200918,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 1,
+          "unordered": {
+            "nodes": 249,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.03822830016724765,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 231,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.040700400015339255,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 2,
+          "unordered": {
+            "nodes": 210,
+            "cutoffs": 78,
+            "depth": 2,
+            "seconds": 0.02661140006966889,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                3,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 210,
+            "cutoffs": 78,
+            "depth": 2,
+            "seconds": 0.029775899834930897,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                3,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 3,
+          "unordered": {
+            "nodes": 122,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.018511399859562516,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 122,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.02216599998064339,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 4,
+          "unordered": {
+            "nodes": 145,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.02494719997048378,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 145,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.02566249994561076,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 5,
+          "unordered": {
+            "nodes": 188,
+            "cutoffs": 46,
+            "depth": 2,
+            "seconds": 0.028091599931940436,
+            "value": -0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 144,
+            "cutoffs": 46,
+            "depth": 2,
+            "seconds": 0.030876899836584926,
+            "value": -0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 6,
+          "unordered": {
+            "nodes": 205,
+            "cutoffs": 72,
+            "depth": 2,
+            "seconds": 0.043542200000956655,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 203,
+            "cutoffs": 72,
+            "depth": 2,
+            "seconds": 0.050611999817192554,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 7,
+          "unordered": {
+            "nodes": 220,
+            "cutoffs": 72,
+            "depth": 2,
+            "seconds": 0.04338019993156195,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 220,
+            "cutoffs": 72,
+            "depth": 2,
+            "seconds": 0.04776980006136,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 8,
+          "unordered": {
+            "nodes": 235,
+            "cutoffs": 78,
+            "depth": 2,
+            "seconds": 0.045933600049465895,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 235,
+            "cutoffs": 78,
+            "depth": 2,
+            "seconds": 0.05274950014427304,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 9,
+          "unordered": {
+            "nodes": 189,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.038013899931684136,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 189,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.04355600010603666,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 10,
+          "unordered": {
+            "nodes": 149,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.026826499961316586,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 149,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.029001499991863966,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 11,
+          "unordered": {
+            "nodes": 231,
+            "cutoffs": 45,
+            "depth": 2,
+            "seconds": 0.03518929984420538,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 226,
+            "cutoffs": 45,
+            "depth": 2,
+            "seconds": 0.040579300140962005,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 12,
+          "unordered": {
+            "nodes": 183,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.0236948998644948,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 158,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.02397489990107715,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 13,
+          "unordered": {
+            "nodes": 198,
+            "cutoffs": 83,
+            "depth": 2,
+            "seconds": 0.028589900117367506,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 198,
+            "cutoffs": 83,
+            "depth": 2,
+            "seconds": 0.03423750004731119,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 14,
+          "unordered": {
+            "nodes": 223,
+            "cutoffs": 75,
+            "depth": 2,
+            "seconds": 0.04416669998317957,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 210,
+            "cutoffs": 75,
+            "depth": 2,
+            "seconds": 0.05123510002158582,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 15,
+          "unordered": {
+            "nodes": 263,
+            "cutoffs": 74,
+            "depth": 2,
+            "seconds": 0.04782480001449585,
+            "value": 0.197375320224904,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 205,
+            "cutoffs": 75,
+            "depth": 2,
+            "seconds": 0.052484899992123246,
+            "value": 0.197375320224904,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 16,
+          "unordered": {
+            "nodes": 273,
+            "cutoffs": 66,
+            "depth": 2,
+            "seconds": 0.05233619990758598,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 270,
+            "cutoffs": 66,
+            "depth": 2,
+            "seconds": 0.05798569996841252,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 17,
+          "unordered": {
+            "nodes": 227,
+            "cutoffs": 48,
+            "depth": 2,
+            "seconds": 0.03872460010461509,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 225,
+            "cutoffs": 48,
+            "depth": 2,
+            "seconds": 0.04255409981124103,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 18,
+          "unordered": {
+            "nodes": 170,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.031284699914976954,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 166,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.03494619997218251,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 19,
+          "unordered": {
+            "nodes": 174,
+            "cutoffs": 56,
+            "depth": 2,
+            "seconds": 0.032812700141221285,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 173,
+            "cutoffs": 56,
+            "depth": 2,
+            "seconds": 0.03879730007611215,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 20,
+          "unordered": {
+            "nodes": 149,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.025803999975323677,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 149,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.028659400064498186,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 21,
+          "unordered": {
+            "nodes": 171,
+            "cutoffs": 49,
+            "depth": 2,
+            "seconds": 0.030081500066444278,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 170,
+            "cutoffs": 49,
+            "depth": 2,
+            "seconds": 0.03395890002138913,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 22,
+          "unordered": {
+            "nodes": 322,
+            "cutoffs": 73,
+            "depth": 2,
+            "seconds": 0.052979900036007166,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                3,
+                3,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 283,
+            "cutoffs": 73,
+            "depth": 2,
+            "seconds": 0.059039700077846646,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                3,
+                3,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 23,
+          "unordered": {
+            "nodes": 661,
+            "cutoffs": 68,
+            "depth": 2,
+            "seconds": 0.0810531999450177,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 358,
+            "cutoffs": 68,
+            "depth": 2,
+            "seconds": 0.0627191998064518,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 24,
+          "unordered": {
+            "nodes": 164,
+            "cutoffs": 53,
+            "depth": 2,
+            "seconds": 0.0324800000526011,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 163,
+            "cutoffs": 53,
+            "depth": 2,
+            "seconds": 0.03633949998766184,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 25,
+          "unordered": {
+            "nodes": 296,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.04114340012893081,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 182,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.03623549989424646,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 26,
+          "unordered": {
+            "nodes": 149,
+            "cutoffs": 31,
+            "depth": 2,
+            "seconds": 0.024602499790489674,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 148,
+            "cutoffs": 31,
+            "depth": 2,
+            "seconds": 0.028175200102850795,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 27,
+          "unordered": {
+            "nodes": 201,
+            "cutoffs": 84,
+            "depth": 2,
+            "seconds": 0.03005869989283383,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 201,
+            "cutoffs": 84,
+            "depth": 2,
+            "seconds": 0.03523080004379153,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 28,
+          "unordered": {
+            "nodes": 127,
+            "cutoffs": 31,
+            "depth": 2,
+            "seconds": 0.02063719998113811,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 126,
+            "cutoffs": 31,
+            "depth": 2,
+            "seconds": 0.022952300030738115,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 29,
+          "unordered": {
+            "nodes": 166,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.031179800163954496,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 166,
+            "cutoffs": 55,
+            "depth": 2,
+            "seconds": 0.03720700019039214,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 30,
+          "unordered": {
+            "nodes": 190,
+            "cutoffs": 31,
+            "depth": 2,
+            "seconds": 0.02361659985035658,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 128,
+            "cutoffs": 32,
+            "depth": 2,
+            "seconds": 0.022740500047802925,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 31,
+          "unordered": {
+            "nodes": 157,
+            "cutoffs": 40,
+            "depth": 2,
+            "seconds": 0.024605599930509925,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 147,
+            "cutoffs": 40,
+            "depth": 2,
+            "seconds": 0.02587670017965138,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 32,
+          "unordered": {
+            "nodes": 196,
+            "cutoffs": 53,
+            "depth": 2,
+            "seconds": 0.04001090000383556,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 197,
+            "cutoffs": 53,
+            "depth": 2,
+            "seconds": 0.046369400108233094,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 33,
+          "unordered": {
+            "nodes": 259,
+            "cutoffs": 48,
+            "depth": 2,
+            "seconds": 0.04317840002477169,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 205,
+            "cutoffs": 48,
+            "depth": 2,
+            "seconds": 0.04351309989579022,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 34,
+          "unordered": {
+            "nodes": 170,
+            "cutoffs": 47,
+            "depth": 2,
+            "seconds": 0.03135759988799691,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 168,
+            "cutoffs": 47,
+            "depth": 2,
+            "seconds": 0.03461699979379773,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 35,
+          "unordered": {
+            "nodes": 189,
+            "cutoffs": 53,
+            "depth": 2,
+            "seconds": 0.03479700000025332,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 185,
+            "cutoffs": 53,
+            "depth": 2,
+            "seconds": 0.039102200185880065,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 36,
+          "unordered": {
+            "nodes": 306,
+            "cutoffs": 75,
+            "depth": 2,
+            "seconds": 0.06089620012789965,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                2,
+                0,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 305,
+            "cutoffs": 75,
+            "depth": 2,
+            "seconds": 0.06544420006684959,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                2,
+                0,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 37,
+          "unordered": {
+            "nodes": 240,
+            "cutoffs": 82,
+            "depth": 2,
+            "seconds": 0.03350959997624159,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                2,
+                2,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 235,
+            "cutoffs": 82,
+            "depth": 2,
+            "seconds": 0.04008499998599291,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                2,
+                2,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 38,
+          "unordered": {
+            "nodes": 204,
+            "cutoffs": 82,
+            "depth": 2,
+            "seconds": 0.032190300058573484,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 200,
+            "cutoffs": 82,
+            "depth": 2,
+            "seconds": 0.0350103999953717,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 39,
+          "unordered": {
+            "nodes": 197,
+            "cutoffs": 72,
+            "depth": 2,
+            "seconds": 0.03563249995931983,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 195,
+            "cutoffs": 72,
+            "depth": 2,
+            "seconds": 0.04238589992746711,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 40,
+          "unordered": {
+            "nodes": 165,
+            "cutoffs": 54,
+            "depth": 2,
+            "seconds": 0.03235080000013113,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 165,
+            "cutoffs": 54,
+            "depth": 2,
+            "seconds": 0.037852399982512,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 41,
+          "unordered": {
+            "nodes": 178,
+            "cutoffs": 45,
+            "depth": 2,
+            "seconds": 0.035605099983513355,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 168,
+            "cutoffs": 45,
+            "depth": 2,
+            "seconds": 0.037839299999177456,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 42,
+          "unordered": {
+            "nodes": 172,
+            "cutoffs": 56,
+            "depth": 2,
+            "seconds": 0.03192119998857379,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 169,
+            "cutoffs": 56,
+            "depth": 2,
+            "seconds": 0.035453799879178405,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 43,
+          "unordered": {
+            "nodes": 223,
+            "cutoffs": 73,
+            "depth": 2,
+            "seconds": 0.04151890007779002,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 221,
+            "cutoffs": 73,
+            "depth": 2,
+            "seconds": 0.049048300134018064,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 44,
+          "unordered": {
+            "nodes": 101,
+            "cutoffs": 32,
+            "depth": 2,
+            "seconds": 0.013598599936813116,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 100,
+            "cutoffs": 32,
+            "depth": 2,
+            "seconds": 0.015085899969562888,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 45,
+          "unordered": {
+            "nodes": 277,
+            "cutoffs": 83,
+            "depth": 2,
+            "seconds": 0.031851100036874413,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 199,
+            "cutoffs": 83,
+            "depth": 2,
+            "seconds": 0.032108800020068884,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 46,
+          "unordered": {
+            "nodes": 104,
+            "cutoffs": 34,
+            "depth": 2,
+            "seconds": 0.013343000086024404,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 104,
+            "cutoffs": 34,
+            "depth": 2,
+            "seconds": 0.015035399934276938,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 47,
+          "unordered": {
+            "nodes": 235,
+            "cutoffs": 78,
+            "depth": 2,
+            "seconds": 0.04880330013111234,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 235,
+            "cutoffs": 78,
+            "depth": 2,
+            "seconds": 0.0569178001023829,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 48,
+          "unordered": {
+            "nodes": 144,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.022888700012117624,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 144,
+            "cutoffs": 30,
+            "depth": 2,
+            "seconds": 0.025671199895441532,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 49,
+          "unordered": {
+            "nodes": 234,
+            "cutoffs": 77,
+            "depth": 2,
+            "seconds": 0.05451730010099709,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 234,
+            "cutoffs": 77,
+            "depth": 2,
+            "seconds": 0.06275560008361936,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "fixed_depth_3": {
+      "total_nodes_unordered": 209298,
+      "total_nodes_ordered": 201752,
+      "aggregate_node_reduction_pct": 3.60538562241397,
+      "aggregate_reduction_bootstrap95_pct": [
+        2.148264285682525,
+        5.217519653721231
+      ],
+      "per_position_reduction_pct": {
+        "n": 50,
+        "mean": 3.657835540025961,
+        "median": 2.111508544824847,
+        "stdev": 5.109091657011502,
+        "p10": -0.1936182843914613,
+        "p90": 9.221755094476745,
+        "min": -11.731528482797525,
+        "max": 19.43361379027293
+      },
+      "positions_where_ordering_used_more_nodes": 7,
+      "root_values_equal": true,
+      "seconds_unordered": {
+        "n": 50,
+        "mean": 0.39834972999524326,
+        "median": 0.3438507999526337,
+        "stdev": 0.159731226789049,
+        "p10": 0.18892093000467866,
+        "p90": 0.6110373299568892,
+        "min": 0.17227620002813637,
+        "max": 0.7211154999677092
+      },
+      "seconds_ordered": {
+        "n": 50,
+        "mean": 0.4039400220196694,
+        "median": 0.3556327000260353,
+        "stdev": 0.16109805409527583,
+        "p10": 0.19204178992658855,
+        "p90": 0.6331070601008832,
+        "min": 0.17163500003516674,
+        "max": 0.6756885000504553
+      },
+      "rows": [
+        {
+          "position": 0,
+          "unordered": {
+            "nodes": 3843,
+            "cutoffs": 90,
+            "depth": 3,
+            "seconds": 0.30800079996697605,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3814,
+            "cutoffs": 90,
+            "depth": 3,
+            "seconds": 0.32405329984612763,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 1,
+          "unordered": {
+            "nodes": 5025,
+            "cutoffs": 199,
+            "depth": 3,
+            "seconds": 0.513182100141421,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4625,
+            "cutoffs": 157,
+            "depth": 3,
+            "seconds": 0.4828504999168217,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 2,
+          "unordered": {
+            "nodes": 6648,
+            "cutoffs": 106,
+            "depth": 3,
+            "seconds": 0.5366953001357615,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 6617,
+            "cutoffs": 106,
+            "depth": 3,
+            "seconds": 0.6721495999954641,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 3,
+          "unordered": {
+            "nodes": 1806,
+            "cutoffs": 90,
+            "depth": 3,
+            "seconds": 0.21177569986321032,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1802,
+            "cutoffs": 90,
+            "depth": 3,
+            "seconds": 0.17904299986548722,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 4,
+          "unordered": {
+            "nodes": 1927,
+            "cutoffs": 113,
+            "depth": 3,
+            "seconds": 0.18586479988880455,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1848,
+            "cutoffs": 113,
+            "depth": 3,
+            "seconds": 0.2021336001344025,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 5,
+          "unordered": {
+            "nodes": 3546,
+            "cutoffs": 145,
+            "depth": 3,
+            "seconds": 0.3423333999235183,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                1,
+                2,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3962,
+            "cutoffs": 141,
+            "depth": 3,
+            "seconds": 0.3832857001107186,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                1,
+                2,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 6,
+          "unordered": {
+            "nodes": 5450,
+            "cutoffs": 127,
+            "depth": 3,
+            "seconds": 0.5538798000197858,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5401,
+            "cutoffs": 127,
+            "depth": 3,
+            "seconds": 0.5776901999488473,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 7,
+          "unordered": {
+            "nodes": 5319,
+            "cutoffs": 142,
+            "depth": 3,
+            "seconds": 0.49222170002758503,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5313,
+            "cutoffs": 142,
+            "depth": 3,
+            "seconds": 0.514653499936685,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 8,
+          "unordered": {
+            "nodes": 5846,
+            "cutoffs": 155,
+            "depth": 3,
+            "seconds": 0.5034038000740111,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5773,
+            "cutoffs": 155,
+            "depth": 3,
+            "seconds": 0.5490869998466223,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 9,
+          "unordered": {
+            "nodes": 3407,
+            "cutoffs": 132,
+            "depth": 3,
+            "seconds": 0.3373774001374841,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3227,
+            "cutoffs": 132,
+            "depth": 3,
+            "seconds": 0.33243510010652244,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 10,
+          "unordered": {
+            "nodes": 1952,
+            "cutoffs": 112,
+            "depth": 3,
+            "seconds": 0.20070870011113584,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1854,
+            "cutoffs": 112,
+            "depth": 3,
+            "seconds": 0.2066128000151366,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 11,
+          "unordered": {
+            "nodes": 4873,
+            "cutoffs": 336,
+            "depth": 3,
+            "seconds": 0.5505275998730212,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3926,
+            "cutoffs": 190,
+            "depth": 3,
+            "seconds": 0.44404590013436973,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 12,
+          "unordered": {
+            "nodes": 4495,
+            "cutoffs": 139,
+            "depth": 3,
+            "seconds": 0.39087049989029765,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                0,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4070,
+            "cutoffs": 102,
+            "depth": 3,
+            "seconds": 0.3509736000560224,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                0,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 13,
+          "unordered": {
+            "nodes": 7369,
+            "cutoffs": 114,
+            "depth": 3,
+            "seconds": 0.6272612998727709,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 7351,
+            "cutoffs": 114,
+            "depth": 3,
+            "seconds": 0.6335485999006778,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 14,
+          "unordered": {
+            "nodes": 6112,
+            "cutoffs": 131,
+            "depth": 3,
+            "seconds": 0.5709100000094622,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 6278,
+            "cutoffs": 129,
+            "depth": 3,
+            "seconds": 0.5873541999608278,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 15,
+          "unordered": {
+            "nodes": 5808,
+            "cutoffs": 223,
+            "depth": 3,
+            "seconds": 0.6214475999586284,
+            "value": 0.3799489622552249,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5413,
+            "cutoffs": 128,
+            "depth": 3,
+            "seconds": 0.5747928000055254,
+            "value": 0.3799489622552249,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 16,
+          "unordered": {
+            "nodes": 4493,
+            "cutoffs": 134,
+            "depth": 3,
+            "seconds": 0.4634422999806702,
+            "value": 0.5370495669980353,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4422,
+            "cutoffs": 134,
+            "depth": 3,
+            "seconds": 0.47702050022780895,
+            "value": 0.5370495669980353,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 17,
+          "unordered": {
+            "nodes": 2647,
+            "cutoffs": 189,
+            "depth": 3,
+            "seconds": 0.28847229992970824,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2654,
+            "cutoffs": 189,
+            "depth": 3,
+            "seconds": 0.3047620998695493,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 18,
+          "unordered": {
+            "nodes": 3561,
+            "cutoffs": 109,
+            "depth": 3,
+            "seconds": 0.32362779998220503,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3185,
+            "cutoffs": 109,
+            "depth": 3,
+            "seconds": 0.3199219999369234,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 19,
+          "unordered": {
+            "nodes": 3660,
+            "cutoffs": 114,
+            "depth": 3,
+            "seconds": 0.34536819998174906,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3433,
+            "cutoffs": 112,
+            "depth": 3,
+            "seconds": 0.3322557001374662,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 20,
+          "unordered": {
+            "nodes": 2599,
+            "cutoffs": 127,
+            "depth": 3,
+            "seconds": 0.26373240002430975,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2360,
+            "cutoffs": 125,
+            "depth": 3,
+            "seconds": 0.26175020006485283,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 21,
+          "unordered": {
+            "nodes": 2819,
+            "cutoffs": 120,
+            "depth": 3,
+            "seconds": 0.27580630010925233,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2583,
+            "cutoffs": 119,
+            "depth": 3,
+            "seconds": 0.31899760011583567,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 22,
+          "unordered": {
+            "nodes": 5922,
+            "cutoffs": 139,
+            "depth": 3,
+            "seconds": 0.6184751999098808,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5933,
+            "cutoffs": 148,
+            "depth": 3,
+            "seconds": 0.6330580001231283,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 23,
+          "unordered": {
+            "nodes": 4414,
+            "cutoffs": 116,
+            "depth": 3,
+            "seconds": 0.4574990998953581,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4389,
+            "cutoffs": 116,
+            "depth": 3,
+            "seconds": 0.4802952001336962,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 24,
+          "unordered": {
+            "nodes": 3323,
+            "cutoffs": 108,
+            "depth": 3,
+            "seconds": 0.3115454998333007,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3225,
+            "cutoffs": 108,
+            "depth": 3,
+            "seconds": 0.31746569997631013,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 25,
+          "unordered": {
+            "nodes": 3352,
+            "cutoffs": 109,
+            "depth": 3,
+            "seconds": 0.30514049995690584,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3178,
+            "cutoffs": 109,
+            "depth": 3,
+            "seconds": 0.3105483998078853,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 26,
+          "unordered": {
+            "nodes": 2046,
+            "cutoffs": 115,
+            "depth": 3,
+            "seconds": 0.19551520003005862,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1964,
+            "cutoffs": 115,
+            "depth": 3,
+            "seconds": 0.19710380001924932,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 27,
+          "unordered": {
+            "nodes": 6840,
+            "cutoffs": 115,
+            "depth": 3,
+            "seconds": 0.5759667998645455,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 6731,
+            "cutoffs": 115,
+            "depth": 3,
+            "seconds": 0.5812024001497775,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 28,
+          "unordered": {
+            "nodes": 1926,
+            "cutoffs": 93,
+            "depth": 3,
+            "seconds": 0.18047200003638864,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1920,
+            "cutoffs": 93,
+            "depth": 3,
+            "seconds": 0.19250419992022216,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 29,
+          "unordered": {
+            "nodes": 3466,
+            "cutoffs": 122,
+            "depth": 3,
+            "seconds": 0.32955100014805794,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3416,
+            "cutoffs": 134,
+            "depth": 3,
+            "seconds": 0.3602917999960482,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 30,
+          "unordered": {
+            "nodes": 2155,
+            "cutoffs": 155,
+            "depth": 3,
+            "seconds": 0.18926050001755357,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1976,
+            "cutoffs": 94,
+            "depth": 3,
+            "seconds": 0.17163500003516674,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 31,
+          "unordered": {
+            "nodes": 1853,
+            "cutoffs": 100,
+            "depth": 3,
+            "seconds": 0.17227620002813637,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1800,
+            "cutoffs": 100,
+            "depth": 3,
+            "seconds": 0.18052710010670125,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 32,
+          "unordered": {
+            "nodes": 4932,
+            "cutoffs": 367,
+            "depth": 3,
+            "seconds": 0.5672327999491245,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4311,
+            "cutoffs": 160,
+            "depth": 3,
+            "seconds": 0.44772769999690354,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 33,
+          "unordered": {
+            "nodes": 3846,
+            "cutoffs": 172,
+            "depth": 3,
+            "seconds": 0.416102800052613,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3208,
+            "cutoffs": 144,
+            "depth": 3,
+            "seconds": 0.377469299826771,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 34,
+          "unordered": {
+            "nodes": 2472,
+            "cutoffs": 117,
+            "depth": 3,
+            "seconds": 0.24150460003875196,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2407,
+            "cutoffs": 117,
+            "depth": 3,
+            "seconds": 0.25909489998593926,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 35,
+          "unordered": {
+            "nodes": 3606,
+            "cutoffs": 136,
+            "depth": 3,
+            "seconds": 0.3307990001048893,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3317,
+            "cutoffs": 130,
+            "depth": 3,
+            "seconds": 0.31920209992676973,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 36,
+          "unordered": {
+            "nodes": 6964,
+            "cutoffs": 151,
+            "depth": 3,
+            "seconds": 0.6732621998526156,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 6347,
+            "cutoffs": 151,
+            "depth": 3,
+            "seconds": 0.6756885000504553,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 37,
+          "unordered": {
+            "nodes": 6583,
+            "cutoffs": 113,
+            "depth": 3,
+            "seconds": 0.5674768001772463,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 6561,
+            "cutoffs": 113,
+            "depth": 3,
+            "seconds": 0.5887609000783414,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 38,
+          "unordered": {
+            "nodes": 6514,
+            "cutoffs": 141,
+            "depth": 3,
+            "seconds": 0.5891850998159498,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 6515,
+            "cutoffs": 141,
+            "depth": 3,
+            "seconds": 0.6007238999009132,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 39,
+          "unordered": {
+            "nodes": 4847,
+            "cutoffs": 120,
+            "depth": 3,
+            "seconds": 0.4407266001217067,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4841,
+            "cutoffs": 120,
+            "depth": 3,
+            "seconds": 0.5127596999518573,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 40,
+          "unordered": {
+            "nodes": 3104,
+            "cutoffs": 109,
+            "depth": 3,
+            "seconds": 0.32256859983317554,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3056,
+            "cutoffs": 109,
+            "depth": 3,
+            "seconds": 0.32950880005955696,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 41,
+          "unordered": {
+            "nodes": 2628,
+            "cutoffs": 127,
+            "depth": 3,
+            "seconds": 0.28425920009613037,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2668,
+            "cutoffs": 153,
+            "depth": 3,
+            "seconds": 0.30960380006581545,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 42,
+          "unordered": {
+            "nodes": 3441,
+            "cutoffs": 112,
+            "depth": 3,
+            "seconds": 0.32397360005415976,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3275,
+            "cutoffs": 111,
+            "depth": 3,
+            "seconds": 0.34668399998918176,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 43,
+          "unordered": {
+            "nodes": 5130,
+            "cutoffs": 148,
+            "depth": 3,
+            "seconds": 0.48768120002932847,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5172,
+            "cutoffs": 161,
+            "depth": 3,
+            "seconds": 0.5071748001500964,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 44,
+          "unordered": {
+            "nodes": 2169,
+            "cutoffs": 66,
+            "depth": 3,
+            "seconds": 0.18244160013273358,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2137,
+            "cutoffs": 66,
+            "depth": 3,
+            "seconds": 0.18481030012480915,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 45,
+          "unordered": {
+            "nodes": 8420,
+            "cutoffs": 152,
+            "depth": 3,
+            "seconds": 0.7211154999677092,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                2,
+                1,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 7723,
+            "cutoffs": 155,
+            "depth": 3,
+            "seconds": 0.6392954001203179,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                2,
+                1,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 46,
+          "unordered": {
+            "nodes": 2270,
+            "cutoffs": 68,
+            "depth": 3,
+            "seconds": 0.1933557998854667,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2238,
+            "cutoffs": 68,
+            "depth": 3,
+            "seconds": 0.19590330007486045,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 47,
+          "unordered": {
+            "nodes": 5908,
+            "cutoffs": 155,
+            "depth": 3,
+            "seconds": 0.5428704998921603,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5836,
+            "cutoffs": 155,
+            "depth": 3,
+            "seconds": 0.6413118001073599,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 48,
+          "unordered": {
+            "nodes": 1925,
+            "cutoffs": 112,
+            "depth": 3,
+            "seconds": 0.18010790017433465,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 1848,
+            "cutoffs": 112,
+            "depth": 3,
+            "seconds": 0.18788009998388588,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 49,
+          "unordered": {
+            "nodes": 6037,
+            "cutoffs": 158,
+            "depth": 3,
+            "seconds": 0.6102108999621123,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5849,
+            "cutoffs": 156,
+            "depth": 3,
+            "seconds": 0.619352700188756,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "timed_0.5s": {
+      "depth_cap": 6,
+      "depth_unordered": {
+        "n": 50,
+        "mean": 2.56,
+        "median": 3.0,
+        "stdev": 0.501426536422407,
+        "p10": 2.0,
+        "p90": 3.0,
+        "min": 2,
+        "max": 3
+      },
+      "depth_ordered": {
+        "n": 50,
+        "mean": 2.56,
+        "median": 3.0,
+        "stdev": 0.501426536422407,
+        "p10": 2.0,
+        "p90": 3.0,
+        "min": 2,
+        "max": 3
+      },
+      "positions_ordered_deeper": 2,
+      "positions_unordered_deeper": 2,
+      "rows": [
+        {
+          "position": 0,
+          "unordered": {
+            "nodes": 5963,
+            "cutoffs": 220,
+            "depth": 3,
+            "seconds": 0.5002895998768508,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5802,
+            "cutoffs": 228,
+            "depth": 3,
+            "seconds": 0.5004239999689162,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 1,
+          "unordered": {
+            "nodes": 4632,
+            "cutoffs": 239,
+            "depth": 2,
+            "seconds": 0.5000976000446826,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4520,
+            "cutoffs": 208,
+            "depth": 2,
+            "seconds": 0.5002035000361502,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 2,
+          "unordered": {
+            "nodes": 6221,
+            "cutoffs": 173,
+            "depth": 2,
+            "seconds": 0.5008561001159251,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                3,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5931,
+            "cutoffs": 167,
+            "depth": 2,
+            "seconds": 0.5009041000157595,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                0,
+                3,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 3,
+          "unordered": {
+            "nodes": 5532,
+            "cutoffs": 200,
+            "depth": 3,
+            "seconds": 0.5003058998845518,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5542,
+            "cutoffs": 205,
+            "depth": 3,
+            "seconds": 0.500820399960503,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 4,
+          "unordered": {
+            "nodes": 5409,
+            "cutoffs": 224,
+            "depth": 3,
+            "seconds": 0.500163699965924,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5148,
+            "cutoffs": 231,
+            "depth": 3,
+            "seconds": 0.5000284998677671,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 5,
+          "unordered": {
+            "nodes": 4872,
+            "cutoffs": 348,
+            "depth": 3,
+            "seconds": 0.50024180021137,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                1,
+                2,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4662,
+            "cutoffs": 269,
+            "depth": 3,
+            "seconds": 0.5006650998257101,
+            "value": 0.197375320224904,
+            "action": [
+              "WALL",
+              [
+                1,
+                2,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 6,
+          "unordered": {
+            "nodes": 4620,
+            "cutoffs": 179,
+            "depth": 2,
+            "seconds": 0.5002463001292199,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4256,
+            "cutoffs": 175,
+            "depth": 2,
+            "seconds": 0.5004493000451475,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 7,
+          "unordered": {
+            "nodes": 5040,
+            "cutoffs": 202,
+            "depth": 2,
+            "seconds": 0.5003432999365032,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4830,
+            "cutoffs": 199,
+            "depth": 2,
+            "seconds": 0.5005856999196112,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 8,
+          "unordered": {
+            "nodes": 5469,
+            "cutoffs": 220,
+            "depth": 2,
+            "seconds": 0.5001235997769982,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5121,
+            "cutoffs": 215,
+            "depth": 2,
+            "seconds": 0.5004394999705255,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 9,
+          "unordered": {
+            "nodes": 4954,
+            "cutoffs": 248,
+            "depth": 3,
+            "seconds": 0.5009737000800669,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4357,
+            "cutoffs": 252,
+            "depth": 3,
+            "seconds": 0.50036760000512,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 10,
+          "unordered": {
+            "nodes": 4163,
+            "cutoffs": 213,
+            "depth": 3,
+            "seconds": 0.5001580000389367,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4478,
+            "cutoffs": 230,
+            "depth": 3,
+            "seconds": 0.5006685999687761,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 11,
+          "unordered": {
+            "nodes": 4254,
+            "cutoffs": 358,
+            "depth": 2,
+            "seconds": 0.5002172000240535,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4216,
+            "cutoffs": 241,
+            "depth": 3,
+            "seconds": 0.5003263999242336,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 12,
+          "unordered": {
+            "nodes": 5352,
+            "cutoffs": 258,
+            "depth": 3,
+            "seconds": 0.5008185000624508,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                0,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4705,
+            "cutoffs": 236,
+            "depth": 3,
+            "seconds": 0.5004815000575036,
+            "value": -0.0,
+            "action": [
+              "WALL",
+              [
+                0,
+                1,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 13,
+          "unordered": {
+            "nodes": 5078,
+            "cutoffs": 164,
+            "depth": 2,
+            "seconds": 0.5001083000097424,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4705,
+            "cutoffs": 160,
+            "depth": 2,
+            "seconds": 0.5003826001193374,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 14,
+          "unordered": {
+            "nodes": 4438,
+            "cutoffs": 174,
+            "depth": 2,
+            "seconds": 0.5002260999754071,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4440,
+            "cutoffs": 173,
+            "depth": 2,
+            "seconds": 0.500638399971649,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 15,
+          "unordered": {
+            "nodes": 4018,
+            "cutoffs": 263,
+            "depth": 2,
+            "seconds": 0.5004491000436246,
+            "value": 0.197375320224904,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4099,
+            "cutoffs": 176,
+            "depth": 2,
+            "seconds": 0.5003337999805808,
+            "value": 0.197375320224904,
+            "action": [
+              "HOP",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 16,
+          "unordered": {
+            "nodes": 3543,
+            "cutoffs": 175,
+            "depth": 2,
+            "seconds": 0.500511399935931,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3532,
+            "cutoffs": 231,
+            "depth": 2,
+            "seconds": 0.5003464000765234,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                0,
+                0,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 17,
+          "unordered": {
+            "nodes": 3997,
+            "cutoffs": 307,
+            "depth": 3,
+            "seconds": 0.500137000111863,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3729,
+            "cutoffs": 263,
+            "depth": 3,
+            "seconds": 0.5003665001131594,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 18,
+          "unordered": {
+            "nodes": 4614,
+            "cutoffs": 222,
+            "depth": 3,
+            "seconds": 0.5008958999533206,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4274,
+            "cutoffs": 241,
+            "depth": 3,
+            "seconds": 0.5005248000379652,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 19,
+          "unordered": {
+            "nodes": 4293,
+            "cutoffs": 226,
+            "depth": 3,
+            "seconds": 0.5006545998621732,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2747,
+            "cutoffs": 150,
+            "depth": 2,
+            "seconds": 0.5001161000691354,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 20,
+          "unordered": {
+            "nodes": 3357,
+            "cutoffs": 217,
+            "depth": 3,
+            "seconds": 0.5003868001513183,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3398,
+            "cutoffs": 224,
+            "depth": 3,
+            "seconds": 0.5003050998784602,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 21,
+          "unordered": {
+            "nodes": 4056,
+            "cutoffs": 230,
+            "depth": 3,
+            "seconds": 0.5001353998668492,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3637,
+            "cutoffs": 227,
+            "depth": 3,
+            "seconds": 0.5000668000429869,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 22,
+          "unordered": {
+            "nodes": 3996,
+            "cutoffs": 174,
+            "depth": 2,
+            "seconds": 0.5006230999715626,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                3,
+                3,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3024,
+            "cutoffs": 174,
+            "depth": 2,
+            "seconds": 0.5005183999892324,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                3,
+                3,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 23,
+          "unordered": {
+            "nodes": 3825,
+            "cutoffs": 158,
+            "depth": 2,
+            "seconds": 0.5003808001056314,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 2801,
+            "cutoffs": 148,
+            "depth": 2,
+            "seconds": 0.5000108999665827,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 24,
+          "unordered": {
+            "nodes": 4439,
+            "cutoffs": 222,
+            "depth": 3,
+            "seconds": 0.5000036999117583,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4255,
+            "cutoffs": 227,
+            "depth": 3,
+            "seconds": 0.5006450999062508,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 25,
+          "unordered": {
+            "nodes": 4753,
+            "cutoffs": 226,
+            "depth": 3,
+            "seconds": 0.5003955001011491,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4390,
+            "cutoffs": 240,
+            "depth": 3,
+            "seconds": 0.5001311001833528,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 26,
+          "unordered": {
+            "nodes": 5058,
+            "cutoffs": 193,
+            "depth": 3,
+            "seconds": 0.5003535998985171,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4828,
+            "cutoffs": 208,
+            "depth": 3,
+            "seconds": 0.5007189998868853,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 27,
+          "unordered": {
+            "nodes": 5301,
+            "cutoffs": 172,
+            "depth": 2,
+            "seconds": 0.5006876999977976,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5163,
+            "cutoffs": 172,
+            "depth": 2,
+            "seconds": 0.5007461002096534,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 28,
+          "unordered": {
+            "nodes": 5317,
+            "cutoffs": 205,
+            "depth": 3,
+            "seconds": 0.500937599921599,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5026,
+            "cutoffs": 202,
+            "depth": 3,
+            "seconds": 0.500363799976185,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 29,
+          "unordered": {
+            "nodes": 4406,
+            "cutoffs": 236,
+            "depth": 3,
+            "seconds": 0.5001127999275923,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3988,
+            "cutoffs": 249,
+            "depth": 3,
+            "seconds": 0.5008675998542458,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 30,
+          "unordered": {
+            "nodes": 4574,
+            "cutoffs": 250,
+            "depth": 3,
+            "seconds": 0.5000879999715835,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5306,
+            "cutoffs": 205,
+            "depth": 3,
+            "seconds": 0.5001995998900384,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                2,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 31,
+          "unordered": {
+            "nodes": 4735,
+            "cutoffs": 212,
+            "depth": 3,
+            "seconds": 0.5010762000456452,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4553,
+            "cutoffs": 220,
+            "depth": 3,
+            "seconds": 0.5003814999945462,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 32,
+          "unordered": {
+            "nodes": 3864,
+            "cutoffs": 321,
+            "depth": 2,
+            "seconds": 0.5006862999871373,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4121,
+            "cutoffs": 200,
+            "depth": 2,
+            "seconds": 0.5008977001998574,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                1
+              ]
+            ]
+          }
+        },
+        {
+          "position": 33,
+          "unordered": {
+            "nodes": 4083,
+            "cutoffs": 218,
+            "depth": 2,
+            "seconds": 0.500376199837774,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3833,
+            "cutoffs": 199,
+            "depth": 3,
+            "seconds": 0.5009673999156803,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 34,
+          "unordered": {
+            "nodes": 4741,
+            "cutoffs": 225,
+            "depth": 3,
+            "seconds": 0.5001412001438439,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4317,
+            "cutoffs": 226,
+            "depth": 3,
+            "seconds": 0.5004598998930305,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 35,
+          "unordered": {
+            "nodes": 4842,
+            "cutoffs": 244,
+            "depth": 3,
+            "seconds": 0.5009856000542641,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4371,
+            "cutoffs": 246,
+            "depth": 3,
+            "seconds": 0.5007205998990685,
+            "value": -0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 36,
+          "unordered": {
+            "nodes": 4278,
+            "cutoffs": 185,
+            "depth": 2,
+            "seconds": 0.5002717999741435,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                2,
+                0,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 3464,
+            "cutoffs": 244,
+            "depth": 2,
+            "seconds": 0.5008241999894381,
+            "value": 0.0,
+            "action": [
+              "WALL",
+              [
+                2,
+                0,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 37,
+          "unordered": {
+            "nodes": 5066,
+            "cutoffs": 167,
+            "depth": 2,
+            "seconds": 0.5005341002251953,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                2,
+                2,
+                "H"
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4527,
+            "cutoffs": 190,
+            "depth": 2,
+            "seconds": 0.5004828998353332,
+            "value": 0.0,
+            "action": [
+              "REPLACE",
+              [
+                2,
+                2,
+                "H"
+              ]
+            ]
+          }
+        },
+        {
+          "position": 38,
+          "unordered": {
+            "nodes": 4706,
+            "cutoffs": 192,
+            "depth": 2,
+            "seconds": 0.5004503999371082,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4652,
+            "cutoffs": 163,
+            "depth": 2,
+            "seconds": 0.5002564999740571,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                0,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 39,
+          "unordered": {
+            "nodes": 5225,
+            "cutoffs": 211,
+            "depth": 3,
+            "seconds": 0.5001217999961227,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5059,
+            "cutoffs": 190,
+            "depth": 2,
+            "seconds": 0.5009119999594986,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 40,
+          "unordered": {
+            "nodes": 4731,
+            "cutoffs": 226,
+            "depth": 3,
+            "seconds": 0.5007523000240326,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4517,
+            "cutoffs": 238,
+            "depth": 3,
+            "seconds": 0.5004808998201042,
+            "value": 0.3799489622552249,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 41,
+          "unordered": {
+            "nodes": 4592,
+            "cutoffs": 235,
+            "depth": 3,
+            "seconds": 0.5003838001284748,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4116,
+            "cutoffs": 264,
+            "depth": 3,
+            "seconds": 0.5001870999112725,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                4,
+                3
+              ]
+            ]
+          }
+        },
+        {
+          "position": 42,
+          "unordered": {
+            "nodes": 5173,
+            "cutoffs": 249,
+            "depth": 3,
+            "seconds": 0.5008996000979096,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4897,
+            "cutoffs": 244,
+            "depth": 3,
+            "seconds": 0.5006417999975383,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 43,
+          "unordered": {
+            "nodes": 5041,
+            "cutoffs": 213,
+            "depth": 2,
+            "seconds": 0.5004631001502275,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4794,
+            "cutoffs": 220,
+            "depth": 2,
+            "seconds": 0.5004098999779671,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 44,
+          "unordered": {
+            "nodes": 6094,
+            "cutoffs": 162,
+            "depth": 3,
+            "seconds": 0.5004030000418425,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5137,
+            "cutoffs": 478,
+            "depth": 3,
+            "seconds": 0.5008001001551747,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 45,
+          "unordered": {
+            "nodes": 5712,
+            "cutoffs": 193,
+            "depth": 2,
+            "seconds": 0.5001441999338567,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5793,
+            "cutoffs": 203,
+            "depth": 2,
+            "seconds": 0.5005757000762969,
+            "value": -0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                3,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 46,
+          "unordered": {
+            "nodes": 5744,
+            "cutoffs": 161,
+            "depth": 3,
+            "seconds": 0.5004222998395562,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5198,
+            "cutoffs": 459,
+            "depth": 3,
+            "seconds": 0.5004705998580903,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 47,
+          "unordered": {
+            "nodes": 5227,
+            "cutoffs": 215,
+            "depth": 2,
+            "seconds": 0.4999987001065165,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4981,
+            "cutoffs": 212,
+            "depth": 2,
+            "seconds": 0.500891099916771,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 48,
+          "unordered": {
+            "nodes": 5633,
+            "cutoffs": 192,
+            "depth": 3,
+            "seconds": 0.5004870998673141,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 5649,
+            "cutoffs": 213,
+            "depth": 3,
+            "seconds": 0.5001626999583095,
+            "value": 0.197375320224904,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "position": 49,
+          "unordered": {
+            "nodes": 4819,
+            "cutoffs": 209,
+            "depth": 2,
+            "seconds": 0.5008070999756455,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          },
+          "ordered": {
+            "nodes": 4462,
+            "cutoffs": 204,
+            "depth": 2,
+            "seconds": 0.5000225000549108,
+            "value": 0.0,
+            "action": [
+              "MOVE",
+              [
+                1,
+                2
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

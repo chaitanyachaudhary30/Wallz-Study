@@ -1,0 +1,145 @@
+{
+  "source": {
+    "commit": "4023eaca86a45d2b6d2a4c9022c5c0f3dffc52f6",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py exact-draws",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T03:06:54+05:30",
+  "config": {
+    "claim_threshold": 900.0,
+    "note": "depth 2 on every non-terminal state; depth 4 on a random sample of DRAW states; positions restored with fresh history"
+  },
+  "seeds": {
+    "draw_sample_rng": 0
+  },
+  "results": [
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 0
+      },
+      "states": 4812,
+      "value_counts": {
+        "WIN": 2093,
+        "LOSS": 1600,
+        "DRAW": 1119,
+        "UNKNOWN": 0
+      },
+      "draw_nontrivial_states": 1043,
+      "checks": {
+        "depth_2": {
+          "states": 3008,
+          "draw_states": 827,
+          "draw_claimed_win": 0,
+          "draw_claimed_loss": 0,
+          "claimed_win": 1076,
+          "claimed_win_wrong": 0,
+          "claimed_loss": 232,
+          "claimed_loss_wrong": 0,
+          "examples": []
+        },
+        "depth_4": {
+          "states": 319,
+          "draw_states": 319,
+          "draw_claimed_win": 0,
+          "draw_claimed_loss": 0,
+          "claimed_win": 0,
+          "claimed_win_wrong": 0,
+          "claimed_loss": 0,
+          "claimed_loss_wrong": 0,
+          "examples": []
+        }
+      }
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": false,
+        "K": 1,
+        "M": 1
+      },
+      "states": 12821,
+      "value_counts": {
+        "WIN": 4006,
+        "LOSS": 3846,
+        "DRAW": 4969,
+        "UNKNOWN": 0
+      },
+      "draw_nontrivial_states": 4969,
+      "checks": {
+        "depth_2": {
+          "states": 9817,
+          "draw_states": 4969,
+          "draw_claimed_win": 0,
+          "draw_claimed_loss": 0,
+          "claimed_win": 3004,
+          "claimed_win_wrong": 0,
+          "claimed_loss": 782,
+          "claimed_loss_wrong": 0,
+          "examples": []
+        },
+        "depth_4": {
+          "states": 300,
+          "draw_states": 300,
+          "draw_claimed_win": 0,
+          "draw_claimed_loss": 0,
+          "claimed_win": 0,
+          "claimed_win_wrong": 0,
+          "claimed_loss": 0,
+          "claimed_loss_wrong": 0,
+          "examples": []
+        }
+      }
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": false,
+        "B": true,
+        "C": true,
+        "K": 2,
+        "M": 1
+      },
+      "states": 188172,
+      "value_counts": {
+        "WIN": 89487,
+        "LOSS": 64727,
+        "DRAW": 33958,
+        "UNKNOWN": 0
+      },
+      "draw_nontrivial_states": 28045,
+      "checks": {
+        "depth_2": {
+          "states": 114745,
+          "draw_states": 18452,
+          "draw_claimed_win": 0,
+          "draw_claimed_loss": 0,
+          "claimed_win": 42180,
+          "claimed_win_wrong": 0,
+          "claimed_loss": 8551,
+          "claimed_loss_wrong": 0,
+          "examples": []
+        },
+        "depth_4": {
+          "states": 202,
+          "draw_states": 202,
+          "draw_claimed_win": 0,
+          "draw_claimed_loss": 0,
+          "claimed_win": 0,
+          "claimed_win_wrong": 0,
+          "claimed_loss": 0,
+          "claimed_loss_wrong": 0,
+          "examples": []
+        }
+      }
+    }
+  ]
+}
