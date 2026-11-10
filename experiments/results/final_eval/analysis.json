@@ -1,13 +1,13 @@
 {
   "run": {
     "source": {
-      "commit": "08809ca020e85ebe27c9154642f16bd132768dcd",
+      "commit": "0f7825b672c686af6852038fe44d09da2ef9b365",
       "dirty": false
     },
     "command": "python scripts/stage2_analysis.py",
     "python": "3.12.5",
     "platform": "Windows-11-10.0.26200-SP0",
-    "date_utc": "2026-11-10T22:45:07+00:00"
+    "date_utc": "2026-11-10T22:45:18+00:00"
   },
   "solve_tables": {
     "solve_N3_K1_M0": [
