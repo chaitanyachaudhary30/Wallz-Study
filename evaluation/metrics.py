@@ -154,13 +154,24 @@ def factorial_effects(cell_means):
     return out
 
 
-def unit_table(results, spec, response):
-    """{opening_seed: {config_label: mean response over that seed's games}}"""
+def opening_key(result):
+    """The opening's action sequence as a string; equal for seeds that drew the same opening."""
+    return repr(result['opening']['actions'])
+
+
+def unit_table(results, spec, response, unit='seed'):
+    """
+    {unit: {config_label: mean response over that unit's games}}.
+    unit='seed' groups by opening seed. unit='opening' groups by the opening actually
+    played, so seeds that drew the same opening count once: with deterministic agents
+    those games are exact replicas, not independent evidence.
+    """
     acc = defaultdict(lambda: defaultdict(list))
     for r in results:
         y = game_responses(r, spec)[response]
         if y is not None:
-            acc[r['config']['opening_seed']][r['config_label']].append(y)
+            u = r['config']['opening_seed'] if unit == 'seed' else opening_key(r)
+            acc[u][r['config_label']].append(y)
     return {s: {c: sum(v) / len(v) for c, v in cells.items()} for s, cells in acc.items()}
 
 
@@ -224,9 +235,10 @@ def holm_bonferroni(p_values, alpha=0.05):
     return [results[i] for i in range(m)]
 
 
-def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05):
-    """Point estimates and paired-bootstrap 95% percentile intervals for all effects with Holm correction."""
-    units = unit_table(results, spec, response)
+def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05, unit='seed'):
+    """Point estimates and paired-bootstrap 95% percentile intervals for all effects with Holm correction.
+    ``unit`` is the resampled unit, see unit_table."""
+    units = unit_table(results, spec, response, unit=unit)
     seeds = sorted(units)
     labels = sorted({c for u in units.values() for c in u})
 
@@ -271,8 +283,8 @@ def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05):
             out[e]['adjusted_p'] = None
             out[e]['significant_holm'] = False
 
-    return {'response': response, 'n_opening_seeds': len(seeds), 'cell_means': cell_means,
-            'effects': out}
+    return {'response': response, 'unit': unit, 'n_units': len(seeds), 'n_opening_seeds': len(seeds)
+            if unit == 'seed' else None, 'n_boot': n_boot, 'cell_means': cell_means, 'effects': out}
 
 
 def agreement_rate(records):
