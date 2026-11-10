@@ -451,6 +451,45 @@ def cmd_hops(args):
     write_new('hop_stats.json', out)
 
 
+def cmd_hop_examples(args):
+    """Replay logged matches; list Greedy wins where Greedy HOPs across a wall minimax placed."""
+    from evaluation.match_runner import action_from_json
+    report = {}
+    for tag in args.tags:
+        rows = []
+        for r in load_results(str(OUT / f'vs_greedy_{tag}.jsonl')):
+            seat = 0 if r['agents']['0']['spec'] != 'greedy' else 1
+            e = WallzEngine(board_size=r['config']['board_size'], rules=r['config']['rules'])
+            placed = {}  # wall -> ply minimax placed / moved it there
+            hops = []
+            for st in r['replay']:
+                a = action_from_json(st['action'])
+                mover = e.current_player
+                if st['source'] == 'agent' and mover != seat and a[0] == 'HOP':
+                    src = e.pawns[mover]
+                    owner = e.wall_owner_on_edge(src, a[1])
+                    wall = next((w for w in e.walls[seat] if any(
+                        {tuple(u), tuple(v)} == {src, a[1]} for u, v in e.board.wall_edges(*w))), None)
+                    hops.append({'hop_ply': st['ply'], 'from': list(src), 'to': list(a[1]),
+                                 'wall_owner': owner, 'wall': list(wall) if wall else None,
+                                 'wall_ply': placed.get(wall)})
+                if mover == seat and a[0] in ('WALL', 'REPLACE'):
+                    placed[tuple(a[1])] = st['ply']  # logged REPLACE is the short (r, c, o) form
+                e.apply_action(a, update_clock=False)
+            greedy_won = r['outcome']['category'] == 'goal' and r['outcome']['winner'] != seat
+            if hops and greedy_won:
+                rows.append({'match_id': r['match_id'], 'minimax_seat': seat,
+                             'length_plies': r['length_plies'], 'hops': hops})
+        report[tag] = {'greedy_wins_with_hop_over_minimax_wall': len(rows),
+                       'all_hops_crossed_minimax_walls': all(h['wall_owner'] == x['minimax_seat']
+                                                            for x in rows for h in x['hops']),
+                       'examples': rows}
+        print(f"  {tag}: {len(rows)} Greedy wins with a HOP over a minimax wall")
+    out = provenance({'tags': args.tags}, None)
+    out['results'] = report
+    write_new('hop_examples.json', out)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
@@ -470,6 +509,9 @@ def main():
     p = sub.add_parser('openings')
     p.add_argument('tags', nargs='+')
     p.set_defaults(func=cmd_openings)
+    p = sub.add_parser('hop-examples')
+    p.add_argument('tags', nargs='+')
+    p.set_defaults(func=cmd_hop_examples)
     p = sub.add_parser('hops')
     p.add_argument('tags', nargs='+')
     p.set_defaults(func=cmd_hops)
