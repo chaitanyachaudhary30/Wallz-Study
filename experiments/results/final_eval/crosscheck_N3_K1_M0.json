@@ -1,0 +1,144 @@
+{
+  "source": {
+    "commit": "8944f165d3c65f9afcd0aa35fc455c24a2a375c5",
+    "dirty": false
+  },
+  "run": {
+    "source": {
+      "commit": "8944f165d3c65f9afcd0aa35fc455c24a2a375c5",
+      "dirty": false
+    },
+    "command": "python scripts/crosscheck_solvers.py -N 3 -K 1 -M 0 --out experiments/results/final_eval/crosscheck_N3_K1_M0.json",
+    "python": "3.12.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date_utc": "2026-11-10T22:20:50+00:00"
+  },
+  "config": {
+    "N": 3,
+    "K": 1,
+    "M": 0,
+    "out": "experiments/results/final_eval/crosscheck_N3_K1_M0.json"
+  },
+  "cells": [
+    {
+      "config_label": "N3_A0B0C0_K1_M0",
+      "both_complete": true,
+      "raw_states": 45,
+      "canonical_states": 45,
+      "canonical_nodes_covered": 45,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 3,
+      "seconds": 0.01
+    },
+    {
+      "config_label": "N3_A0B0C1_K1_M0",
+      "both_complete": true,
+      "raw_states": 642,
+      "canonical_states": 642,
+      "canonical_nodes_covered": 642,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 5,
+      "seconds": 0.23
+    },
+    {
+      "config_label": "N3_A0B1C0_K1_M0",
+      "both_complete": true,
+      "raw_states": 45,
+      "canonical_states": 45,
+      "canonical_nodes_covered": 45,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 3,
+      "seconds": 0.01
+    },
+    {
+      "config_label": "N3_A0B1C1_K1_M0",
+      "both_complete": true,
+      "raw_states": 642,
+      "canonical_states": 642,
+      "canonical_nodes_covered": 642,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 5,
+      "seconds": 0.24
+    },
+    {
+      "config_label": "N3_A1B0C0_K1_M0",
+      "both_complete": true,
+      "raw_states": 45,
+      "canonical_states": 45,
+      "canonical_nodes_covered": 45,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 3,
+      "seconds": 0.01
+    },
+    {
+      "config_label": "N3_A1B0C1_K1_M0",
+      "both_complete": true,
+      "raw_states": 642,
+      "canonical_states": 642,
+      "canonical_nodes_covered": 642,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 5,
+      "seconds": 0.27
+    },
+    {
+      "config_label": "N3_A1B1C0_K1_M0",
+      "both_complete": true,
+      "raw_states": 45,
+      "canonical_states": 45,
+      "canonical_nodes_covered": 45,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 3,
+      "seconds": 0.01
+    },
+    {
+      "config_label": "N3_A1B1C1_K1_M0",
+      "both_complete": true,
+      "raw_states": 642,
+      "canonical_states": 642,
+      "canonical_nodes_covered": 642,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 5,
+      "seconds": 0.23
+    }
+  ]
+}

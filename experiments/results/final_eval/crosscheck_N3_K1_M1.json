@@ -1,0 +1,144 @@
+{
+  "source": {
+    "commit": "8944f165d3c65f9afcd0aa35fc455c24a2a375c5",
+    "dirty": false
+  },
+  "run": {
+    "source": {
+      "commit": "8944f165d3c65f9afcd0aa35fc455c24a2a375c5",
+      "dirty": false
+    },
+    "command": "python scripts/crosscheck_solvers.py -N 3 -K 1 -M 1 --out experiments/results/final_eval/crosscheck_N3_K1_M1.json",
+    "python": "3.12.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date_utc": "2026-11-10T22:20:53+00:00"
+  },
+  "config": {
+    "N": 3,
+    "K": 1,
+    "M": 1,
+    "out": "experiments/results/final_eval/crosscheck_N3_K1_M1.json"
+  },
+  "cells": [
+    {
+      "config_label": "N3_A0B0C0_K1_M1",
+      "both_complete": true,
+      "raw_states": 1953,
+      "canonical_states": 1341,
+      "canonical_nodes_covered": 1341,
+      "canonical_nodes_with_merged_raw_keys": 612,
+      "raw_keys_in_merged_nodes": 1224,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 7,
+      "seconds": 0.34
+    },
+    {
+      "config_label": "N3_A0B0C1_K1_M1",
+      "both_complete": true,
+      "raw_states": 23764,
+      "canonical_states": 16696,
+      "canonical_nodes_covered": 16696,
+      "canonical_nodes_with_merged_raw_keys": 7068,
+      "raw_keys_in_merged_nodes": 14136,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 9,
+      "seconds": 8.42
+    },
+    {
+      "config_label": "N3_A0B1C0_K1_M1",
+      "both_complete": true,
+      "raw_states": 5013,
+      "canonical_states": 4893,
+      "canonical_nodes_covered": 4893,
+      "canonical_nodes_with_merged_raw_keys": 120,
+      "raw_keys_in_merged_nodes": 240,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 5,
+      "seconds": 1.0
+    },
+    {
+      "config_label": "N3_A0B1C1_K1_M1",
+      "both_complete": true,
+      "raw_states": 61148,
+      "canonical_states": 59240,
+      "canonical_nodes_covered": 59240,
+      "canonical_nodes_with_merged_raw_keys": 1908,
+      "raw_keys_in_merged_nodes": 3816,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "WIN",
+      "root_rank": 7,
+      "seconds": 23.88
+    },
+    {
+      "config_label": "N3_A1B0C0_K1_M1",
+      "both_complete": true,
+      "raw_states": 3861,
+      "canonical_states": 3861,
+      "canonical_nodes_covered": 3861,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "DRAW",
+      "root_rank": null,
+      "seconds": 1.59
+    },
+    {
+      "config_label": "N3_A1B0C1_K1_M1",
+      "both_complete": true,
+      "raw_states": 46886,
+      "canonical_states": 46886,
+      "canonical_nodes_covered": 46886,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "DRAW",
+      "root_rank": null,
+      "seconds": 30.38
+    },
+    {
+      "config_label": "N3_A1B1C0_K1_M1",
+      "both_complete": true,
+      "raw_states": 12821,
+      "canonical_states": 12821,
+      "canonical_nodes_covered": 12821,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "DRAW",
+      "root_rank": null,
+      "seconds": 5.34
+    },
+    {
+      "config_label": "N3_A1B1C1_K1_M1",
+      "both_complete": true,
+      "raw_states": 150710,
+      "canonical_states": 150710,
+      "canonical_nodes_covered": 150710,
+      "canonical_nodes_with_merged_raw_keys": 0,
+      "raw_keys_in_merged_nodes": 0,
+      "merged_groups_with_unequal_value_or_rank": 0,
+      "status_mismatches": 0,
+      "rank_mismatches": 0,
+      "root_status": "DRAW",
+      "root_rank": null,
+      "seconds": 96.96
+    }
+  ]
+}

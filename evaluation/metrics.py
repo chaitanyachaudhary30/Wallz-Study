@@ -58,6 +58,15 @@ def mean(xs):
     return sum(xs) / len(xs) if xs else None
 
 
+def sample_sd(xs):
+    """Sample standard deviation (n - 1 denominator); None for fewer than 2 values."""
+    xs = [x for x in xs if x is not None]
+    if len(xs) < 2:
+        return None
+    m = sum(xs) / len(xs)
+    return math.sqrt(sum((x - m) ** 2 for x in xs) / (len(xs) - 1))
+
+
 def game_responses(result, spec):
     """Per-game numeric responses used for cell means and effects."""
     p = focus_player(result, spec)
@@ -97,6 +106,10 @@ def summarize_cells(results, spec):
             'counts': counts,
             'x_goal_win_rate': counts['win'] / n,
             'x_goal_win_rate_ci95': wilson(counts['win'], n),
+            'x_goal_loss_rate': counts['loss'] / n,
+            'x_goal_loss_rate_ci95': wilson(counts['loss'], n),
+            'draw_rate': counts['draw'] / n,
+            'draw_rate_ci95': wilson(counts['draw'], n),
             'truncation_rate': counts['truncated'] / n,
             'truncation_rate_ci95': wilson(counts['truncated'], n),
             'stalemate_rate': draw_stalemate / n,
@@ -105,6 +118,7 @@ def summarize_cells(results, spec):
             'repetition_rate_ci95': wilson(draw_repetition, n),
             'draw_breakdown': {'stalemate': draw_stalemate, 'repetition': draw_repetition},
             'mean_length_plies': mean([x['length_plies'] for x in resp]),
+            'sd_length_plies': sample_sd([x['length_plies'] for x in resp]),
             'mean_legal_actions': mean([x['mean_legal_actions'] for x in resp]),
             'x_mean_decision_ms': mean([x['x_decision_ms'] for x in resp]),
         }
@@ -140,13 +154,24 @@ def factorial_effects(cell_means):
     return out
 
 
-def unit_table(results, spec, response):
-    """{opening_seed: {config_label: mean response over that seed's games}}"""
+def opening_key(result):
+    """The opening's action sequence as a string; equal for seeds that drew the same opening."""
+    return repr(result['opening']['actions'])
+
+
+def unit_table(results, spec, response, unit='seed'):
+    """
+    {unit: {config_label: mean response over that unit's games}}.
+    unit='seed' groups by opening seed. unit='opening' groups by the opening actually
+    played, so seeds that drew the same opening count once: with deterministic agents
+    those games are exact replicas, not independent evidence.
+    """
     acc = defaultdict(lambda: defaultdict(list))
     for r in results:
         y = game_responses(r, spec)[response]
         if y is not None:
-            acc[r['config']['opening_seed']][r['config_label']].append(y)
+            u = r['config']['opening_seed'] if unit == 'seed' else opening_key(r)
+            acc[u][r['config_label']].append(y)
     return {s: {c: sum(v) / len(v) for c, v in cells.items()} for s, cells in acc.items()}
 
 
@@ -210,9 +235,10 @@ def holm_bonferroni(p_values, alpha=0.05):
     return [results[i] for i in range(m)]
 
 
-def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05):
-    """Point estimates and paired-bootstrap 95% percentile intervals for all effects with Holm correction."""
-    units = unit_table(results, spec, response)
+def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05, unit='seed'):
+    """Point estimates and paired-bootstrap 95% percentile intervals for all effects with Holm correction.
+    ``unit`` is the resampled unit, see unit_table."""
+    units = unit_table(results, spec, response, unit=unit)
     seeds = sorted(units)
     labels = sorted({c for u in units.values() for c in u})
 
@@ -257,8 +283,8 @@ def effects_with_ci(results, spec, response, n_boot=2000, seed=0, alpha=0.05):
             out[e]['adjusted_p'] = None
             out[e]['significant_holm'] = False
 
-    return {'response': response, 'n_opening_seeds': len(seeds), 'cell_means': cell_means,
-            'effects': out}
+    return {'response': response, 'unit': unit, 'n_units': len(seeds), 'n_opening_seeds': len(seeds)
+            if unit == 'seed' else None, 'n_boot': n_boot, 'cell_means': cell_means, 'effects': out}
 
 
 def agreement_rate(records):

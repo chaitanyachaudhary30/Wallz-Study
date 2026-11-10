@@ -21,8 +21,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from evaluation.ablation import ablation_configs, solver_sweep, agreement, default_caps  # noqa: E402
 from evaluation.match_runner import (MatchConfig, run_match, run_batch, load_results,  # noqa: E402
-                                     verify_replay, source_commit)
-from evaluation.metrics import summarize_cells, effects_with_ci  # noqa: E402
+                                     verify_replay, source_commit, run_metadata)
+from evaluation.metrics import summarize_cells, effects_with_ci, opening_key  # noqa: E402
 from evaluation.replay_export import export_demo_replay  # noqa: E402
 from evaluation.retrograde import solve_config  # noqa: E402
 from evaluation.state_graph import GraphCaps  # noqa: E402
@@ -45,12 +45,20 @@ def seed_everything(seed: int = 42) -> None:
         pass
 
 
-RESPONSES = ['x_goal_win', 'x_goal_loss', 'truncated', 'length_plies', 'mean_legal_actions', 'x_decision_ms']
+START = {}  # run provenance, filled in by main()
+
+RESPONSES = ['x_goal_win', 'x_goal_loss', 'rule_draw', 'truncated', 'length_plies', 'mean_legal_actions',
+             'x_decision_ms']
 
 
 def rules_from(abc, K, M):
     a, b, c = (bool(int(ch)) for ch in abc)
     return {'A': a, 'B': b, 'C': c, 'K': K, 'M': M}
+
+
+def vars_of(args):
+    """Parsed CLI arguments as a JSON-safe dict (the full run configuration)."""
+    return {k: v for k, v in vars(args).items() if k != 'func'}
 
 
 def write_json(path, obj):
@@ -85,6 +93,18 @@ def cmd_match(args):
         write_json(args.out, res)
 
 
+def replica_check(results):
+    """Distinct openings, and whether games that share (cell, seats, opening) are identical."""
+    groups = {}
+    for r in results:
+        g = (r['config_label'], r['config']['p0'], r['config']['p1'], opening_key(r))
+        groups.setdefault(g, set()).add((r['outcome']['category'], r['outcome']['winner'],
+                                         r['length_plies'], r['final_state_id']))
+    return {'distinct_openings': len({opening_key(r) for r in results}),
+            'distinct_games': len(groups),
+            'groups_with_differing_replicas': sum(1 for v in groups.values() if len(v) > 1)}
+
+
 def cmd_ablation(args):
     seed_start = args.seed_start if args.seed_start != 0 or getattr(args, 'seed', None) is None else args.seed
     seed_everything(seed_start)
@@ -103,14 +123,22 @@ def cmd_ablation(args):
     results = [r for r in load_results(log_path)
                if r['match_id'] in {c.match_id() for c in configs}]
     summary = {
-        'source': source_commit(),
+        'source': START['source'],
+        'run': START,
+        'config': vars_of(args),
         'design': {'agent_x': args.x, 'agent_y': args.y, 'board_size': args.N, 'K': args.K,
                    'M': args.M, 'opening_seeds': list(seeds), 'opening_plies': args.opening_plies,
                    'max_plies': args.max_plies, 'move_time_limit': args.move_time_limit,
                    'games_per_cell': 2 * len(seeds), 'n_matches': len(results)},
         'match_log': log_path.replace('\\', '/'),
         'cells': summarize_cells(results, args.x),
-        'effects': {r: effects_with_ci(results, args.x, r, n_boot=args.n_boot) for r in RESPONSES},
+        # Primary: resample distinct openings (replica seeds counted once)
+        'effects': {r: effects_with_ci(results, args.x, r, n_boot=args.n_boot, unit='opening')
+                    for r in RESPONSES},
+        # For comparison only: resample seeds (overstates n when seeds share an opening)
+        'effects_by_seed': {r: effects_with_ci(results, args.x, r, n_boot=args.n_boot, unit='seed')
+                            for r in RESPONSES},
+        'replicas': replica_check(results),
         'replay_verification': None,
     }
     bad = [(r['match_id'], m) for r in results for ok, m in [verify_replay(r)] if not ok]
@@ -126,11 +154,14 @@ def cmd_solve(args):
             print(f"  {row['config_label']}: {row['states']} states, complete={row['complete']}, "
                   f"root {row['root_status']} rank {row['root_rank']}, "
                   f"{row['build_seconds'] + row['solve_seconds']:.1f}s", flush=True)
-        rows, effects, _ = solver_sweep(args.N, K=args.K, M=args.M, caps=caps, progress=progress)
-        out = {'source': source_commit(), 'caps': vars(caps), 'cells': rows, 'factorial_effects': effects}
+        rows, effects, _ = solver_sweep(args.N, K=args.K, M=args.M, caps=caps, progress=progress,
+                                        keep_solutions=False)
+        out = {'source': START['source'], 'run': START, 'config': vars_of(args),
+               'caps': vars(caps), 'cells': rows, 'factorial_effects': effects}
     else:
         sol = solve_config(args.N, rules_from(args.abc, args.K, args.M), caps)
-        out = {'source': source_commit(), 'caps': vars(caps), 'cells': [sol.summary()]}
+        out = {'source': START['source'], 'run': START, 'config': vars_of(args),
+               'caps': vars(caps), 'cells': [sol.summary()]}
         s = out['cells'][0]
         print(f"{s['states']} states, complete={s['complete']}, root {s['root_status']} "
               f"rank {s['root_rank']}, optimal {s['root_rank_optimal_actions']}")
@@ -160,7 +191,8 @@ def cmd_agreement(args):
             print(f"  {label} {spec}: value-optimal {a['value_optimal_rate']:.3f}, "
                   f"rank-optimal {a['rank_optimal_rate']:.3f} (n={a['n']})", flush=True)
     if args.out:
-        write_json(args.out, {'source': source_commit(), 'rows': rows})
+        write_json(args.out, {'source': START['source'], 'run': START,
+                              'config': vars_of(args), 'rows': rows})
 
 
 def cmd_verify(args):
@@ -294,6 +326,7 @@ def main():
     p.set_defaults(func=cmd_export)
 
     args = ap.parse_args()
+    START.update(run_metadata())  # provenance taken before any work starts
     args.func(args)
 
 

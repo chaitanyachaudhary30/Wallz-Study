@@ -43,15 +43,16 @@ Each fix has a regression test in `tests/test_engine_prerequisites.py`.
 | No record of *why* a game ended. | `terminal_reason` ∈ {`goal`, `timeout`, `repetition`, `no_legal_actions`}. | — |
 | Solver needs exact restore without history/clock. | `restore_state_key(key)` (fresh history) and `has_legal_action()`. | — |
 
-**Convention made explicit (open for the team).** Path-preservation checks for WALL,
+**Expiring blocks (settled: `docs/decisions.md` Decision 9).** Path-preservation checks for WALL,
 REPLACE and BLOCK treat every currently active temporary block as impassable. That includes a
 block that expires on this same ply. Walls therefore also treat temporary blocks as obstacles.
 The proposal's PathExists(s<sub>t+1</sub>) would ignore a block expiring on this ply, so the engine is
-conservative by at most one ply. It was left as implemented on `main`.
+conservative by at most one ply. This is the frozen rule (`docs/reports/stage1_engine_freeze.md`).
 
 Checked and left unchanged: history is recorded after the side to move switches (already fixed
-on `main`); HOP needs no obstacle to jump over (current `docs/game_rules.md`); REPLACE moves only
-the latest wall (current team rule, replacing the older FIFO design).
+on `main`); REPLACE moves only the latest wall (current team rule, replacing the older FIFO design).
+HOP is one step across a wall placed by the opponent (`4e346a8`; the old 2-cell jump is gone,
+see `docs/game_rules.md` 3.4).
 
 ---
 
@@ -66,7 +67,9 @@ successors (tested on ~10k random positions by an independent review).
 **Canonical positions.** The engine key keeps each player's walls in placement order, but
 later play depends only on the union of walls, the inventories and, with rule A, each
 player's latest wall. `canonical_key` therefore merges keys that differ only in the order
-or owner of the other walls, and drops the latest pointer when A is off. Without this,
+of the other walls, and drops the latest pointer when A is off. Wall owners are merged only
+once no hop is left: a hop may cross only an opponent's wall, so while a hop remains the
+owner of each wall is kept (`WallzEngine.canonicalize_key`, since `4e346a8`). Without this,
 state counts are inflated in the A = 0 cells (N=3, M=1, A=0: 1953 raw keys vs 1341
 positions), which would bias A's measured effect. A test checks that every raw key merged
 into a node has the same exact value and rank under the independent reference. Use
@@ -142,9 +145,10 @@ ok, msg = verify_replay(result)  # re-simulates every ply with the current engin
 ```
 
 **Agent specs**: `greedy`, `minimax:depth=D[,time_limit=S]` (no time limit means deterministic),
-`random:seed=S`, `exact` (tiny boards, rank-optimal play from a complete solve), `dqn` → raises
-`AgentUnavailable` because `agents/dqn/*.py` are empty scaffolds (no encoder, action-id map or
-checkpoint format yet).
+`random:seed=S`, `exact` (tiny boards, rank-optimal play from a complete solve),
+`dqn:path=<checkpoint>` (loads a trained checkpoint through `agents/dqn/agent.py`
+`load_checkpoint`; raises `AgentUnavailable` when torch is missing or the checkpoint does not
+match the board size and rules; see `docs/dqn.md`).
 
 **Openings**: `opening_plies` random pawn MOVEs from `random.Random(opening_seed)`. A MOVE's
 legality does not depend on A/B/C before any wall/hop/block is used, so a seed yields the
@@ -213,6 +217,11 @@ python scripts/run_experiments.py verify-replay experiments/logs/ablation_N5_min
 ---
 
 ## 6. Pilot results
+
+> **Stale.** These pilots predate the HOP change (`4e346a8`), the Greedy changes and the
+> Minimax fix (`ce55e0c`). B-on cells, agreement rates and the match ablation below do not
+> describe the final rules. Final numbers: `docs/reports/stage2_solver_stats.md` and
+> `experiments/results/final_eval/`; per-file status: `experiments/results/STALE.md`.
 
 All files in `experiments/results/person3_pilot/` were produced from commit `7e2d6da` with a clean tree (recorded in each file's `source`), by the commands in §5. Exact solves use K = 1. "Value" is from the side to move at the root (player 0).
 
@@ -311,7 +320,7 @@ wall (r, c, o) → (gx=c, gy=N−2−r, o). `tests/test_match_runner.py` checks 
 edge by edge against a Python transcription of the demo's `isEdgeBlocked`.
 
 The demo (commit `77a566c`) has **no replay loader** and different rules: fixed 9×9, FIFO wall
-recycling and no REPLACE, a one-cell "wall hop" instead of the engine's two-cell HOP, and
+recycling and no REPLACE, a one-cell "wall hop" (not re-checked against the engine's HOP after `4e346a8`), and
 Quoridor-style pawn jumps. The export therefore reports `demo_compatible` and lists every
 incompatibility. Compatible games are 9×9, with no HOP or REPLACE, and K = 3 when blocks are on.
 **Remaining dependency (demo owner):** add a loader that, for each event, sets `currentPlayer` and
@@ -327,5 +336,5 @@ runs the same branch as `executeAITurn` for that player. Nothing was pushed to t
 * Enumeration is pure Python and single-threaded. Feasibility limits are the measured ones in §6, not assumed.
 * Ablation pilots use deterministic agents. Independent evidence comes from distinct opening
   seeds (balanced sides), and a 10-seed pilot is too small for firm conclusions.
-* DQN evaluation is wired (`dqn` spec, `discounted_value`, agreement) but blocked until Person 4
-  defines the encoder, action ids and checkpoint format.
+* DQN evaluation is wired (`dqn:path=` spec, `discounted_value`, agreement). The committed
+  checkpoints were trained under the old HOP rule, so DQN numbers wait for retrained ones.

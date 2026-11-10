@@ -38,15 +38,19 @@ def ablation_configs(agent_x, agent_y, board_size=5, K=3, M=10, opening_seeds=ra
     return configs
 
 
-def solver_sweep(board_size, K=1, M=0, caps=None, progress=None):
-    """Exact solve of all 8 cells; returns (rows, effects on complexity measures)."""
+def solver_sweep(board_size, K=1, M=0, caps=None, progress=None, keep_solutions=True):
+    """Exact solve of all 8 cells; returns (rows, effects on complexity measures, solutions).
+    keep_solutions=False drops each graph after its summary, so peak memory is one cell's
+    graph instead of all eight (solutions is then empty)."""
     rows, solutions = [], {}
     for rules in factorial_rules(K, M):
         sol = solve_config(board_size, rules, caps)
         row = sol.summary()
         row['config_label'] = MatchConfig(board_size=board_size, rules=rules).label()
         rows.append(row)
-        solutions[row['config_label']] = sol
+        if keep_solutions:
+            solutions[row['config_label']] = sol
+        del sol
         if progress:
             progress(row)
     effects = {}
