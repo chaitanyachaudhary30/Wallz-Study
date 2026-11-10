@@ -396,6 +396,30 @@ class TestTrainingMachinery(unittest.TestCase):
                 load_checkpoint(d, expected_rules={'K': 3})
 
 
+    def test_resume_state_round_trip(self):
+        import tempfile
+        import torch
+        from pathlib import Path
+        from agents.dqn.self_play import SelfPlayManager
+        from scripts.train_dqn import load_resume_state, save_resume_state
+        a = SelfPlayManager(self._trainer(), snapshot_interval=30, max_plies=40)
+        for _ in range(6):
+            a.run_episode()
+        with tempfile.TemporaryDirectory() as d:
+            f = Path(d) / 'resume.pt'
+            save_resume_state(f, a.trainer, a, episode=6, last_eval_step=0, elapsed=1.0)
+            b = SelfPlayManager(self._trainer(seed=99), snapshot_interval=30, max_plies=40)
+            st = load_resume_state(f, b.trainer, b)
+        self.assertEqual(st['episode'], 6)
+        self.assertEqual(b.trainer.total_env_steps, a.trainer.total_env_steps)
+        self.assertEqual(len(b.pool), len(a.pool))
+        self.assertEqual((b.trainer.buffer.size, b.trainer.buffer.ptr), (a.trainer.buffer.size, a.trainer.buffer.ptr))
+        np.testing.assert_array_equal(b.trainer.buffer.obs[:a.trainer.buffer.size],
+                                      a.trainer.buffer.obs[:a.trainer.buffer.size])
+        for k, v in a.trainer.online_net.state_dict().items():
+            self.assertTrue(torch.equal(v, b.trainer.online_net.state_dict()[k]))
+
+
 @unittest.skipUnless(TORCH, "torch not installed: self-play legality not checked")
 class TestAgentsPlayLegally(unittest.TestCase):
     def test_self_play_never_illegal(self):
