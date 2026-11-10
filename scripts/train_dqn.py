@@ -317,7 +317,7 @@ def main():
         episode, last_eval_step = state['episode'], state['last_eval_step']
         t_start = time.time() - state['elapsed_seconds']
         print(f"Resumed from {resume_file} at step {trainer.total_env_steps}")
-    elif not args.resume:
+    else:
         with open(output_dir / "run_config.json", 'w', encoding='utf-8') as f:
             json.dump({'command': 'python ' + ' '.join(sys.argv), 'config': cfg_dict,
                        'started': time.strftime('%Y-%m-%dT%H:%M:%S%z')}, f, indent=2, default=str)
