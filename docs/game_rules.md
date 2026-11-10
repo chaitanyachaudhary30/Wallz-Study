@@ -5,6 +5,8 @@ Modified Wallz is a deterministic, sequential, two-player zero-sum adversarial g
 
 The canonical engine implementation in `wallz_engine.py` serves as the **single source of truth** for all rules, validations, legal move generations, and state transitions.
 
+**Status: frozen at Stage 1** (engine as of `main` = `ce55e0c`, verified in `docs/reports/stage1_engine_freeze.md`, tests in `tests/test_stage1_engine_freeze.py`). This file describes the current rules only; Section 3.4 notes the one earlier HOP rule whose results are stale.
+
 ---
 
 ## 2. Board & Pawns
@@ -32,9 +34,15 @@ The engine accepts actions either as Python tuples or as JSON lists:
   - Must remain within the $N \times N$ board boundaries.
 
 ### 2. Path-Preservation Invariant
-- **Core Invariant**: Every action (wall placement, wall repositioning, move, or cell block) must preserve at least one valid path from each player's current position to their respective goal row:
+- **Core Invariant**: After every action, each player must still have at least one path from their current cell to their goal row:
   $$\operatorname{PathExists}(s', 0) = 1 \quad \text{and} \quad \operatorname{PathExists}(s', 1) = 1$$
 - If an action would isolate either player from their goal row, it is strictly illegal.
+- How the engine checks it, per action:
+  - `WALL`, `REPLACE`, `BLOCK`: a breadth-first search for **both** players on the board after the action.
+  - `HOP`: a search for the **hopping** player from the landing cell (walls do not change, so the opponent's path cannot change).
+  - `MOVE`: no search needed. A one-step move can always be undone, so it cannot cut a path.
+- Paths ignore pawns: a pawn never counts as an obstacle for path checks (it does block a `MOVE` or `HOP` onto its cell).
+- **Expiring blocks still count (team Decision 9, `docs/decisions.md`)**: every block in `blocked_cells` is treated as impassable, including a block whose timer is 1 and which will expire at the end of this same ply. A `WALL`/`REPLACE`/`BLOCK` that would only be legal once that block expires is rejected. This is conservative by at most one ply and is the frozen rule.
 
 ### 3. Modification A: Reusable Walls (`WALL`, `REPLACE`)
 - Walls are 2-cell barriers placed along grid lines, designated by `(r, c, orient)` where:
@@ -42,7 +50,7 @@ The engine accepts actions either as Python tuples or as JSON lists:
   - `c` $\in \{0 \dots N-2\}$
   - `orient` $\in \{'H', 'V'\}$ ('H' blocks vertical passage between $(r, c)$/$(r, c+1)$ and $(r+1, c)$/$(r+1, c+1)$; 'V' blocks horizontal passage between $(r, c)$/$(r+1, c)$ and $(r, c+1)$/$(r+1, c+1)$).
 - Walls cannot overlap with existing walls or cross perpendicular walls through their center.
-- **Initial Inventory**: Each player begins with a finite inventory $M = 10$ walls ($m_i = 10$, configurable via `rules['M']`).
+- **Initial Inventory**: Both players begin with the same finite inventory of $M$ walls, set by `rules['M']` (default $M = 10$; any integer $M \ge 0$; `WallzConfig` rejects $M < 0$). Agents and the web backend read the configured value (`engine.rules['M']`, `engine.max_walls`, `WallzConfig().M`); none hard-codes 10.
 - **New Wall Placement (`WALL`)**:
   - Syntax: `('WALL', (r, c, orient))` or `["WALL", [r, c, "H"]]`.
   - Permissible only when $m_i > 0$.
@@ -83,8 +91,10 @@ The engine accepts actions either as Python tuples or as JSON lists:
 ### 5. Modification C: Temporary Cell Block (`BLOCK`)
 - Syntax: `('BLOCK', (r, c))` or `["BLOCK", [r, c]]`.
 - A single-use ability per player (`block_available[player] = True` initially).
-- Temporarily blocks a chosen cell for $K$ plies (default $K = 3$, configurable via `rules['K']`).
+- Temporarily blocks a chosen cell for the next $K$ plies (default $K = 3$, configurable via `rules['K']`, $K \ge 1$). See the timeline in Section 4.
 - Cannot block an occupied pawn cell or an already blocked cell.
+- A blocked cell cannot be entered by `MOVE` or `HOP` and counts as an obstacle in path checks. It does not block walls.
+- Both players' blocks may be active at the same time; each timer runs on its own.
 - Must preserve at least one valid path to the goal row for both players.
 - Permanently consumed upon execution (`block_available[player] = False`).
 
@@ -118,7 +128,7 @@ The canonical method `apply_action(action, update_clock=True)` executes a strict
 3. **Legality Validation (`_validate_action`)**:
    - Evaluates legality without modifying state:
      - `MOVE`: raises `ValueError("Illegal move to (r, c).")` on wall collisions, blocked cells, or bounds.
-     - `HOP`: raises `ValueError("Illegal hop to (r, c).")` if Rule B disabled, hop consumed, or invalid jump.
+     - `HOP`: raises `ValueError("Illegal hop to (r, c).")` if Rule B is disabled, the hop is used, or any condition of Section 3.4 fails.
      - `WALL`: raises `ValueError("Player X has no walls remaining in inventory.")` if $m_i \le 0$; raises `ValueError("Illegal wall placement at ...")` if colliding or disconnecting paths.
      - `REPLACE`: raises `ValueError("Reusable wall mechanic (Rule A) is disabled.")`, `ValueError("Player X has not placed any wall yet to reposition.")`, `ValueError("Cannot reposition older wall ...")`, or `ValueError("Illegal wall replacement ...")`.
      - `BLOCK`: raises `ValueError("Player X has no cell block available.")` or `ValueError("Illegal cell block at ...: path preservation violated.")`.
@@ -132,12 +142,15 @@ The canonical method `apply_action(action, update_clock=True)` executes a strict
    - Decrements all existing block timers by 1 ply; cleans up expired blocks ($\le 0$); sets new block timer to $K$.
 8. **Turn Transition**:
    - Swaps active player (`current_player = 1 - current_player`) and increments `turn_count += 1`.
-9. **Step Limit Truncation Check**:
+9. **Step Limit Truncation Check** (only when the engine was built with `max_plies`; the engine default is `None`, i.e. off):
    - If `turn_count >= max_plies`: sets `is_draw = True`, `is_truncated = True`, `terminal_reason = 'truncated'`.
 10. **No-Legal-Actions Draw Check**:
     - If non-terminal and `has_legal_action(current_player) == False`: sets `is_draw = True`, `terminal_reason = 'no_legal_actions'`.
-11. **5-Fold Repetition Draw Check**:
-    - Appends state signature to history; if frequency $\ge 5$: sets `is_draw = True`, `terminal_reason = 'repetition'`.
+    - Example: the mover's only open neighbour holds the opponent's pawn (or a blocked cell), and it has no walls, no `REPLACE`, no block and no hop left. Its path still exists (paths ignore pawns), but it cannot act.
+11. **N-Fold Repetition Draw Check**:
+    - Appends the canonical position key (`position_key()`) to history; if it has now occurred `repetition_limit` times (default 5, configurable): sets `is_draw = True`, `terminal_reason = 'repetition'`.
+
+Steps 1-3 raise before anything changes, so a rejected action leaves the whole state unchanged, including the clock.
 
 ---
 
@@ -146,6 +159,9 @@ The canonical method `apply_action(action, update_clock=True)` executes a strict
 When evaluating the end of a match, precedence is strictly evaluated as:
 1. **Clock Timeout**: Instantaneous forfeit upon clock expiry.
 2. **Goal Reached**: Immediate win for the player reaching their goal row.
-3. **Max Plies Truncation**: Match terminated at $T_{\max} = 200$ plies (`terminal_reason = 'truncated'`).
-4. **No Legal Actions**: Draw declared if the player to move has zero legal actions (`terminal_reason = 'no_legal_actions'`).
-5. **5-Fold Repetition**: Draw declared if the identical game state signature occurs 5 times (`terminal_reason = 'repetition'`).
+3. **Max Plies Truncation**: Off in the engine by default. With `max_plies` set, the engine stops at that ply (`terminal_reason = 'truncated'`, `is_truncated = True`, `is_draw = True`).
+   The match runner (`evaluation/match_runner.py`, `MatchConfig.max_plies = 200`) and `WallzEnv` (`max_plies = 200`) do **not** pass the cap to the engine. They stop the game themselves and report it as `truncated`, a separate outcome that is not a rule draw.
+4. **No Legal Actions**: Draw declared if the player to move has zero legal actions (`terminal_reason = 'no_legal_actions'`; the match runner reports `draw_no_legal_actions`).
+5. **N-Fold Repetition**: Draw declared when the same canonical position occurs `repetition_limit` times, default 5 (`terminal_reason = 'repetition'`).
+
+A terminal game rejects every further action with `ValueError` (Section 5, step 1).
