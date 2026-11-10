@@ -212,6 +212,16 @@ Files: `vs_greedy_N9_timed_summary.json`, `vs_greedy_N9_timed.jsonl`. `verify-re
 | Mean nodes per decision | 890.0 | 877.6 | 882.9 |
 | Mean decision time | 403 ms | 325 ms | 359 ms |
 
+**Load during the timed run (decision times are load-affected).** `resource_status` just before
+the N9 run (about 04:11 IST): posture `ample`, 4.9 GB free, 16 cores. No `resource_status` was
+taken at the end, and I did not record which other bots' jobs were running during it. At 03:23
+Bot 3's exact solve (`run_experiments.py solve -N 4 ...`) and Bot 2's DQN training were both
+running; at 04:29, after the run, only Bot 2's DQN evaluation was running (posture `tight`,
+4.0 GB). So the N9 decision times, the depth reached (mean 1.93) and through them the games
+themselves may differ on an idle machine. N=5 used no time limit, so only its decision times
+(not its games) are load-affected. The N5 runs before Mr. CEO's run-beside decision took
+`HEAVY.lock` when it was free (the superseded 30 s run at 04:01-04:02); later runs did not use the lock.
+
 The distinct-game row is `distinct_game_results` for `N9_timed` in `opening_maps.json`
 (repeated games dropped; Greedy won 5 of the 16). With 16 games the interval is wide;
 this is a larger-board indication, not an exact finding. All 6 Greedy wins contain a Greedy HOP

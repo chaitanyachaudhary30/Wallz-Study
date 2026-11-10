@@ -98,7 +98,8 @@ opening seeds 0-9 with 2-ply openings, both seatings: 20 matches but only 8 dist
 16 distinct games (`opening_maps.json`). Minimax won 14 of 20 (8 of 10 as P0, 6 of 10 as P1;
 `vs_greedy_N9_timed_summary.json`), 11 of the 16 distinct games (95% Wilson 44-86%;
 `distinct_game_results` in `opening_maps.json`). It finished depth 2 in most decisions (mean 1.93)
-at 359 ms per decision. Timed search depends on machine load, so a rerun can give other games.
+at 359 ms per decision. Other bots' jobs shared the machine during the run, so these decision
+times are load-affected. Timed search depends on machine load, so a rerun can give other games.
 
 ## 8. Search efficiency
 
