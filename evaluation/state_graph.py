@@ -98,6 +98,8 @@ class StateGraph:
         self.stop_reason = None
         self.edge_count = 0
         self.build_seconds = 0.0
+        # One shared tuple per distinct action: saves memory on large graphs, same values
+        self._actions = {}
 
     def _engine(self):
         return WallzEngine(board_size=self.board_size, rules=self.rules)
@@ -134,6 +136,7 @@ class StateGraph:
             engine = self.restore(self.keys[node])
             edges = []
             for action in engine.get_legal_actions():
+                action = self._actions.setdefault(action, action)
                 child = engine.clone()
                 child.apply_action(action, update_clock=False)
                 child_key = child._get_state_hashable_key()

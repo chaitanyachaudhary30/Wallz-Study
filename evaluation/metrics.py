@@ -58,6 +58,15 @@ def mean(xs):
     return sum(xs) / len(xs) if xs else None
 
 
+def sample_sd(xs):
+    """Sample standard deviation (n - 1 denominator); None for fewer than 2 values."""
+    xs = [x for x in xs if x is not None]
+    if len(xs) < 2:
+        return None
+    m = sum(xs) / len(xs)
+    return math.sqrt(sum((x - m) ** 2 for x in xs) / (len(xs) - 1))
+
+
 def game_responses(result, spec):
     """Per-game numeric responses used for cell means and effects."""
     p = focus_player(result, spec)
@@ -97,6 +106,10 @@ def summarize_cells(results, spec):
             'counts': counts,
             'x_goal_win_rate': counts['win'] / n,
             'x_goal_win_rate_ci95': wilson(counts['win'], n),
+            'x_goal_loss_rate': counts['loss'] / n,
+            'x_goal_loss_rate_ci95': wilson(counts['loss'], n),
+            'draw_rate': counts['draw'] / n,
+            'draw_rate_ci95': wilson(counts['draw'], n),
             'truncation_rate': counts['truncated'] / n,
             'truncation_rate_ci95': wilson(counts['truncated'], n),
             'stalemate_rate': draw_stalemate / n,
@@ -105,6 +118,7 @@ def summarize_cells(results, spec):
             'repetition_rate_ci95': wilson(draw_repetition, n),
             'draw_breakdown': {'stalemate': draw_stalemate, 'repetition': draw_repetition},
             'mean_length_plies': mean([x['length_plies'] for x in resp]),
+            'sd_length_plies': sample_sd([x['length_plies'] for x in resp]),
             'mean_legal_actions': mean([x['mean_legal_actions'] for x in resp]),
             'x_mean_decision_ms': mean([x['x_decision_ms'] for x in resp]),
         }
