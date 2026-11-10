@@ -201,5 +201,14 @@ No separate copy of the game rules was found.
 
 ## Independent break attempt
 
-A fresh reviewer that saw only the diff and `docs/game_rules.md` tried to break one rule claim.
-Result: see the section added below after that review.
+A fresh reviewer that saw only the diff and `docs/game_rules.md` tried to break the rule claims,
+calling the engine as a black box. **Verdict: HELD, no counterexample.**
+
+| Attack | Size | Checked after or before every ply | Result |
+|---|---|---|---|
+| Random-play fuzz | seeds 0-299; N 3-5, K 1-4, M 0/1/3/10; up to 60 plies; 10,938 plies, 172 HOPs | `bool(get_legal_actions()) == has_legal_action()`; random off-list HOP/MOVE/WALL/BLOCK raise `ValueError` with state unchanged; every listed action applies; both players keep a path | held |
+| HOP/BLOCK/REPLACE-biased fuzz | seeds 1000-1399; N 3-5, K 1-4, M 1/3/10; up to 80 plies; 3,235 legal HOPs | every legal HOP crosses a wall `wall_owner_on_edge` says is the opponent's, hop unused, target not pawn or blocked; no blocked cell is a MOVE/HOP target; a block placed at ply t is present exactly while `turn_count - t < K` | held |
+
+Not covered by the reviewer: repetition limit, clock, wall overlap/cross geometry, boards above
+5x5, the Decision 9 expiring-block case, and `position_key` owner merging. The new unittest file
+covers the Decision 9 case, owner merging and repetition directly.
