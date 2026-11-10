@@ -182,9 +182,12 @@ original design (`opening_plies=2`, seeds 0-49, 100 matches; `vs_greedy_N5_summa
 minimax wins, 65 Greedy wins. Its 100 matches are only 18 distinct games, so its counts and
 interval are not valid samples. The 20-match depth-1/depth-3 checks on seeds 0-9
 (`vs_greedy_N5_depth1_diag_summary.json`, `vs_greedy_N5_depth3_diag_summary.json`) are also
-only 16 distinct games each, and are superseded by the table above. In these summaries the
-`seed_to_opening` field spells `MOVE` as a list of letters (fixed in `d46fc5c`); use
-`opening_maps.json` instead.
+only 16 distinct games each, and are superseded by the table above.
+
+Known cosmetic defect: in `vs_greedy_N5_open4_distinct_summary.json` and
+`vs_greedy_N9_timed_summary.json` (made at `f5aa757`) the `config.seed_to_opening` field spells
+`MOVE` as a list of letters. Fixed in `d46fc5c`; the correct map for every run is in
+`opening_maps.json`, and the match logs themselves are correct.
 
 ### Larger board: N=9, A1B1C1, K=3, M=10, `minimax:depth=2,time_limit=1.0` vs `greedy`
 
