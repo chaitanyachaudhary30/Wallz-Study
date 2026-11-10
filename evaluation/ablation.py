@@ -13,7 +13,8 @@ import math
 import random
 from itertools import product
 
-from evaluation.match_runner import MatchConfig, make_agent
+from evaluation.match_runner import MatchConfig, make_agent, opening_actions
+from wallz_engine import WallzEngine
 from evaluation.metrics import factorial_effects, agreement_rate
 from evaluation.retrograde import solve_config
 from evaluation.state_graph import GraphCaps, NONTERMINAL
@@ -36,6 +37,25 @@ def ablation_configs(agent_x, agent_y, board_size=5, K=3, M=10, opening_seeds=ra
                                            opening_seed=seed, move_time_limit=move_time_limit,
                                            record_replay=record_replay))
     return configs
+
+
+def first_distinct_openings(board_size, plies, max_openings, K=3, M=10, max_seed=10_000):
+    """
+    Scan seeds 0, 1, 2, ... and keep the first seed of each distinct opening (the action
+    sequence). Returns [(seed, actions)] with at most ``max_openings`` entries. With
+    deterministic agents, a repeated opening replays the same game, so only these seeds add
+    evidence. Openings are pawn MOVEs only, so the same list holds in every A/B/C cell.
+    """
+    seen, out = set(), []
+    for seed in range(max_seed):
+        engine = WallzEngine(board_size=board_size, rules={'K': K, 'M': M})
+        actions = tuple(opening_actions(engine, plies, seed))
+        if actions not in seen:
+            seen.add(actions)
+            out.append((seed, actions))
+            if len(out) >= max_openings:
+                break
+    return out
 
 
 def solver_sweep(board_size, K=1, M=0, caps=None, progress=None, keep_solutions=True):

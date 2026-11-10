@@ -93,14 +93,23 @@ def opening_counts():
     from wallz_engine import WallzEngine
     from evaluation.match_runner import opening_actions
 
+    def opening(plies, s):
+        return tuple(opening_actions(WallzEngine(board_size=5, rules={'K': 3, 'M': 10}), plies, s))
+
     def distinct(plies, seeds):
-        return len({tuple(opening_actions(WallzEngine(board_size=5, rules={'K': 3, 'M': 10}), plies, s))
-                    for s in seeds})
+        return len({opening(plies, s) for s in seeds})
+
+    pilot_map, first = {}, {}
+    for s in range(10):
+        o = opening(2, s)
+        first.setdefault(o, s)
+        pilot_map[str(s)] = {'opening': [[a[0], list(a[1])] for a in o], 'same_as_seed': first[o]}
     return {
         'plies2_seeds0-9 (pilot)': distinct(2, range(10)),
-        'plies2_seeds0-29 (final_eval open2)': distinct(2, range(30)),
-        'plies2_seeds0-1999 (all that exist)': distinct(2, range(2000)),
-        'plies6_seeds10-49 (final_eval open6)': distinct(6, range(10, 50)),
+        'pilot_seed_to_opening_plies2': pilot_map,
+        'plies2_distinct_in_seeds0-1999': distinct(2, range(2000)),
+        'plies4_distinct_in_seeds0-1999': distinct(4, range(2000)),
+        'smallest_opening_plies_with_at_least_30_distinct': 4,
     }
 
 
