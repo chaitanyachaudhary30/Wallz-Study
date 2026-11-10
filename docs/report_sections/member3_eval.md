@@ -146,13 +146,17 @@ folder]. No game was truncated and none was forfeited.
 
 ## 6. Multi-seed analysis
 
-Not available yet. The 5-seed study (`scripts/run_multi_seed_3x3.py`) trains a DQN agent per
-seed, which is another member's task; it was not run here, so this section has no numbers.
-When the five checkpoints exist, the plan is: per seed, win, draw and truncation rates with
-Wilson intervals and mean game length; across seeds, mean, sample SD and a t-interval
-(mean +/- 2.776 x SD / sqrt(5)); and a leave-one-out check of whether one seed drives the mean.
-The script currently counts truncated games as draws and caps games at 100 plies; both need
-fixing first (`docs/reports/stage2_solver_stats.md` Section 3).
+**Method.** Five DQN agents trained on 3x3 (N3 A1B1C1 K1 M1) with seeds 42-46 are each
+compared with the exact solve (share of decided positions where the network's value has the
+right sign, and mean absolute value error) and play 100 paired games against Greedy and against
+Random (`scripts/run_multi_seed_3x3.py`). Per seed: win, draw and truncation rates with Wilson 95%
+intervals and mean game length. Across seeds: mean, sample SD, a 95% t-interval
+(mean +/- 2.776 x SD / sqrt(5)), and leave-one-seed-out means, which show whether one seed drives
+the result. Truncated games (the study's 100-ply cap) are a separate column, never draws.
+
+> **Results: pending Bot 2 checkpoints.** The five checkpoints
+> (`checkpoints/final/3x3_s<seed>/final.pt`) do not exist yet. This part will be filled from
+> `experiments/results/final_eval/multi_seed_3x3.json` in the later integration item.
 
 ## 7. Factorial ablation results
 

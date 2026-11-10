@@ -26,6 +26,7 @@
 | `scripts/crosscheck_solvers.py` (new) | retrograde vs `agents/exact_solver.py`, canonical-merge check | Task 1 |
 | `scripts/stage2_analysis.py` (new) | builds `final_eval/analysis.json` from the result files | every table below |
 | `scripts/mutation_check_solver_tests.py` (new) | proves the new tests fail on two broken rules | Task 1 |
+| `scripts/run_multi_seed_3x3.py` (rewritten), `tests/test_multi_seed_aggregation.py` (new, 4 tests) | no training by default, truncation column, t-intervals, provenance | Task 3 preparation |
 | `tests/test_solver_final_rules.py` (new, 18 tests), `tests/test_metrics_holm.py` (+1 test) | | Task 1, opening units |
 
 ## 1. Task 1: solver validation against the final engine
@@ -209,24 +210,41 @@ M = 1 on 3x3 only A changes the root value (first-player WIN -> DRAW). The pilot
 "without A, B flips the root" (`docs/person3_evaluation.md` 6.1) came from the old jump. State counts stay almost multiplicative (log-scale interactions
 within 0.021 of zero).
 
-## 3. Task 3: multi-seed experiments: **not run**
+## 3. Task 3: multi-seed experiments: **prepared, not run (pending Bot 2 checkpoints)**
 
-`scripts/run_multi_seed_3x3.py` **trains DQN**: for each seed in 42-46 without
-`checkpoints/dqn_3x3_s<seed>/final.pt` (none exist) it runs `scripts/train_dqn.py --steps 50000`
-(up to 4 in parallel), then checks sign agreement against the exact N3 A1B1C1 K1 M1 solve and
-plays 100 matches against Greedy and Random. Per the brief, DQN training belongs to Bot 2, so it
-was not run and a `question` went to the conductor. No multi-seed numbers exist yet.
+The old `scripts/run_multi_seed_3x3.py` **trained DQN** whenever
+`checkpoints/dqn_3x3_s<seed>/final.pt` was missing (none exist): `scripts/train_dqn.py --steps 50000`
+for each of seeds 42-46, up to 4 in parallel. DQN training belongs to Bot 2, so it was not run.
+Conductor decision: Bot 2 trains the 5 seeds under the final rules into
+`checkpoints/final/3x3_s<seed>/final.pt`; this study runs in a later integration item.
 
-Problems found in the script for whoever runs it:
-- it counts `truncated` as a draw (`'draw' in cat or cat == 'truncated'`), against the team decision;
-- it caps games at `max_plies=100`, not the runner's 200;
-- `std` is `np.std` (population, ddof 0); with 5 seeds the sample SD (ddof 1) is the usual choice;
-- `gate_x11_passed` is `ci_low >= 0.90 or iqm >= 0.90`, so the gate passes on the IQM alone.
+Problems in the old script, all fixed in this PR:
 
-Planned analysis once 5 checkpoints exist: per seed, win/draw/truncation rates with Wilson 95%
-intervals and mean game length; across seeds, mean, sample SD and a t-interval
-mean +/- 2.776 * SD / sqrt(5); and a leave-one-seed-out check of whether any single seed moves
-the mean outside the other four seeds' interval.
+| Old behaviour | Now |
+|---|---|
+| `truncated` counted as a draw (`'draw' in cat or cat == 'truncated'`) | outcomes come from `evaluation/metrics.py` `outcome_for`; win, loss, draw, truncated and forfeits are separate columns |
+| trained missing seeds automatically | `--no-train` is the default: a missing checkpoint exits with an error naming the seeds; `--train` (sequential) only on request |
+| checkpoint path `checkpoints/dqn_3x3_s<seed>/final.pt` | `--checkpoint-dir` (default `checkpoints/final`), pattern `3x3_s{seed}/final.pt` |
+| `max_plies=100` hidden in the code | `--max-plies` with default 100 (the study's old value, kept and stated); recorded in the output; the 200 of other experiments is unchanged |
+| `std` = `np.std` (population); IQM and bootstrap CI over 5 values | sample SD (n - 1), 95% t-interval mean +/- t(0.975, n-1) * SD / sqrt(n) (2.776 for 5 seeds), min, max, leave-one-seed-out means and the largest shift; pooled Wilson intervals for rates |
+| no provenance | commit, dirty flag, command, Python, platform, date, torch version, full CLI config, seeds, rules and SHA-256 of every checkpoint |
+| `from scripts.validate_dqn import validate_cell` (that function does not exist) | `evaluate_cell_x16` from `scripts/validate_dqn.py` |
+| exact solve cached in `experiments/cache/sol_N3_A1B1C1_K1_M1.pkl` (could hold an old-HOP solve) | solved fresh each run (about 1 minute) |
+
+The old `gate_x11_passed` flag (`ci_low >= 0.90 or iqm >= 0.90`) was dropped: the gate
+belongs to the DQN member, and the raw sign-agreement statistics are kept.
+
+The aggregation needs no torch and is tested on synthetic per-seed results:
+`python -m unittest tests.test_multi_seed_aggregation` -> 4 tests pass (truncation column,
+t-interval and leave-one-out, 5-seed aggregate with pooled Wilson, missing checkpoint exits
+without training). A smoke run loaded `checkpoints/release/dqn_3x3/model.pt` and played 2 games
+through the new code path. The exact-solve and X-16 steps were not run end to end.
+
+Command for the later item:
+
+```
+python scripts/run_multi_seed_3x3.py --checkpoint-dir checkpoints/final --seeds 42 43 44 45 46 --matches 100 --max-plies 100 --out experiments/results/final_eval/multi_seed_3x3.json
+```
 
 ## 4. Task 4: 2^3 factorial match ablation on the final engine
 
@@ -370,6 +388,7 @@ So Task 5 must point `make_tables.py` at `final_eval/ablation_N5_K3_M10_open6/su
 | `tests.test_exact_solver` | 9 pass |
 | `tests.test_match_runner` | 16 pass |
 | `tests.test_metrics_holm` | 5 pass (1 new) |
+| `tests.test_multi_seed_aggregation` (new) | 4 pass |
 | `tests.test_golden_regression` | pass |
 | `tests.test_agents` | pass |
 | `pytest tests/test_edge_invariants.py` | 4 pass |
@@ -387,7 +406,8 @@ it: the `logs/*.jsonl` match logs and a rerun of the bootstrap.
 
 ## 8. Not done, and limits
 
-- Task 3 not run (DQN training; waiting on the conductor). Task 5 not started (later item).
+- Task 3 prepared but not run: it waits for Bot 2's 5 checkpoints (later integration item).
+  Its exact-solve and X-16 steps were not exercised end to end. Task 5 not started (later item).
 - Agent-vs-exact agreement (`agreement` subcommand) was not rerun; the pilot agreement files stay stale.
 - N = 4, M = 1 C-on cells are capped at 400k states: no exact claim, no factorial effects there.
 - The 5x5 ablation is one opponent pairing, one depth, one board size; its results say nothing
