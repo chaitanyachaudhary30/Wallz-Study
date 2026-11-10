@@ -294,6 +294,108 @@ class TestCodec(unittest.TestCase):
                     self.assertEqual(mact[1], (act[1][0], n - 2 - act[1][1], act[1][2]))
 
 
+@unittest.skipUnless(TORCH, "torch not installed: training machinery not checked")
+class TestTrainingMachinery(unittest.TestCase):
+    """Task 6: opponent sampler, replay buffer, target network, checkpoints."""
+
+    def _trainer(self, n=3, **kw):
+        from agents.dqn.trainer import DQNConfig, DQNTrainer
+        cfg = dict(board_size=n, rules=RULE_CELLS['train3_K1_M1'], batch_size=8, min_buffer_size=8,
+                   buffer_capacity=64, channels=8, blocks=1, hidden=16, seed=3)
+        cfg.update(kw)
+        return DQNTrainer(DQNConfig(**cfg))
+
+    def test_opponent_sampler_frequencies(self):
+        from agents.dqn.self_play import SelfPlayManager
+        sp = SelfPlayManager(self._trainer())
+        random.seed(0)
+        empty = [sp.sample_opponent_type() for _ in range(20000)]
+        # empty pool: the 40% snapshot share falls back to the online network
+        self.assertEqual(empty.count('snapshot'), 0)
+        self.assertAlmostEqual(empty.count('current') / 20000, 0.9, delta=0.01)
+        sp.pool.add(sp.trainer.online_net.state_dict())
+        full = [sp.sample_opponent_type() for _ in range(20000)]
+        for kind, p in (('current', 0.5), ('snapshot', 0.4), ('greedy', 0.1)):
+            self.assertAlmostEqual(full.count(kind) / 20000, p, delta=0.01)
+
+    def test_replay_fifo_overwrite(self):
+        from agents.dqn.replay_buffer import ReplayBuffer
+        buf = ReplayBuffer(capacity=5, board_size=3, num_actions=33)
+        z = np.zeros((14, 3, 3), dtype=np.float32)
+        for i in range(7):
+            buf.push(z, i, float(i), z, False, False, [True] * 33)
+        self.assertEqual(len(buf), 5)
+        self.assertEqual(sorted(buf.actions.tolist()), [2, 3, 4, 5, 6])
+        b = buf.sample(5, rng=random.Random(0))
+        self.assertEqual(sorted(b['actions'].tolist()), [2, 3, 4, 5, 6])   # no replacement
+
+    def test_mirror_augmentation_equals_mirrored_transition(self):
+        from agents.dqn.replay_buffer import ReplayBuffer
+        n, rules = 3, RULE_CELLS['K2_M3']
+        codec = ActionCodec(n)
+        perm = codec.mirror_permutation()
+        checked = 0
+        for e in random_positions(n, rules, seed=5, plies=20):
+            for aid in codec.legal_ids(e)[:4]:
+                nxt = e.clone()
+                nxt.apply_action(codec.decode(aid, e), update_clock=False)
+                buf = ReplayBuffer(capacity=1, board_size=n, num_actions=codec.num_actions)
+                buf.push(encode_observation(e), aid, 0.0, encode_observation(nxt), nxt.is_terminal(),
+                         False, codec.legal_mask(nxt) if not nxt.is_terminal() else [False] * codec.num_actions)
+                b = buf.sample(1, rng=random.Random(0), mirror_prob=1.0, mirror_perm=perm)
+                me = restore(n, rules, mirror_key(e._get_state_hashable_key(), n))
+                mn = me.clone()
+                mn.apply_action(codec.decode(perm[aid], me), update_clock=False)
+                np.testing.assert_allclose(b['obs'][0], encode_observation(me), atol=1e-3)
+                np.testing.assert_allclose(b['next_obs'][0], encode_observation(mn), atol=1e-3)
+                self.assertEqual(int(b['actions'][0]), perm[aid])
+                if not mn.is_terminal():
+                    self.assertEqual(b['next_mask'][0].tolist(), codec.legal_mask(mn))
+                checked += 1
+        self.assertGreater(checked, 20)
+
+    def test_target_network_hard_update(self):
+        import torch
+        t = self._trainer(target_update_freq=3)
+        z = np.random.rand(14, 3, 3).astype(np.float32)
+        for i in range(16):
+            t.buffer.push(z, i % 33, 1.0, z, True, False, [True] * 33)
+
+        def same():
+            return all(torch.equal(a, b) for a, b in zip(t.online_net.state_dict().values(),
+                                                           t.target_net.state_dict().values()))
+        self.assertTrue(same())
+        t.train_step()
+        t.train_step()
+        self.assertFalse(same())
+        t.train_step()
+        self.assertTrue(same())
+
+    def test_checkpoint_round_trip(self):
+        import tempfile
+        import torch
+        from agents.dqn.agent import load_checkpoint, save_checkpoint
+        t = self._trainer()
+        meta = {'N': 3, 'rules': RULE_CELLS['train3_K1_M1'], 'gamma': 0.99, 'double': True,
+                'dueling': False, 'channels': 8, 'blocks': 1, 'hidden': 16, 'seed': 3, 'step': 0}
+        with tempfile.TemporaryDirectory() as d:
+            save_checkpoint(d, t.online_net, meta, filename='model.pt')
+            agent = load_checkpoint(os.path.join(d, 'model.pt'), expected_board_size=3,
+                                    expected_rules=RULE_CELLS['train3_K1_M1'])
+            with open(os.path.join(d, 'meta.json')) as fh:
+                saved = json.load(fh)
+        x = torch.rand(4, 14, 3, 3)
+        t.online_net.eval()
+        with torch.no_grad():
+            self.assertTrue(torch.equal(t.online_net(x), agent.model(x)))
+        for k in ('codec_version', 'obs_version', 'commit', 'N', 'rules', 'step'):
+            self.assertIn(k, saved)
+        with self.assertRaises(ValueError):
+            with tempfile.TemporaryDirectory() as d:
+                save_checkpoint(d, t.online_net, meta)
+                load_checkpoint(d, expected_rules={'K': 3})
+
+
 @unittest.skipUnless(TORCH, "torch not installed: self-play legality not checked")
 class TestAgentsPlayLegally(unittest.TestCase):
     def test_self_play_never_illegal(self):

@@ -117,6 +117,48 @@ def evaluate_agent(
     return eval_results
 
 
+def make_q_probe(board_size: int, rules: dict, games: int = 8, plies: int = 12):
+    """Fixed probe positions (start position + uniform random playouts, seeds 0..games-1)
+    used to log the Q-value curve; independent of the training RNG."""
+    import random as _random
+    import numpy as _np
+    from agents.dqn.encoding import encode_observation
+    from wallz_engine import WallzEngine
+    try:
+        from modified_wallz.actions import ActionCodec
+    except ImportError:
+        from src.modified_wallz.actions import ActionCodec
+    codec = ActionCodec(board_size)
+    obs, masks = [], []
+    for g in range(games):
+        rng = _random.Random(g)
+        e = WallzEngine(board_size=board_size, rules=rules)
+        for _ in range(plies):
+            if e.is_terminal():
+                break
+            obs.append(encode_observation(e))
+            masks.append(codec.legal_mask(e))
+            e.apply_action(rng.choice(e.get_legal_actions()), update_clock=False)
+    return _np.stack(obs), _np.array(masks, dtype=bool)
+
+
+def q_probe_stats(model, probe) -> Dict[str, float]:
+    """Mean / min / max of the max legal Q over the probe set, and Q at the start position."""
+    import numpy as _np
+    import torch
+    obs, masks = probe
+    was_training = model.training
+    model.eval()
+    with torch.no_grad():
+        q = model(torch.as_tensor(obs, dtype=torch.float32)).cpu().numpy()
+    if was_training:
+        model.train()
+    best = _np.where(masks, q, -_np.inf).max(axis=1)
+    return {'mean_max_q': round(float(best.mean()), 4), 'min_max_q': round(float(best.min()), 4),
+            'max_max_q': round(float(best.max()), 4), 'start_max_q': round(float(best[0]), 4),
+            'probe_states': int(len(best))}
+
+
 def main():
     parser = argparse.ArgumentParser(description="Train DQN agent on Modified Wallz.")
     parser.add_argument("--config", type=str, default="configs/training.yaml", help="Path to config YAML")
@@ -127,7 +169,11 @@ def main():
     parser.add_argument("--output-dir", type=str, default=None, help="Output directory for checkpoints and logs")
     parser.add_argument("--eval-freq", type=int, default=None, help="Env steps between evaluations")
     parser.add_argument("--smoke", action="store_true", help="Run quick 2000-step smoke test")
+    parser.add_argument("--threads", type=int, default=None, help="torch CPU threads (default: torch's choice)")
     args = parser.parse_args()
+    if args.threads:
+        import torch
+        torch.set_num_threads(args.threads)
 
     cfg_dict = load_yaml_config(args.config, board_size=args.board_size)
 
@@ -205,6 +251,8 @@ def main():
     eval_matches = cfg_dict.get('eval_matches', 10)
     last_eval_step = 0
     episode = 0
+    probe = make_q_probe(board_size, rules)
+    t_start = time.time()
 
     with open(log_file, 'a', encoding='utf-8') as f_log:
         while trainer.total_env_steps < total_steps:
@@ -253,6 +301,8 @@ def main():
                     'env_steps': trainer.total_env_steps,
                     'grad_steps': trainer.total_grad_steps,
                     'eval': eval_out,
+                    'q_probe': q_probe_stats(trainer.online_net, probe),
+                    'elapsed_seconds': round(time.time() - t_start, 1),
                     'timestamp': time.time(),
                 }
                 f_log.write(json.dumps(eval_entry) + "\n")
