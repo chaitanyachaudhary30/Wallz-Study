@@ -413,10 +413,15 @@ def cmd_openings(args):
         cfg = rs[0]['config']
         seeds = sorted({r['opening']['seed'] for r in rs})
         seq = {s: next(r['opening']['actions'] for r in rs if r['opening']['seed'] == s) for s in seeds}
-        games = {json.dumps([r['agents']['0']['spec'], [st['action'] for st in r['replay']]]) for r in rs}
+        uniq = {}
+        for r in rs:
+            uniq.setdefault(json.dumps([r['agents']['0']['spec'], [st['action'] for st in r['replay']]]), r)
+        games = uniq
+        spec = next(r['agents'][p]['spec'] for r in rs for p in ('0', '1') if r['agents'][p]['spec'] != 'greedy')
         report[tag] = {'board_size': cfg['board_size'], 'opening_plies': cfg['opening_plies'],
                        'seeds': seeds, 'distinct_openings': len({json.dumps(v) for v in seq.values()}),
-                       'matches': len(rs), 'distinct_games': len(games), 'seed_to_opening': seq}
+                       'matches': len(rs), 'distinct_games': len(games), 'seed_to_opening': seq,
+                       'distinct_game_results': summarize_vs(list(uniq.values()), spec)}
         print(f"  {tag}: {report[tag]['distinct_openings']} distinct openings, {len(games)} distinct games")
     out = provenance({'tags': args.tags}, None)
     out['results'] = report
