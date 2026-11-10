@@ -1,0 +1,113 @@
+{
+  "source": {
+    "commit": "4023eaca86a45d2b6d2a4c9022c5c0f3dffc52f6",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py equivalence",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T03:04:51+05:30",
+  "config": {
+    "suites": "see results",
+    "compared": "full-width (no AB, no ordering) vs AB+ordering and AB unordered"
+  },
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "results": [
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "depth": 3,
+      "positions": 40,
+      "seed": 1,
+      "max_abs_root_value_diff": 0.0,
+      "positions_with_diff_over_1e-12": 0,
+      "unordered_ab_same_action_as_full_width": 40,
+      "total_nodes_full_width": 21149,
+      "total_nodes_alpha_beta_ordered": 4145
+    },
+    {
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 2
+      },
+      "depth": 4,
+      "positions": 8,
+      "seed": 2,
+      "max_abs_root_value_diff": 0.0,
+      "positions_with_diff_over_1e-12": 0,
+      "unordered_ab_same_action_as_full_width": 8,
+      "total_nodes_full_width": 54045,
+      "total_nodes_alpha_beta_ordered": 2612
+    },
+    {
+      "board_size": 4,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 2,
+        "M": 2
+      },
+      "depth": 2,
+      "positions": 40,
+      "seed": 3,
+      "max_abs_root_value_diff": 0.0,
+      "positions_with_diff_over_1e-12": 0,
+      "unordered_ab_same_action_as_full_width": 40,
+      "total_nodes_full_width": 21339,
+      "total_nodes_alpha_beta_ordered": 3094
+    },
+    {
+      "board_size": 4,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 3
+      },
+      "depth": 3,
+      "positions": 10,
+      "seed": 4,
+      "max_abs_root_value_diff": 0.0,
+      "positions_with_diff_over_1e-12": 0,
+      "unordered_ab_same_action_as_full_width": 10,
+      "total_nodes_full_width": 204870,
+      "total_nodes_alpha_beta_ordered": 8655
+    },
+    {
+      "board_size": 5,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 10
+      },
+      "depth": 2,
+      "positions": 20,
+      "seed": 5,
+      "max_abs_root_value_diff": 0.0,
+      "positions_with_diff_over_1e-12": 0,
+      "unordered_ab_same_action_as_full_width": 20,
+      "total_nodes_full_width": 65697,
+      "total_nodes_alpha_beta_ordered": 3576
+    }
+  ]
+}
