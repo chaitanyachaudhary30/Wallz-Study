@@ -58,7 +58,9 @@ Confirm that the environment is correctly set up by running the comprehensive te
 ```bash
 .venv/bin/python -m pytest -q
 ```
-*Expected Result*: All 300+ unit, integration, property, and web tests pass cleanly.
+*Expected Result*: All 325 unit, integration, property, and web tests pass cleanly.
+
+torch is required: without it `tests/conftest.py` stops the run, because every DQN test would skip and a green run would not cover the DQN agent. To run without DQN coverage on purpose, set `WALLZ_SKIP_DQN=1`; the summary then prints a red "DQN tests were NOT run" line.
 
 ### Run Frontend Vitest Suite
 ```bash

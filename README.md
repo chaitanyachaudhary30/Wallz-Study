@@ -264,7 +264,7 @@ python3 -m unittest tests/test_golden_regression.py
 .venv/bin/python -m pytest -q
 ```
 
-*Expected Output*: `301 passed in ~72s`.
+*Expected Output*: `325 passed in ~62s`. The run refuses to start without torch (DQN tests would all skip); set `WALLZ_SKIP_DQN=1` to skip them on purpose.
 
 ---
 

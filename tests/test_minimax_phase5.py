@@ -60,5 +60,28 @@ class TestMinimaxPhase5(unittest.TestCase):
         self.assertIsNotNone(action)
 
 
+    def test_decision_independent_of_previous_calls(self):
+        """A reused agent picks the same move as a fresh one: no PV/history leak between positions."""
+        import random
+        rng = random.Random(3)
+        states = []
+        for seed in range(12):
+            e = WallzEngine(board_size=4, rules={'K': 1, 'M': 2})
+            r = random.Random(seed)
+            for _ in range(r.randint(0, 8)):
+                if e.is_terminal():
+                    break
+                e.apply_action(r.choice(e.get_legal_actions()), update_clock=False)
+            if not e.is_terminal():
+                states.append(e)
+        reused = {p: MinimaxAgent(player_id=p, depth=2) for p in (0, 1)}
+        for order in (states, list(reversed(states)), rng.sample(states, len(states))):
+            for e in order:
+                p = e.current_player
+                fresh = MinimaxAgent(player_id=p, depth=2)
+                self.assertEqual(reused[p].select_action(e.clone()), fresh.select_action(e.clone()))
+                self.assertEqual(reused[p].nodes_expanded, fresh.nodes_expanded)
+
+
 if __name__ == '__main__':
     unittest.main()

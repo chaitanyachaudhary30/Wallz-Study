@@ -198,6 +198,12 @@ class MinimaxAgent:
         start_time = time.time()
         self.nodes_expanded = 0
         self.cutoffs = 0
+        # Ordering state is per decision: a PV move or history scores carried over
+        # from an earlier, unrelated position would change which of several
+        # equal-valued moves is returned, making the choice depend on call order.
+        # Iterative deepening still reuses both across depths within this call.
+        self.history = collections.defaultdict(int)
+        self.pv_move = None
 
         legal_actions = engine.get_legal_actions(self.player_id)
         if not legal_actions:

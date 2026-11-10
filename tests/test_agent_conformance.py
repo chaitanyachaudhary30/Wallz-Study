@@ -8,6 +8,7 @@ Verifies that all agent types (Random, Greedy, Minimax, Exact, DQN):
 5. Produce actions that apply successfully on engine clones without error.
 """
 import copy
+import importlib.util
 import os
 import unittest
 from wallz_engine import WallzEngine
@@ -15,6 +16,8 @@ from agents.greedy import GreedyAgent
 from agents.minimax import MinimaxAgent
 from agents.exact_solver import ExactSolverAgent
 from evaluation.match_runner import RandomAgent, ExactAgent, make_agent, MatchConfig
+
+TORCH_AVAILABLE = importlib.util.find_spec("torch") is not None
 
 
 class TestAgentConformance(unittest.TestCase):
@@ -90,6 +93,7 @@ class TestAgentConformance(unittest.TestCase):
         agent = ExactSolverAgent(player_id=0, board_size=3, rules=self.rules_3x3_m0)
         self._assert_agent_conforms(agent, engine, "ExactSolverAgent 3x3 M=0")
 
+    @unittest.skipUnless(TORCH_AVAILABLE, "PyTorch required for DQNAgent conformance")
     def test_dqn_agent_conformance(self):
         """DQNAgent conforms using released 3x3 and 4x4 checkpoints."""
         chk_3x3 = "checkpoints/release/dqn_3x3/model.pt"
@@ -120,7 +124,7 @@ class TestAgentConformance(unittest.TestCase):
         ]
 
         chk_3x3 = "checkpoints/release/dqn_3x3/model.pt"
-        if os.path.exists(chk_3x3):
+        if TORCH_AVAILABLE and os.path.exists(chk_3x3):
             config = MatchConfig(board_size=3, rules=self.rules_3x3_m1)
             dqn_agent, _ = make_agent(f"dqn:path={chk_3x3}", player_id=0, config=config)
             agents.append(("DQN", dqn_agent))

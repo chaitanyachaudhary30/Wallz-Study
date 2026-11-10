@@ -142,6 +142,7 @@ This eliminates redundant min/max dual-branching logic while preserving identica
 1. **PV-First Ordering**: The principal variation move discovered from iteration $d - 1$ is tried first at iteration $d$.
 2. **Shortest-Path Wall Prioritization**: Walls and blocks intersecting the opponent's current shortest-path edges are ordered before off-path walls.
 3. **History Heuristic**: Non-capturing moves causing beta-cutoffs accrue a history score proportional to $d^2$, dynamically boosting effective candidate moves across sibling branches.
+4. **Per-decision state**: `select_action` clears the PV move and history table at the start of every call. Both carry across iterative-deepening depths inside one decision, never across decisions, so a reused agent returns the same move as a fresh one regardless of which positions it saw before (`tests/test_minimax_phase5.py::test_decision_independent_of_previous_calls`).
 
 ### Goal-Proximity Search Extension (`extend_goal`)
 When `extend_goal=True`, at horizon $d = 0$, if either player is within critical proximity of victory ($\min(d_{\text{self}}, d_{\text{opp}}) \le 2$), the search extends by 1 ply (quiescence extension, capped at 2 extensions per branch) to eliminate horizon effects near goal rows.
