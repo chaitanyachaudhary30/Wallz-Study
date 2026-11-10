@@ -1,13 +1,13 @@
 {
   "run": {
     "source": {
-      "commit": "8944f165d3c65f9afcd0aa35fc455c24a2a375c5",
+      "commit": "08809ca020e85ebe27c9154642f16bd132768dcd",
       "dirty": false
     },
     "command": "python scripts/stage2_analysis.py",
     "python": "3.12.5",
     "platform": "Windows-11-10.0.26200-SP0",
-    "date_utc": "2026-11-10T22:37:44+00:00"
+    "date_utc": "2026-11-10T22:45:07+00:00"
   },
   "solve_tables": {
     "solve_N3_K1_M0": [
@@ -929,6 +929,12 @@
       }
     },
     "solve_N4_K1_M1": null
+  },
+  "opening_counts_N5": {
+    "plies2_seeds0-9 (pilot)": 8,
+    "plies2_seeds0-29 (final_eval open2)": 9,
+    "plies2_seeds0-1999 (all that exist)": 9,
+    "plies6_seeds10-49 (final_eval open6)": 40
   },
   "ablations": {
     "ablation_N5_K3_M10_open2": {
