@@ -154,7 +154,8 @@ def cmd_solve(args):
             print(f"  {row['config_label']}: {row['states']} states, complete={row['complete']}, "
                   f"root {row['root_status']} rank {row['root_rank']}, "
                   f"{row['build_seconds'] + row['solve_seconds']:.1f}s", flush=True)
-        rows, effects, _ = solver_sweep(args.N, K=args.K, M=args.M, caps=caps, progress=progress)
+        rows, effects, _ = solver_sweep(args.N, K=args.K, M=args.M, caps=caps, progress=progress,
+                                        keep_solutions=False)
         out = {'source': START['source'], 'run': START, 'config': vars_of(args),
                'caps': vars(caps), 'cells': rows, 'factorial_effects': effects}
     else:
