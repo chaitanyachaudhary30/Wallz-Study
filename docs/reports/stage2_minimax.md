@@ -13,6 +13,7 @@
   | `f5aa757` | `vs_greedy_N5_open4_distinct*` (main run), `vs_greedy_N9_timed*` |
   | `d46fc5c` | `vs_greedy_N5_open4_depth{1,3}_diag*` |
   | `8589a55` | `hop_stats.json` |
+| `bc15ce5` | `hop_examples.json` (replays the match logs; plays nothing) |
   | `f755a3a` | `opening_maps.json` (read from the match logs; plays nothing) |
 - **Added:** `tests/test_minimax_final_compat.py` (14 tests), `scripts/final_minimax.py`
   (experiment driver), results in `experiments/results/final_minimax/`, this report,
@@ -48,6 +49,7 @@ python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-p
 python scripts/final_minimax.py vs-greedy -N 9 --seeds 10 --opening-plies 2 --spec minimax:depth=2,time_limit=1.0 --tag N9_timed
 python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=1 --tag N5_open4_depth1_diag
 python scripts/final_minimax.py vs-greedy -N 5 --seeds 50 --distinct --opening-plies 4 --spec minimax:depth=3 --tag N5_open4_depth3_diag
+python scripts/final_minimax.py hop-examples N5_open4_depth1_diag N5_open4_distinct N5_open4_depth3_diag
 python scripts/final_minimax.py hops N5_open4_distinct N5_open4_depth1_diag N5_open4_depth3_diag N9_timed
 python scripts/final_minimax.py openings N5 N5_open4_distinct N9_timed N5_depth1_diag N5_depth3_diag N5_open4_depth1_diag N5_open4_depth3_diag
 python scripts/run_experiments.py verify-replay experiments/results/final_minimax/vs_greedy_N5.jsonl
@@ -132,6 +134,18 @@ that reaches 50 distinct openings: seeds were scanned from 0 upward and the firs
 distinct opening kept (seeds 0-79 scanned; 50 kept). `opening_plies=6` was not needed.
 All rates below are over distinct games only.
 
+**N5 design check (confirmed from the files).**
+
+| Item | Main run `N5_open4_distinct` | Where |
+|---|---|---|
+| `opening_plies` | 4 | `vs_greedy_N5_open4_distinct_summary.json` `config.opening_plies` |
+| Seeds | 50 seeds, chosen as the first seed of each distinct opening, scanning seeds 0-79 | same file, `seeds` and `config.seed_selection` |
+| Distinct openings | 50 | same file `config.distinct_openings`; `opening_maps.json` `N5_open4_distinct.distinct_openings` |
+| Distinct games | 100 of 100 matches | `opening_maps.json` `N5_open4_distinct.distinct_games` |
+| Seed -> opening map | all 50 seeds | `opening_maps.json` `N5_open4_distinct.seed_to_opening` |
+
+The superseded 50-seed, `opening_plies=2` run is not the main run (only 18 distinct games; see below).
+
 ### Main run: N=5, A1B1C1, K=3, M=10, `minimax:depth=2` vs `greedy`
 
 50 distinct 4-ply pawn-move openings, each played with minimax as P0 and as P1 (100 matches,
@@ -159,23 +173,41 @@ seed -> opening map in `opening_maps.json`. `verify-replay`: 100/100 verified.
 Depth-2 minimax **loses** to Greedy on the final engine (39 vs 60). Mean depth is below 2
 because a decision with a single legal action is returned without search and counted as depth 1.
 
-**Same 50 openings, other depths (diagnostic, not the main run;**
-`vs_greedy_N5_open4_depth1_diag_summary.json`, `vs_greedy_N5_open4_depth3_diag_summary.json`):
+### Side check (not the main run): depth 1 / 2 / 3 on the same 100 games
 
-| Spec | Minimax wins | Greedy wins | Draws (all repetition) | Truncated | Win rate (95% Wilson) |
-|---|---|---|---|---|---|
-| `minimax:depth=1` | 45 | 46 | 9 | 0 | 45% (35.6-54.8%) |
-| `minimax:depth=2` (main) | 39 | 60 | 1 | 0 | 39% (30.0-48.8%) |
-| `minimax:depth=3` | 45 | 48 | 7 | 0 | 45% (35.6-54.8%) |
+Same 50 distinct 4-ply openings, both seatings, same rules; only the depth changes.
+Files: `vs_greedy_N5_open4_depth1_diag_summary.json`, `vs_greedy_N5_open4_distinct_summary.json`
+(depth 2, the main run), `vs_greedy_N5_open4_depth3_diag_summary.json`; HOP counts from
+`hop_examples.json` (replayed through the engine).
+
+| Spec | Minimax wins | Greedy wins | Draws (all repetition) | Truncated | Win rate (95% Wilson) | Greedy wins with a Greedy HOP over a minimax wall |
+|---|---|---|---|---|---|---|
+| `minimax:depth=1` | 45 | 46 | 9 | 0 | 45% (35.6-54.8%) | 16 of 46 |
+| `minimax:depth=2` (main) | 39 | 60 | 1 | 0 | 39% (30.0-48.8%) | 30 of 60 |
+| `minimax:depth=3` | 45 | 48 | 7 | 0 | 45% (35.6-54.8%) | 33 of 48 |
 
 No depth beats Greedy, and the intervals overlap, so this does **not** show that deeper search is worse.
 
-**Observed weakness.** HOP may only cross a wall the opponent owns, so every Greedy HOP in these
-games crosses a minimax wall. At depth 2, 30 of Greedy's 60 wins contain a Greedy HOP; minimax
-placed 207 walls over the 100 games (`hop_stats.json`). The leaf evaluation measures `d_opp` by
-BFS and ignores the opponent's unused HOP, so it overrates its own walls while that HOP is
-unused. This is an evaluation limit under the new HOP rule, not a search bug (the search is exact
-against full width). It was not changed: the evaluation is a team design decision.
+**Wall-then-hop pattern, example replays** (match ids in the `.jsonl` logs named above; every
+HOP listed in `hop_examples.json` crosses a wall owned by minimax, `all_hops_crossed_minimax_walls: true`):
+
+| Depth | Match id | Minimax seat | Minimax wall, ply placed | Greedy HOP, ply | Result |
+|---|---|---|---|---|---|
+| 1 | `N5_A1B1C1_K3_M10__minimax:depth=1__vs__greedy__open4s0__cap200` | P0 | `(0,0,H)`, ply 5 | (1,0) -> (0,0), ply 12 | Greedy reaches goal by the HOP |
+| 1 | `N5_A1B1C1_K3_M10__minimax:depth=1__vs__greedy__open4s1__cap200` | P0 | `(0,3,H)`, ply 37 | (1,3) -> (0,3), ply 38 | Greedy reaches goal by the HOP |
+| 2 | `N5_A1B1C1_K3_M10__minimax:depth=2__vs__greedy__open4s0__cap200` | P0 | `(0,0,H)`, ply 5 | (1,1) -> (0,1), ply 14 | Greedy reaches goal by the HOP |
+| 2 | `N5_A1B1C1_K3_M10__minimax:depth=2__vs__greedy__open4s1__cap200` | P0 | `(0,1,H)`, ply 13 | (1,1) -> (0,1), ply 22 | Greedy reaches goal by the HOP |
+| 2 | `N5_A1B1C1_K3_M10__greedy__vs__minimax:depth=2__open4s0__cap200` | P1 | `(3,0,H)`, ply 20 | (3,1) -> (4,1), ply 27 | Greedy reaches goal by the HOP |
+| 3 | `N5_A1B1C1_K3_M10__minimax:depth=3__vs__greedy__open4s0__cap200` | P0 | `(0,0,H)`, ply 7 | (1,1) -> (0,1), ply 14 | Greedy reaches goal by the HOP |
+| 3 | `N5_A1B1C1_K3_M10__minimax:depth=3__vs__greedy__open4s2__cap200` | P0 | `(0,1,H)`, ply 9 | (1,2) -> (0,2), ply 18 | Greedy reaches goal by the HOP |
+
+**Finding (scoring flaw, not changed, team decision).** HOP may only cross a wall the opponent
+owns, so every Greedy HOP in these games crosses a minimax wall. At depth 2, 30 of Greedy's 60
+wins contain a Greedy HOP over a minimax wall; minimax placed 207 walls over the 100 games
+(`hop_stats.json`, `hop_examples.json`). The leaf evaluation measures `d_opp` by BFS and ignores
+the opponent's unused HOP, so it overrates its own walls while that HOP is unused. This is an
+evaluation limit under the new HOP rule, not a search bug (the search is exact against full
+width). The evaluator was not changed: the evaluation is a team design decision.
 
 **Superseded first run (kept, not used for claims).** Before the design change I ran the brief's
 original design (`opening_plies=2`, seeds 0-49, 100 matches; `vs_greedy_N5_summary.json`): 35
