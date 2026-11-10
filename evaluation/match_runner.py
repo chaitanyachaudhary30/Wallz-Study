@@ -128,7 +128,15 @@ def make_agent(spec, player_id, config, solutions=None, match_seed=0):
         time_limit = params.get('time_limit')
         extend_goal = bool(params.get('extend_goal', False))
         identity['params'] = {'depth': depth, 'time_limit': time_limit, 'extend_goal': extend_goal}
-        return MinimaxAgent(player_id=player_id, depth=depth, time_limit=time_limit, extend_goal=extend_goal), identity
+        evaluator = None  # None = MinimaxAgent's default HEvaluator
+        if 'eval' in params:
+            if params['eval'] != 'hop':
+                raise ValueError(f"Unknown minimax eval {params['eval']!r} (known: 'hop')")
+            from agents.evaluation_fn import HopAwareEvaluator
+            evaluator = HopAwareEvaluator()
+            identity['params']['eval'] = 'hop'
+        return MinimaxAgent(player_id=player_id, depth=depth, time_limit=time_limit, extend_goal=extend_goal,
+                            evaluator=evaluator), identity
     if name == 'random':
         seed = params.get('seed', 0) * 1_000_003 + match_seed * 2 + player_id
         identity['params'] = {'seed': params.get('seed', 0), 'derived_seed': seed}

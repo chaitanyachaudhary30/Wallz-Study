@@ -146,7 +146,18 @@ def distinct_seeds(n, rules, plies, want, start=0, max_scan=10_000):
 def cmd_vs_greedy(args):
     rules = dict(RULES, K=args.K, M=args.M)
     scanned = None
-    if args.distinct:
+    if args.openings_from:
+        # Reuse a committed seed list (and check every opening regenerates identically).
+        src = json.load(open(ROOT / 'experiments' / 'results' / 'final_minimax' / 'opening_maps.json'))
+        row = src['results'][args.openings_from]
+        if row['opening_plies'] != args.opening_plies or row['board_size'] != args.N:
+            raise SystemExit('--openings-from needs the same -N and --opening-plies as its source run')
+        seeds = row['seeds']
+        for s in seeds:
+            regen = [[a[0], list(a[1])] for a in opening_of(args.N, rules, args.opening_plies, s)]
+            if regen != row['seed_to_opening'][str(s)]:
+                raise SystemExit(f'opening for seed {s} does not regenerate')
+    elif args.distinct:
         seeds, scanned = distinct_seeds(args.N, rules, args.opening_plies, args.seeds, args.seed_start)
     else:
         seeds = list(range(args.seed_start, args.seed_start + args.seeds))
@@ -154,11 +165,12 @@ def cmd_vs_greedy(args):
     n_distinct = len({json.dumps(o) for o in openings.values()})
     configs = []
     for s in seeds:
-        for p0, p1 in ((args.spec, 'greedy'), ('greedy', args.spec)):
+        for p0, p1 in ((args.spec, args.opponent), (args.opponent, args.spec)):
             configs.append(MatchConfig(board_size=args.N, rules=rules, p0=p0, p1=p1,
                                        max_plies=args.max_plies, opening_plies=args.opening_plies,
                                        opening_seed=s))
-    log = OUT / f'vs_greedy_{args.tag}.jsonl'
+    prefix = 'vs_greedy' if args.opponent == 'greedy' else 'vs_minimax'
+    log = OUT / f'{prefix}_{args.tag}.jsonl'
     t0 = time.time()
 
     def progress(i, n, res):
@@ -169,9 +181,10 @@ def cmd_vs_greedy(args):
     results = [r for r in load_results(str(log)) if r['match_id'] in ids]
     bad = [(r['match_id'], m) for r in results for ok, m in [verify_replay(r)] if not ok]
     config = {'board_size': args.N, 'rules': configs[0].rules, 'minimax_spec': args.spec,
-              'opponent': 'greedy', 'max_plies': args.max_plies, 'opening_plies': args.opening_plies,
+              'opponent': args.opponent, 'max_plies': args.max_plies, 'opening_plies': args.opening_plies,
               'seatings': 'both per opening seed', 'move_time_limit': None,
-              'seed_selection': (f'first seed of each distinct opening, scanned {scanned} seeds from {args.seed_start}'
+              'seed_selection': f'seed list of {args.openings_from} in final_minimax/opening_maps.json'
+              if args.openings_from else (f'first seed of each distinct opening, scanned {scanned} seeds from {args.seed_start}'
                                  if args.distinct else 'consecutive seeds'),
               'distinct_openings': n_distinct, 'seed_to_opening': openings,
               'deterministic': 'time_limit' not in args.spec,
@@ -183,7 +196,7 @@ def cmd_vs_greedy(args):
                     'wall_seconds': round(time.time() - t0, 1),
                     'replay_verification': {'checked': len(results), 'failed': bad},
                     'results': summarize_vs(results, args.spec)})
-    write_new(f'vs_greedy_{args.tag}_summary.json', summary)
+    write_new(f'{prefix}_{args.tag}_summary.json', summary)
 
 
 # ---------------------------------------------------------------------------
@@ -451,6 +464,72 @@ def cmd_hops(args):
     write_new('hop_stats.json', out)
 
 
+def cmd_compare_logs(args):
+    """Are two match logs the same games? Compares everything except timings and provenance."""
+    def fields(r):
+        return {'replay': [(st['ply'], st['player'], st['action'], st.get('state_id'), st.get('legal_count'))
+                           for st in r['replay']],
+                'outcome': r['outcome'], 'length_plies': r['length_plies'],
+                'final_state_id': r['final_state_id'], 'agents': r['agents'],
+                'mean_nodes_expanded': r['mean_nodes_expanded'],
+                'mean_depth_completed': r['mean_depth_completed']}
+    a = {r['match_id']: fields(r) for r in load_results(str(ROOT / args.a))}
+    b = {r['match_id']: fields(r) for r in load_results(str(ROOT / args.b))}
+    common = sorted(set(a) & set(b))
+    diff = {m: sorted(k for k in a[m] if a[m][k] != b[m][k]) for m in common}
+    diff = {m: v for m, v in diff.items() if v}
+    out = provenance({'a': args.a, 'b': args.b,
+                      'compared': 'replay actions, state ids and legal counts per ply, outcome, length, final '
+                                  'state, agent identities, mean nodes and depth per match (timings ignored)'}, None)
+    out['results'] = {'matches_a': len(a), 'matches_b': len(b), 'common': len(common),
+                      'only_in_a': sorted(set(a) - set(b)), 'only_in_b': sorted(set(b) - set(a)),
+                      'identical': len(common) - len(diff), 'differing': diff}
+    print(f"  {len(common) - len(diff)}/{len(common)} identical; only_a {len(set(a) - set(b))}, only_b {len(set(b) - set(a))}")
+    write_new(args.name, out)
+
+
+def cmd_paired(args):
+    """Per-opening paired comparison of two scorers: minimax win-rate difference with a bootstrap CI."""
+    def wins(path, spec):
+        out = {}
+        for r in load_results(str(ROOT / path)):
+            seat = 0 if r['agents']['0']['spec'] == spec else 1
+            assert r['agents'][str(seat)]['spec'] == spec, (path, spec)
+            o = r['outcome']
+            out[(r['opening']['seed'], seat)] = int(o['category'] == 'goal' and o['winner'] == seat)
+        return out
+    a, b = wins(args.a, args.spec_a), wins(args.b, args.spec_b)
+    keys = sorted(set(a) & set(b))
+    seeds = sorted({s for s, _ in keys})
+    by_seed = {s: [(a[k], b[k]) for k in keys if k[0] == s] for s in seeds}
+
+    def diff(sample):
+        pairs = [p for s in sample for p in by_seed[s]]
+        return sum(y - x for x, y in pairs) / len(pairs)
+    rng = random.Random(0)
+    boots = [diff([rng.choice(seeds) for _ in seeds]) for _ in range(args.n_boot)]
+    table = {'both_win': 0, 'only_a_wins': 0, 'only_b_wins': 0, 'neither_wins': 0}
+    for k in keys:
+        table[{(1, 1): 'both_win', (1, 0): 'only_a_wins', (0, 1): 'only_b_wins', (0, 0): 'neither_wins'}[(a[k], b[k])]] += 1
+    res = {'games_paired': len(keys), 'openings': len(seeds),
+           'win_rate_a': sum(a[k] for k in keys) / len(keys), 'win_rate_b': sum(b[k] for k in keys) / len(keys),
+           'difference_b_minus_a': diff(seeds),
+           'paired_bootstrap95': [pct(boots, 0.025), pct(boots, 0.975)],
+           'per_game_table': table}
+    for seat in (0, 1):
+        ks = [k for k in keys if k[1] == seat]
+        res[f'minimax_as_p{seat}'] = {'games': len(ks), 'win_rate_a': sum(a[k] for k in ks) / len(ks),
+                                      'win_rate_b': sum(b[k] for k in ks) / len(ks)}
+    out = provenance({'a': args.a, 'spec_a': args.spec_a, 'b': args.b, 'spec_b': args.spec_b,
+                      'unit': 'game = (opening seed, minimax seat); win = minimax goal win',
+                      'bootstrap': f'{args.n_boot} resamples of openings (both seats kept together)'},
+                     {'bootstrap_rng': 0})
+    out['results'] = res
+    print(f"  {res['win_rate_a']:.3f} -> {res['win_rate_b']:.3f}, diff {res['difference_b_minus_a']:+.3f} "
+          f"CI {res['paired_bootstrap95']}")
+    write_new(args.name, out)
+
+
 def cmd_hop_examples(args):
     """Replay logged matches; list Greedy wins where Greedy HOPs across a wall minimax placed."""
     from evaluation.match_runner import action_from_json
@@ -492,6 +571,8 @@ def cmd_hop_examples(args):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument('--results-dir', default=None,
+                    help='output folder name under experiments/results (default final_minimax)')
     sub = ap.add_subparsers(dest='cmd', required=True)
     p = sub.add_parser('vs-greedy')
     p.add_argument('-N', type=int, default=5)
@@ -504,11 +585,27 @@ def main():
     p.add_argument('--max-plies', type=int, default=200)
     p.add_argument('--distinct', action='store_true',
                    help='--seeds counts distinct openings: keep the first seed of each distinct opening')
+    p.add_argument('--opponent', default='greedy',
+                   help="opponent spec; the summary's greedy_* fields then refer to this opponent")
+    p.add_argument('--openings-from', help='tag in final_minimax/opening_maps.json whose seed list to reuse')
     p.add_argument('--tag', required=True)
     p.set_defaults(func=cmd_vs_greedy)
     p = sub.add_parser('openings')
     p.add_argument('tags', nargs='+')
     p.set_defaults(func=cmd_openings)
+    p = sub.add_parser('compare-logs')
+    p.add_argument('a')
+    p.add_argument('b')
+    p.add_argument('--name', required=True)
+    p.set_defaults(func=cmd_compare_logs)
+    p = sub.add_parser('paired')
+    p.add_argument('a')
+    p.add_argument('spec_a')
+    p.add_argument('b')
+    p.add_argument('spec_b')
+    p.add_argument('--n-boot', type=int, default=10000)
+    p.add_argument('--name', required=True)
+    p.set_defaults(func=cmd_paired)
     p = sub.add_parser('hop-examples')
     p.add_argument('tags', nargs='+')
     p.set_defaults(func=cmd_hop_examples)
@@ -534,6 +631,9 @@ def main():
     p.add_argument('--depth-caps', type=int, nargs='+', default=[8])
     p.set_defaults(func=cmd_timing)
     args = ap.parse_args()
+    if args.results_dir:
+        global OUT
+        OUT = ROOT / 'experiments' / 'results' / args.results_dir
     args.func(args)
 
 
