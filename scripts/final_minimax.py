@@ -26,7 +26,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from agents.minimax import MinimaxAgent  # noqa: E402
-from evaluation.match_runner import MatchConfig, run_batch, load_results, source_commit, verify_replay  # noqa: E402
+from evaluation.match_runner import (MatchConfig, run_batch, load_results, source_commit,  # noqa: E402
+                                     verify_replay, opening_actions)
 from evaluation.metrics import wilson  # noqa: E402
 from wallz_engine import WallzEngine  # noqa: E402
 
@@ -128,9 +129,29 @@ def summarize_vs(results, spec):
     return out
 
 
+def opening_of(n, rules, plies, seed):
+    return tuple(opening_actions(WallzEngine(board_size=n, rules=rules), plies, seed))
+
+
+def distinct_seeds(n, rules, plies, want, start=0, max_scan=10_000):
+    """First seed of each distinct opening action sequence, scanning upward from ``start``."""
+    seen = {}
+    s = start
+    while len(seen) < want and s < start + max_scan:
+        seen.setdefault(opening_of(n, rules, plies, s), s)
+        s += 1
+    return sorted(seen.values()), s - start
+
+
 def cmd_vs_greedy(args):
-    seeds = list(range(args.seed_start, args.seed_start + args.seeds))
     rules = dict(RULES, K=args.K, M=args.M)
+    scanned = None
+    if args.distinct:
+        seeds, scanned = distinct_seeds(args.N, rules, args.opening_plies, args.seeds, args.seed_start)
+    else:
+        seeds = list(range(args.seed_start, args.seed_start + args.seeds))
+    openings = {s: [list(map(list, a)) for a in opening_of(args.N, rules, args.opening_plies, s)] for s in seeds}
+    n_distinct = len({json.dumps(o) for o in openings.values()})
     configs = []
     for s in seeds:
         for p0, p1 in ((args.spec, 'greedy'), ('greedy', args.spec)):
@@ -150,6 +171,9 @@ def cmd_vs_greedy(args):
     config = {'board_size': args.N, 'rules': configs[0].rules, 'minimax_spec': args.spec,
               'opponent': 'greedy', 'max_plies': args.max_plies, 'opening_plies': args.opening_plies,
               'seatings': 'both per opening seed', 'move_time_limit': None,
+              'seed_selection': (f'first seed of each distinct opening, scanned {scanned} seeds from {args.seed_start}'
+                                 if args.distinct else 'consecutive seeds'),
+              'distinct_openings': n_distinct, 'seed_to_opening': openings,
               'deterministic': 'time_limit' not in args.spec,
               'note': ('timed search: depth reached depends on machine load, so results are '
                        'not reproducible move-for-move') if 'time_limit' in args.spec else
@@ -393,6 +417,8 @@ def main():
     p.add_argument('--seed-start', type=int, default=0)
     p.add_argument('--opening-plies', type=int, default=2)
     p.add_argument('--max-plies', type=int, default=200)
+    p.add_argument('--distinct', action='store_true',
+                   help='--seeds counts distinct openings: keep the first seed of each distinct opening')
     p.add_argument('--tag', required=True)
     p.set_defaults(func=cmd_vs_greedy)
     p = sub.add_parser('ordering')
