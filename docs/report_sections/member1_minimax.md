@@ -128,3 +128,40 @@ reproduced on the final engine. Ordering costs slightly more time than it saves.
 - Timed search is not reproducible: the depth reached depends on machine load.
 - The goal-proximity extension exists but is off in all runs; there is no quiescence search.
 - Exact checks are on 3x3 boards only; larger-board results are empirical.
+
+## New contribution (Wallz-Study): hop-aware evaluation
+
+This is new work added after the audit above. The sections above and their numbers describe the
+default scorer and are unchanged. Full details: `docs/reports/stage3_minimax_hop_eval.md`. All
+numbers below come from `experiments/results/final_minimax_hop/`.
+
+**Idea.** The default distance ignores that a player with an unused HOP may cross one wall owned
+by the other player. The optional `HopAwareEvaluator` (spec `minimax:...,eval=hop`) keeps the same
+formula, `tanh(0.2 · (d_opp − d_self))`. While a player's hop is unused, it measures that player's
+distance as the shortest path crossing at most one opponent-owned wall. Wall ownership and edges
+come from the engine. On 240 random positions this distance equals a search built only from the
+engine's own legal MOVE and HOP actions (`tests/test_minimax_hop_eval.py`). The default spec is
+unchanged: a full rerun of the 100-game N=5 main run reproduced every game exactly
+(`default_repro_diff.json`).
+
+**Results** (N=5, the same 50 distinct openings, both seats, 100 games per row; old-scorer
+numbers from Section 7; `paired_d{1,2,3}_default_vs_hop.json`):
+
+| Depth | Old scorer vs Greedy | Hop scorer vs Greedy | Difference (paired bootstrap 95% CI) |
+|---|---|---|---|
+| 1 | 45 wins | 50 wins (50-50) | +5 points (-1 to +11) |
+| 2 | 39 wins | 50 wins (50-48, 2 draws) | +11 points (+1 to +21) |
+| 3 | 45 wins | 50 wins (50-46, 4 draws) | +5 points (-5 to +15) |
+
+Head to head at depth 2, the hop scorer beat the default scorer 54-44 with 2 draws (Wilson 44-63%;
+`vs_minimax_N5_hop_d2_vs_default_d2_summary.json`). The gain comes entirely from the first seat. As
+the second player the hop scorer did the same as the old one at depths 1 and 2, and 6 points worse at depth 3.
+It also stops wasting walls: at depth 2, minimax placed 35 walls instead of 207, and Greedy's wins by
+hopping a minimax wall fell from 30 to 3 (`hop_stats.json`).
+
+**Larger board (empirical, timed, load-affected).** On N=9 with `time_limit=1.0` the hop scorer won
+10 of 20 matches against Greedy (8 of 16 distinct games), against 14 of 20 for the default scorer.
+The drop is all in the second seat (60% -> 20%; `paired_N9_timed_default_vs_hop.json`). It placed no
+walls at all on N=9. A likely reason, not tested: at depth 2 one new wall can always be hopped while
+Greedy's hop is unused, so no wall ever looks useful within the horizon. The hop scorer is therefore
+better at N=5 depth 2 but not better everywhere. The default stays the default.

@@ -1,0 +1,188 @@
+{
+  "source": {
+    "commit": "99cd1ef3c048fde4d3f5d78571e66c23ed992f48",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py --results-dir final_minimax_hop hop-examples N5_hop_d1 N5_hop_d2 N5_hop_d3",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T05:49:08+05:30",
+  "config": {
+    "tags": [
+      "N5_hop_d1",
+      "N5_hop_d2",
+      "N5_hop_d3"
+    ]
+  },
+  "seeds": null,
+  "results": {
+    "N5_hop_d1": {
+      "greedy_wins_with_hop_over_minimax_wall": 1,
+      "all_hops_crossed_minimax_walls": true,
+      "examples": [
+        {
+          "match_id": "N5_A1B1C1_K3_M10__minimax:depth=1,eval=hop__vs__greedy__open4s31__cap200",
+          "minimax_seat": 0,
+          "length_plies": 28,
+          "hops": [
+            {
+              "hop_ply": 28,
+              "from": [
+                1,
+                0
+              ],
+              "to": [
+                0,
+                0
+              ],
+              "wall_owner": 0,
+              "wall": [
+                0,
+                0,
+                "H"
+              ],
+              "wall_ply": 11
+            }
+          ]
+        }
+      ]
+    },
+    "N5_hop_d2": {
+      "greedy_wins_with_hop_over_minimax_wall": 3,
+      "all_hops_crossed_minimax_walls": true,
+      "examples": [
+        {
+          "match_id": "N5_A1B1C1_K3_M10__minimax:depth=2,eval=hop__vs__greedy__open4s7__cap200",
+          "minimax_seat": 0,
+          "length_plies": 18,
+          "hops": [
+            {
+              "hop_ply": 18,
+              "from": [
+                1,
+                1
+              ],
+              "to": [
+                0,
+                1
+              ],
+              "wall_owner": 0,
+              "wall": [
+                0,
+                1,
+                "H"
+              ],
+              "wall_ply": 11
+            }
+          ]
+        },
+        {
+          "match_id": "N5_A1B1C1_K3_M10__greedy__vs__minimax:depth=2,eval=hop__open4s38__cap200",
+          "minimax_seat": 1,
+          "length_plies": 25,
+          "hops": [
+            {
+              "hop_ply": 23,
+              "from": [
+                3,
+                1
+              ],
+              "to": [
+                3,
+                0
+              ],
+              "wall_owner": 1,
+              "wall": [
+                3,
+                0,
+                "V"
+              ],
+              "wall_ply": 22
+            }
+          ]
+        },
+        {
+          "match_id": "N5_A1B1C1_K3_M10__greedy__vs__minimax:depth=2,eval=hop__open4s53__cap200",
+          "minimax_seat": 1,
+          "length_plies": 25,
+          "hops": [
+            {
+              "hop_ply": 23,
+              "from": [
+                3,
+                1
+              ],
+              "to": [
+                3,
+                0
+              ],
+              "wall_owner": 1,
+              "wall": [
+                3,
+                0,
+                "V"
+              ],
+              "wall_ply": 22
+            }
+          ]
+        }
+      ]
+    },
+    "N5_hop_d3": {
+      "greedy_wins_with_hop_over_minimax_wall": 2,
+      "all_hops_crossed_minimax_walls": true,
+      "examples": [
+        {
+          "match_id": "N5_A1B1C1_K3_M10__minimax:depth=3,eval=hop__vs__greedy__open4s7__cap200",
+          "minimax_seat": 0,
+          "length_plies": 18,
+          "hops": [
+            {
+              "hop_ply": 18,
+              "from": [
+                1,
+                1
+              ],
+              "to": [
+                0,
+                1
+              ],
+              "wall_owner": 0,
+              "wall": [
+                0,
+                1,
+                "H"
+              ],
+              "wall_ply": 11
+            }
+          ]
+        },
+        {
+          "match_id": "N5_A1B1C1_K3_M10__minimax:depth=3,eval=hop__vs__greedy__open4s31__cap200",
+          "minimax_seat": 0,
+          "length_plies": 18,
+          "hops": [
+            {
+              "hop_ply": 18,
+              "from": [
+                1,
+                0
+              ],
+              "to": [
+                0,
+                0
+              ],
+              "wall_owner": 0,
+              "wall": [
+                0,
+                0,
+                "H"
+              ],
+              "wall_ply": 9
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "source": {
+    "commit": "99cd1ef3c048fde4d3f5d78571e66c23ed992f48",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py --results-dir final_minimax_hop compare-logs experiments/results/final_minimax/vs_greedy_N5_open4_distinct.jsonl experiments/results/final_minimax_hop/vs_greedy_N5_default_repro.jsonl --name default_repro_diff.json",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T04:59:59+05:30",
+  "config": {
+    "a": "experiments/results/final_minimax/vs_greedy_N5_open4_distinct.jsonl",
+    "b": "experiments/results/final_minimax_hop/vs_greedy_N5_default_repro.jsonl",
+    "compared": "replay actions, state ids and legal counts per ply, outcome, length, final state, agent identities, mean nodes and depth per match (timings ignored)"
+  },
+  "seeds": null,
+  "results": {
+    "matches_a": 100,
+    "matches_b": 100,
+    "common": 100,
+    "only_in_a": [],
+    "only_in_b": [],
+    "identical": 100,
+    "differing": {}
+  }
+}
