@@ -154,8 +154,9 @@ in each folder]. No game was truncated and none was forfeited.
 ## 6. Multi-seed analysis
 
 **Method.** Five DQN agents trained on 3x3 (N3 A1B1C1 K1 M1, 200,000 steps each) with seeds
-42-46 are each compared with the exact solve (share of 1,000 sampled decided positions where the
-network's value has the right sign, and mean absolute value error) and play matches against
+42-46 are each compared with the exact solve on 1,000 sampled non-terminal positions (the same
+sample for every seed): sign agreement is the share of the 599 decided (WIN or LOSS) positions
+where the network's value has the right sign; MAE is over all 1,000. They also play matches against
 Greedy and Random (`scripts/run_multi_seed_3x3.py`). Each checkpoint's SHA-256 matched its
 committed `checkpoints/final/3x3_s<seed>/manifest.json` before use.
 
@@ -211,8 +212,10 @@ With M = 0, A and B change nothing (no walls), so those cells repeat; the 45-pos
 33 non-terminal positions, all scored. The DQN checkpoints were trained only for A1B1C1 M1, so
 they are scored there only. In that cell all five DQN seeds, both Minimax variants and Greedy
 were scored on the same 300 positions. With 300 positions a Wilson interval near 0.96 is about
-0.93-0.98, so the DQN-vs-Minimax differences there (at most 0.024) are not resolved;
-Greedy is lower than both by 0.06-0.08 (Greedy 0.857-0.926 vs Minimax d2 0.923-0.972).
+0.93-0.98, so the DQN-vs-Minimax differences there (at most 0.024) are not resolved. Greedy's
+value-optimal rate there is 0.056 below Minimax d2 and 0.070 below the hop variant, but its 95%
+Wilson interval (0.857-0.926) still touches Minimax d2's (0.923-0.972), so that gap is
+borderline at this sample size.
 
 ## 7. Factorial ablation results
 

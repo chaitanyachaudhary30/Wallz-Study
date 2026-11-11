@@ -37,7 +37,14 @@ python scripts/make_tables.py
 
 The agreement job was run twice: the first run started while `scripts/make_tables.py` was
 being edited, so it recorded `dirty: true`. It was rerun from a clean commit; all 128 rows and
-all 16 sample hashes are identical, and only the clean run is committed.
+all 16 sample hashes are identical, and only the clean run is committed (the comparison was
+made on the uncommitted first file, which is not kept).
+
+Determinism, which the no-replica design relies on: `agents/dqn/agent.py` uses
+"deterministic lowest-ID argmax tie-breaking"; `GreedyAgent` without a seed breaks ties by
+action index (`agents/greedy.py`). `multi_seed_3x3.json` `config.steps` (50000) is the unused
+training default (`no_train` is true); the checkpoints were trained for about 200,000 steps
+(`checkpoints/final/3x3_s<seed>/manifest.json` `steps`).
 
 ## 1. Multi-seed study (`final_eval/multi_seed_3x3.json`)
 
@@ -45,7 +52,7 @@ Full per-seed table and reading: `docs/report_sections/member3_eval.md` Section 
 
 | Measure | Mean | SD | 95% t-interval | Min | Max | Largest leave-one-out shift |
 |---|---:|---:|---|---:|---:|---:|
-| sign agreement (1,000 decided states) | 0.9836 | 0.0027 | 0.9802-0.9870 | 0.9800 | 0.9866 | 0.0009 |
+| sign agreement (599 decided of 1,000 sampled states) | 0.9836 | 0.0027 | 0.9802-0.9870 | 0.9800 | 0.9866 | 0.0009 |
 | value MAE | 0.1789 | 0.0086 | 0.1683-0.1896 | 0.1655 | 0.1871 | 0.0034 |
 | vs Greedy win rate (16 games/seed) | 0.650 | 0.056 | 0.581-0.719 | 0.625 | 0.750 | 0.025 |
 | vs Greedy draw rate | 0.225 | 0.056 | 0.156-0.294 | 0.125 | 0.250 | 0.025 |
@@ -91,6 +98,16 @@ folders are added next to `FINAL_EVAL` ... `FINAL_DQN` near the top of `scripts/
 | `multi_seed_3x3` | `final_eval/multi_seed_3x3.json` |
 | `minimax_vs_greedy` | every `*_summary.json` in `final_minimax/` and `final_minimax_hop/` |
 | `dqn_3x3_seeds` | `final_dqn/aggregate_3x3_seeds.json` |
+
+## Independent check
+
+A fresh reviewer that saw only `git diff origin/main..HEAD` and the result files recomputed every
+per-seed and aggregate number, the pooled Wilson intervals, every agreement-table cell, the
+shared-sample hashes, the 8 distinct openings, the commit hashes and the leave-one-out claim.
+All matched. It found two problems, both fixed: sign agreement is over 599 decided positions
+(not 1,000), and "Greedy is lower than both" overstated a gap whose Wilson intervals touch. It
+also noted `config.steps` and the determinism assumption (both now explained above).
+Not checked by it: the `.tex` tables and the Minimax-vs-Greedy table.
 
 ## Tests
 
