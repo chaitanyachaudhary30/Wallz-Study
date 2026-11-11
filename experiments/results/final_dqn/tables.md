@@ -1,4 +1,4 @@
-﻿### Exact ground truth (all non-terminal solved states)
+### Exact ground truth (all non-terminal solved states)
 
 | Model | States | Value-opt % | Rank-opt % | Sign agree % | 3-class value % | MAE | Legacy protocol |
 |---|---:|---:|---:|---:|---:|---:|---|
