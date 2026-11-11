@@ -1,0 +1,81 @@
+{
+  "checkpoint": "checkpoints/final/4x4_s42/final.pt",
+  "sha256": "3b1445a4b4e9bd440b27f400a9bc72d3bc5d453d143ee39403bb093b20772132",
+  "size_bytes": 1590939,
+  "train_commit": "fa79c06",
+  "train_dirty": false,
+  "train_git_source": "commit log at run start (--train-commit)",
+  "seed": 42,
+  "steps": 500006,
+  "command": "python D:\\SEM V\\Wallz-Study-wt\\bot2-dqn\\scripts\\train_dqn.py --board-size 4 --seed 42 --output-dir checkpoints/final/4x4_s42 --threads 2 --resume --max-minutes 24",
+  "config": {
+    "lr": 0.0001,
+    "batch_size": 128,
+    "gamma": 0.99,
+    "target_update_freq": 1000,
+    "train_freq": 4,
+    "grad_clip": 10.0,
+    "huber_delta": 1.0,
+    "double_dqn": true,
+    "dueling": false,
+    "channels": 64,
+    "blocks": 3,
+    "hidden": 256,
+    "snapshot_interval": 20000,
+    "snapshot_pool_size": 10,
+    "mixture": [
+      0.5,
+      0.4,
+      0.1
+    ],
+    "eval_freq": 25000,
+    "eval_matches": 20,
+    "seed": 42,
+    "device": "cpu",
+    "board_size": 4,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 1,
+      "M": 0
+    },
+    "total_steps": 500000,
+    "buffer_capacity": 20000,
+    "min_buffer_size": 1000,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.05,
+    "epsilon_decay_steps": 50000,
+    "mirror_prob": 0.0
+  },
+  "started": "2026-11-11T06:32:52+0530",
+  "wall_seconds": 2886.1,
+  "torch": "2.15.0+cpu",
+  "python": "3.12.5",
+  "meta": {
+    "N": 4,
+    "blocks": 3,
+    "channels": 64,
+    "codec_version": 1,
+    "commit": "cb83693",
+    "double": true,
+    "dueling": false,
+    "gamma": 0.99,
+    "hidden": 256,
+    "obs_version": 1,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 1,
+      "M": 0
+    },
+    "seed": 42,
+    "step": 500006
+  },
+  "manifest_written_at_commit": {
+    "commit": "cb836938980bf242bed9050324221995c413eab3",
+    "dirty": false
+  },
+  "note": "configs/training.yaml board_4 values, 500k steps. Ran in 3 lock chunks via --max-minutes/--resume (pause at 250,090 and 499,986). Started at fa79c06 with a clean tree; later chunks ran with an uncommitted edit to the run_config.json write only, which a resumed run does not execute. Commit reconstructed from the commit log."
+}
