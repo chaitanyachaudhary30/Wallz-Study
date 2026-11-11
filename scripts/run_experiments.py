@@ -19,9 +19,10 @@ import random
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from evaluation.ablation import ablation_configs, solver_sweep, agreement, default_caps  # noqa: E402
+from evaluation.ablation import (ablation_configs, solver_sweep, agreement, default_caps,  # noqa: E402
+                                 first_distinct_openings)
 from evaluation.match_runner import (MatchConfig, run_match, run_batch, load_results,  # noqa: E402
-                                     verify_replay, source_commit, run_metadata)
+                                     verify_replay, source_commit, run_metadata, action_to_json)
 from evaluation.metrics import summarize_cells, effects_with_ci, opening_key  # noqa: E402
 from evaluation.replay_export import export_demo_replay  # noqa: E402
 from evaluation.retrograde import solve_config  # noqa: E402
@@ -108,7 +109,16 @@ def replica_check(results):
 def cmd_ablation(args):
     seed_start = args.seed_start if args.seed_start != 0 or getattr(args, 'seed', None) is None else args.seed
     seed_everything(seed_start)
-    seeds = range(seed_start, seed_start + args.seeds)
+    opening_map = None
+    if args.distinct_openings:
+        # First seed of each distinct opening, scanning seeds 0, 1, 2, ... (no replicas)
+        picked = first_distinct_openings(args.N, args.opening_plies, args.distinct_openings,
+                                         K=args.K, M=args.M)
+        seeds = [s for s, _ in picked]
+        opening_map = {str(s): [action_to_json(a) for a in acts] for s, acts in picked}
+        print(f"  {len(seeds)} distinct openings at {args.opening_plies} plies; seeds {seeds}", flush=True)
+    else:
+        seeds = range(seed_start, seed_start + args.seeds)
     configs = ablation_configs(args.x, args.y, board_size=args.N, K=args.K, M=args.M,
                                opening_seeds=seeds, opening_plies=args.opening_plies,
                                max_plies=args.max_plies, move_time_limit=args.move_time_limit)
@@ -129,7 +139,9 @@ def cmd_ablation(args):
         'design': {'agent_x': args.x, 'agent_y': args.y, 'board_size': args.N, 'K': args.K,
                    'M': args.M, 'opening_seeds': list(seeds), 'opening_plies': args.opening_plies,
                    'max_plies': args.max_plies, 'move_time_limit': args.move_time_limit,
-                   'games_per_cell': 2 * len(seeds), 'n_matches': len(results)},
+                   'games_per_cell': 2 * len(seeds), 'n_matches': len(results),
+                   'distinct_openings_requested': args.distinct_openings},
+        'opening_map': opening_map,
         'match_log': log_path.replace('\\', '/'),
         'cells': summarize_cells(results, args.x),
         # Primary: resample distinct openings (replica seeds counted once)
@@ -283,6 +295,9 @@ def main():
     p.add_argument('--x', required=True, help='focus agent spec')
     p.add_argument('--y', required=True, help='opponent agent spec')
     p.add_argument('--seeds', type=int, default=100)
+    p.add_argument('--distinct-openings', type=int, default=None,
+                   help='instead of --seeds: use the first seed of each of the first N distinct '
+                        'openings, scanning seeds 0, 1, 2, ... (records the seed -> opening map)')
     p.add_argument('--seed-start', type=int, default=0)
     p.add_argument('--seed', type=int, default=None, help='starting seed (alias for seed-start)')
     p.add_argument('--opening-plies', type=int, default=2)

@@ -137,6 +137,20 @@ class TestReproducibility(unittest.TestCase):
             seqs.add(tuple(opening_actions(e, 4, seed=11)))
         self.assertEqual(len(seqs), 1)
 
+    def test_first_distinct_openings(self):
+        from evaluation.ablation import first_distinct_openings
+        picked = first_distinct_openings(5, 2, 50, max_seed=200)
+        self.assertEqual(len(picked), 9)                       # 3 x 3 pawn moves exist at 2 plies
+        self.assertEqual(len({a for _, a in picked}), 9)
+        seeds = [s for s, _ in picked]
+        self.assertEqual(seeds, sorted(seeds))
+        self.assertEqual(seeds[0], 0)
+        for s, acts in picked:                                # each is the FIRST seed of its opening
+            for earlier in range(s):
+                e = WallzEngine(board_size=5, rules={'K': 3, 'M': 10})
+                self.assertNotEqual(tuple(opening_actions(e, 2, earlier)), acts)
+        self.assertEqual(len(first_distinct_openings(5, 4, 3)), 3)
+
     def test_batch_resume(self):
         cfgs = ablation_configs('greedy', 'random', board_size=3, K=1, M=0, opening_seeds=range(1),
                                 opening_plies=0, max_plies=30)

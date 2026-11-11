@@ -2,7 +2,7 @@
 
 All numbers below come from files in `experiments/results/final_eval/` (named in brackets).
 They were produced on the frozen Stage 1 rules (base `main` = `70e2351`) from clean commits
-`f930e8e` and `8944f16`; each file records its commit, command, Python version and date.
+`f930e8e`, `8944f16` and `4ef8124`; each file records its commit, command, Python version and date.
 Exact results on 3x3 and 4x4 boards (Sections 1-3) and match results on 5x5 (Sections 5-7)
 answer different questions and are kept apart.
 
@@ -130,19 +130,26 @@ capped.
 The match ablation plays depth-2 Minimax against Greedy on 5x5, K = 3, M = 10, in all 8 cells,
 both seatings, 200-ply cap.
 
-Both agents are deterministic, so a game is fixed by its opening. With 2 opening plies only 9
-openings exist, and the pilot's 10 seeds drew 8 of them [`analysis.json` `opening_counts_N5`]:
-replica seeds added no evidence. The primary design therefore uses **6 opening plies and 40
-distinct openings** (seeds 10-49): 40 x 2 seatings x 8 cells = 640 matches
-[`ablation_N5_K3_M10_open6/summary.json`]. The 2-ply design was rerun for comparison with 30
-seeds, which gave 9 openings and 144 distinct games in 480 logged matches; all replicas were
-identical [`ablation_N5_K3_M10_open2/summary.json` `replicas`].
+Both agents are deterministic, so a game is fixed by its opening (a few random pawn moves).
+With 2 opening plies only 9 openings exist, and the pilot's 10 seeds drew just 8 of them
+[`analysis.json` `opening_counts_N5`]: two seeds replayed games already played, so the pilot's
+effective sample was 8 openings, not 10 seeds.
+
+The design therefore counts **distinct openings**. The shortest opening with at least 30
+distinct versions is 4 plies (99 exist; 2 plies gives 9). Seeds are scanned in order and only
+the first seed of each distinct opening is kept; the seed -> opening map is stored with the
+results. The primary run uses the first **40 distinct 4-ply openings**, both seatings, all 8
+cells: 640 matches [`ablation_N5_K3_M10_open4/summary.json`]. Two more runs are reported: all
+9 distinct 2-ply openings (144 matches), the direct comparison with the pilot
+[`ablation_N5_K3_M10_open2_pilot_comparison/summary.json`], and 40 distinct 6-ply openings
+(640 matches) as a check of how much the opening length matters
+[`ablation_N5_K3_M10_open6/summary.json`].
 
 The statistical unit is the opening: its games in all 8 cells and both seatings stay together
 when resampled. Intervals are percentile intervals from 10,000 paired bootstrap draws;
 p-values are two-sided bootstrap p-values; Holm's method controls the family-wise error over the
-7 effects at 5%. All 640 and 480 replays verified on the final engine [`verify_replay.txt` in each
-folder]. No game was truncated and none was forfeited.
+7 effects at 5%. All 640, 144 and 640 replays verified on the final engine [`verify_replay.txt`
+in each folder]. No game was truncated and none was forfeited.
 
 ## 6. Multi-seed analysis
 
@@ -160,50 +167,69 @@ the result. Truncated games (the study's 100-ply cap) are a separate column, nev
 
 ## 7. Factorial ablation results
 
-Minimax's goal-win rate per cell [`ablation_N5_K3_M10_open6/summary.json` `cells`]:
+Minimax's goal-win rate per cell, primary run [`ablation_N5_K3_M10_open4/summary.json` `cells`]:
 
 | Cell | Win rate (95% Wilson) | Draw rate | Truncation rate | Mean plies |
 |---|---|---:|---:|---:|
-| A0B0C0 | 0.863 (0.770-0.921) | 0.063 | 0 | 27.1 |
-| A0B0C1 | 0.738 (0.632-0.821) | 0.063 | 0 | 27.7 |
-| A0B1C0 | 0.363 (0.266-0.472) | 0.013 | 0 | 15.1 |
-| A0B1C1 | 0.325 (0.232-0.434) | 0 | 0 | 17.2 |
-| A1B0C0 | 0.800 (0.700-0.873) | 0.075 | 0 | 39.0 |
-| A1B0C1 | 0.638 (0.528-0.734) | 0.125 | 0 | 37.8 |
-| A1B1C0 | 0.363 (0.266-0.472) | 0.063 | 0 | 18.1 |
-| A1B1C1 | 0.338 (0.243-0.446) | 0.075 | 0 | 22.7 |
+| A0B0C0 | 0.713 (0.605-0.800) | 0.075 | 0 | 24.1 |
+| A0B0C1 | 0.638 (0.528-0.734) | 0.088 | 0 | 26.2 |
+| A0B1C0 | 0.575 (0.466-0.677) | 0.025 | 0 | 15.3 |
+| A0B1C1 | 0.500 (0.393-0.607) | 0 | 0 | 16.3 |
+| A1B0C0 | 0.625 (0.515-0.723) | 0.213 | 0 | 41.9 |
+| A1B0C1 | 0.638 (0.528-0.734) | 0.163 | 0 | 34.4 |
+| A1B1C0 | 0.425 (0.323-0.534) | 0.013 | 0 | 15.3 |
+| A1B1C1 | 0.413 (0.311-0.522) | 0.013 | 0 | 18.2 |
 
-(80 games per cell; exact rates such as 0.8625 and 0.0625 are rounded to 3 decimals.)
+(80 games per cell; exact rates such as 0.7125 and 0.0875 are rounded half up to 3 decimals.)
 
 Factorial effects on the win rate [`summary.json` `effects.x_goal_win`]:
 
 | Effect | Estimate | 95% CI | Holm p |
 |---|---:|---|---:|
-| A | -0.037 | (-0.103, +0.025) | 0.787 |
-| **B** | **-0.413** | (-0.497, -0.328) | < 0.001 |
-| **C** | **-0.088** | (-0.150, -0.028) | 0.010 |
-| AB | +0.044 | (-0.000, +0.091) | 0.262 |
-| AC | -0.006 | (-0.028, +0.013) | 0.787 |
-| **BC** | **+0.056** | (+0.016, +0.109) | 0.007 |
-| ABC | +0.013 | (-0.012, +0.037) | 0.787 |
+| A | -0.081 | (-0.147, -0.019) | 0.070 |
+| **B** | **-0.175** | (-0.259, -0.088) | < 0.001 |
+| C | -0.037 | (-0.072, -0.006) | 0.111 |
+| AB | -0.037 | (-0.078, +0.003) | 0.275 |
+| AC | +0.037 | (+0.000, +0.075) | 0.234 |
+| BC | -0.006 | (-0.047, +0.034) | 1.000 |
+| ABC | -0.006 | (-0.031, +0.019) | 1.000 |
 
-B makes depth-2 Minimax much weaker against Greedy (about 41 points of win rate) and shortens
-games by about 15 plies. C costs it about 9 points, and less when B is also on (BC). A makes games
-about 8 plies longer [`effects.length_plies`] without a clear effect on who wins. The pilot's AB
-interaction (+0.11) is not confirmed: +0.044 here, interval touching zero, Holm p 0.26.
+B makes depth-2 Minimax weaker against Greedy (about 18 points of win rate), lowers the draw rate
+by about 12 points [`effects.rule_draw`] and shortens games by about 15 plies
+[`effects.length_plies`]. A makes games about 7 plies longer. A and C may lower Minimax's win
+rate a little (raw intervals exclude zero), but neither survives Holm. The pilot's AB
+interaction (+0.11) is not confirmed: -0.037 here (Holm p 0.28) and -0.042 with the pilot's own
+2-ply openings.
+
+How the win-rate effects change with the opening length (bold = survives Holm):
+
+| Effect | 2 plies, 9 openings | 4 plies, 40 openings (primary) | 6 plies, 40 openings |
+|---|---:|---:|---:|
+| A | -0.014 | -0.081 | -0.037 |
+| B | **-0.403** | **-0.175** | **-0.413** |
+| C | -0.069 | -0.037 | **-0.088** |
+| BC | +0.014 | -0.006 | **+0.056** |
+
+B lowers Minimax's win rate in all three, but by very different amounts. C and BC are supported
+only with 6-ply openings. So the size of each effect depends on which openings are played.
 
 ## 8. Statistical significance and limitations
 
-- **Which effects are supported.** On the win rate, B, C and BC survive Holm at 5%; A, AB, AC and
-  ABC do not. On the draw rate only AC survives. On game length A, B, C, AB, BC and ABC survive.
+- **Which effects are supported (primary run).** On the win rate only B survives Holm at 5%;
+  A, C, AB, AC, BC and ABC do not. On the loss rate B (+0.297) and AB (+0.091) survive
+  [`effects.x_goal_loss`]. On the draw rate only B survives. On game length A, B, AB, AC, BC and
+  ABC survive; C does not.
 - **Power.** With 40 independent openings, the smallest win-rate effect found with 80% power is
   0.157 at a 5% level and 0.197 at Holm's strictest step, in the worst case [`analysis.json`
   `mde_win_rate_80pct_power`]. The paired standard errors are smaller (detectable effects of
-  0.03-0.12 by effect), which is why C and BC were found. The 2-ply design, with 9 openings,
-  cannot reliably detect anything under 0.33.
-- **Replicas.** Counting the 2-ply design's 30 seeds as independent would have made five of seven
-  win-rate effects "significant"; by opening, only B is [`ablation_N5_K3_M10_open2/summary.json`
-  `effects_by_seed` vs `effects`].
+  0.04-0.12 by effect). A (-0.081) and C (-0.037) are below their own detectable sizes (0.092 and
+  0.047), so the study could miss effects of that size. For the 2-ply design (9 openings) the
+  worst-case bound is 0.33 and the paired estimates 0.06-0.20, so only large effects are found.
+- **Effective sample of the pilot.** The pilot's 10 seeds held 8 distinct openings, but its
+  bootstrap resampled 10 seeds as if they were independent. Its own match log is gone, so the
+  effect on its intervals cannot be checked.
+- **Opening length.** Effect sizes differ between 2-, 4- and 6-ply openings (Section 7), so they
+  hold for this opening distribution only.
 - **Scope.** One pairing (depth-2 Minimax vs Greedy), one board (5x5), one K and M. The results
   describe these two agents, not the game's true value; the exact values hold only for the solved
   3x3 and 4x4 cells.
