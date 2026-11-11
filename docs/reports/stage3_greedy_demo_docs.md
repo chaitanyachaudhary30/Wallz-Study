@@ -2,7 +2,7 @@
 
 - **Base:** `main` = `d91549c`. No engine code changed (`wallz_engine.py`, `src/modified_wallz/` untouched).
 - **Commits tested:** match sets N3 (random, minimax2) and N5 minimax2 at `edc3d06`; N3 self, N5/N9 random and self at `1edd675`; N9 minimax2 at `69509f5`. Between `edc3d06` and `1edd675`, `scripts/final_greedy.py` changed only how self-play games are counted (once per game, from Player 0) and how `tables.md` is printed; match play is identical. Every summary JSON records its own commit and `dirty: false`.
-- **Machine:** Windows 11, Python 3.12.5, pytest 9.2.0, torch 2.15.0+cpu, numpy 2.2.0, Flask 3.1.0, networkx installed, hypothesis **not** installed. Node 22.19 / npm 10.9 (frontend packages installed with `npm ci` from the committed lockfile, approved by the conductor).
+- **Machine:** Windows 11, Python 3.12.5, pytest 9.2.0, torch 2.15.0+cpu, numpy 2.2.0, Flask 3.1.0, networkx installed, hypothesis **not** installed. Node v22.19.0 / npm 10.9.3. Frontend packages: `npm --prefix web/frontend ci --no-audit --no-fund` in this worktree only, approved by the conductor, run while `resource_status` read AMPLE. It installed from the committed `package-lock.json` (exit 0, 253 packages); `package.json` and `package-lock.json` are unchanged on this branch.
 
 ## Task 3: Greedy match campaign
 
@@ -142,7 +142,7 @@ No frontend code computes hop distance, block timers, legal moves, wall counts o
 | Rules page check text present | `test_scenario_checks_carry_the_message_the_page_shows` |
 | Arena counts match the match outcomes | `test_arena_counts_come_from_the_match_outcome` |
 
-Frontend: Vitest 11 passed in 3 files (one new test: truncated banner is not a draw). `npm run build` (tsc + vite) succeeds.
+Frontend: `npm --prefix web/frontend test` (Vitest v1.6.1): 11 passed in 3 files (`geometry.test.ts` 3, `regressions.test.tsx` 5, `Board.test.tsx` 3; one new test: truncated banner is not a draw). Before the new test the same run gave 10 passed. `npm run build` (tsc + vite) succeeds.
 
 ### (d) Docker
 
