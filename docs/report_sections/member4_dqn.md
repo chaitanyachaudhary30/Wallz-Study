@@ -82,8 +82,8 @@ steps.
 Checkpoints and SHA-256: `checkpoints/final/<board>_s<seed>/manifest.json`. Training loss rose
 to about 0.02 in the first 10k steps and fell to 0.00025-0.00064 by the end on 3x3; the
 probe's mean max-Q stayed between 0.01 and 0.38, with no divergence
-(`final_dqn/training_curves_*.json`). 5x5 (estimated 4.1 h per seed for 2M steps) awaits a
-decision; 9x9 was skipped (5M steps at least 23 h) (`final_dqn/training_timing_5x5_9x9.json`).
+(`final_dqn/training_curves_*.json`). 5x5 ran 500k steps on seed 42 (Section 9.1). 9x9 was
+skipped: 5M steps would take at least 23 h (`final_dqn/training_timing_5x5_9x9.json`).
 
 ## 8. Checkpoint evaluation
 
@@ -123,12 +123,33 @@ per-seating rates are in `final_dqn/tables.md`. Truncation appears only once: 4%
 3x3 seed 44 vs Minimax. Seating matters: on 3x3 the retrained models win 81% vs Greedy as player 0
 and 47-71% as player 1 (`final_dqn/final_dqn_3x3_s4*_eval.json`).
 
+### 9.1 Larger board: 5x5 (no exact ground truth)
+
+**500k steps, short of the plan's 2M target, by user decision for compute.** Seed 42, rules
+K=3, M=10, `board_5` config; 87 minutes of training (`final_dqn/5x5/training_curves_5x5_s42.json`,
+checkpoint hashes in `checkpoints/final/5x5_s42/manifest.json`). Openings follow the
+distinct-opening rule: 4 plies, the first 50 distinct openings (seeds 0..79), both seats.
+
+| Opponent | Win / draw / truncated / loss, % | Win % as P0 / P1 |
+|---|---|---|
+| random | 98 / 2 / 0 / 0 | 98 / 98 |
+| greedy | 66 / 28 / 0 / 6 | 72 / 60 |
+| minimax:depth=2 | 73 / 10 / 0 / 17 | 74 / 72 |
+
+Source: `final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json`. These are match results only; there
+is no solver on 5x5, so they make no claim about optimal play.
+
+Known limit: with M=10 the observation cannot show who owns walls that are no longer anyone's
+latest wall, yet HOP may only cross an opponent's wall, so the network can misjudge HOP.
+14.6% of owner-swapped 5x5 audit positions have a different legal set under the same
+observation (`final_dqn/encoding_alias_audit.json`).
+
 ## 10. Limitations and generalization
 
 - **Board and rules are fixed per checkpoint.** The network's input and output sizes depend
   on N, and `meta.json` pins A, B, C, K and M; a 3x3 model cannot play 4x4 or another K or M.
-- **Exact claims hold only for 3x3 and 4x4.** No larger board was trained, so nothing here
-  shows the DQN scales; 5x5 needs about 4 hours per seed, 9x9 more than a day.
+- **Exact claims hold only for 3x3 and 4x4.** The one larger board, 5x5, has one seed at
+  500k of the planned 2M steps and only match results (Section 9.1); 9x9 was not trained.
 - **Encoding blind spots** (Section 2) will matter on boards with M >= 2: HOP legality
   depends on wall owners the network cannot see.
 - **4x4 rests on one seed.** The 3x3 spread across five seeds is small (value-optimal

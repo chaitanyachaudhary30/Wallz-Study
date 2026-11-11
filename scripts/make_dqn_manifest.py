@@ -37,6 +37,8 @@ def main():
     ap.add_argument('--train-commit', default=None)
     ap.add_argument('--train-dirty', choices=['true', 'false'], default=None)
     ap.add_argument('--note', default=None)
+    ap.add_argument('--kept-resume', action='store_true',
+                    help='the run ended with --keep-resume; record resume.pt instead of refusing')
     args = ap.parse_args()
     run = Path(args.run)
     rc = json.loads((run / 'run_config.json').read_text(encoding='utf-8'))
@@ -44,8 +46,10 @@ def main():
     rows = [json.loads(line) for line in open(run / 'train_log.jsonl', encoding='utf-8') if line.strip()]
     evals = [r for r in rows if r['type'] == 'eval']
     final = run / 'final.pt'
-    if not final.is_file() or (run / 'resume.pt').exists():
-        raise SystemExit(f"{run}: run not finished (final.pt missing or resume.pt present)")
+    resume = run / 'resume.pt'
+    if not final.is_file() or (resume.exists() and not args.kept_resume):
+        raise SystemExit(f"{run}: run not finished (final.pt missing, or resume.pt present "
+                         f"without --kept-resume)")
     git = rc.get('git') or {}
     commit = args.train_commit or git.get('commit')
     dirty = {'true': True, 'false': False}.get(args.train_dirty, git.get('dirty'))
@@ -73,6 +77,10 @@ def main():
         'meta': meta,
         'manifest_written_at_commit': git_state(),
     }
+    if args.kept_resume:
+        # full state (networks, optimizer, buffer, pool, RNG) kept for a later --resume
+        manifest['resume_state'] = {'path': resume.as_posix(), 'sha256': sha256(resume),
+                                    'size_bytes': resume.stat().st_size}
     if args.note:
         manifest['note'] = args.note
     out = run / 'manifest.json'

@@ -1,0 +1,1865 @@
+{
+  "provenance": {
+    "git": {
+      "commit": "352f54656069fa6f8fa3b8d04ab6b2f41beee35a",
+      "dirty": false
+    },
+    "command": "python scripts/eval_dqn_final.py --checkpoint checkpoints/final/5x5_s42/model.pt --out 5x5/final_dqn_5x5_s42_500k_eval.json --skip-truth --exact-seeds 0 --distinct-openings 50",
+    "config": {
+      "gamma": 0.99,
+      "max_plies": 200,
+      "opening_plies": 4,
+      "distinct_openings": 50,
+      "random_greedy_seeds": 100,
+      "minimax_seeds": 50,
+      "exact_seeds": 0,
+      "value_class_threshold": 0.5,
+      "tie_break": "lowest action id among max Q (as DQNAgent)"
+    },
+    "seeds": [
+      {
+        "distinct_opening_seeds": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          12,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          26,
+          28,
+          29,
+          30,
+          31,
+          33,
+          34,
+          35,
+          37,
+          38,
+          40,
+          41,
+          42,
+          43,
+          44,
+          47,
+          50,
+          52,
+          53,
+          57,
+          58,
+          60,
+          61,
+          67,
+          74,
+          76,
+          78,
+          79
+        ]
+      }
+    ],
+    "checkpoints": [
+      {
+        "path": "checkpoints/final/5x5_s42/model.pt",
+        "sha256": "cfee5c2daad79709e0d38db2b548e7f336202d45ff6b5002dcdf2c206aeac452"
+      }
+    ],
+    "python": "3.12.5",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.2.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date": "2026-11-11T12:12:47+05:30"
+  },
+  "checkpoint_meta": {
+    "N": 5,
+    "blocks": 3,
+    "channels": 64,
+    "codec_version": 1,
+    "commit": "d736668",
+    "double": true,
+    "dueling": false,
+    "gamma": 0.99,
+    "hidden": 256,
+    "obs_version": 1,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "seed": 42,
+    "step": 500040
+  },
+  "board_size": 5,
+  "rules": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "K": 3,
+    "M": 10
+  },
+  "openings": {
+    "rule": "shortest opening_plies with >= 50 distinct openings, first seed of each, scanned from seed 0",
+    "opening_plies": 4,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      12,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      26,
+      28,
+      29,
+      30,
+      31,
+      33,
+      34,
+      35,
+      37,
+      38,
+      40,
+      41,
+      42,
+      43,
+      44,
+      47,
+      50,
+      52,
+      53,
+      57,
+      58,
+      60,
+      61,
+      67,
+      74,
+      76,
+      78,
+      79
+    ],
+    "seeds_scanned": 80,
+    "seed_to_opening": {
+      "0": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            0
+          ]
+        ]
+      ],
+      "1": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "2": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "3": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "4": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "5": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "6": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "7": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "8": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "9": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "12": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "14": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "15": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "16": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            0
+          ]
+        ]
+      ],
+      "17": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            0
+          ]
+        ]
+      ],
+      "18": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "19": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "20": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "21": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            0
+          ]
+        ]
+      ],
+      "22": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "23": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "24": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "26": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "28": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "29": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "30": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "31": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            0
+          ]
+        ]
+      ],
+      "33": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "34": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "35": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "37": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "38": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "40": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "41": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "42": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "43": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "44": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "47": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "50": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "52": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "53": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "57": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "58": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "60": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "61": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "67": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "74": [
+        [
+          "MOVE",
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "76": [
+        [
+          "MOVE",
+          [
+            0,
+            3
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "78": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "79": [
+        [
+          "MOVE",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            1
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "MOVE",
+          [
+            4,
+            2
+          ]
+        ]
+      ]
+    }
+  },
+  "matches": {
+    "random": {
+      "opponent": "random",
+      "opening_seeds": [
+        0,
+        79
+      ],
+      "overall": {
+        "matches": 100,
+        "categories": {
+          "win": 98,
+          "draw_no_legal_actions": 1,
+          "draw_repetition": 1,
+          "truncated": 0,
+          "loss": 0
+        },
+        "win_rate": 0.98,
+        "win_rate_ci95": [
+          0.93,
+          0.9945
+        ],
+        "loss_rate": 0.0,
+        "draw_rate": 0.02,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 19.63
+      },
+      "dqn_as_p0": {
+        "matches": 50,
+        "categories": {
+          "win": 49,
+          "draw_no_legal_actions": 1
+        },
+        "win_rate": 0.98,
+        "win_rate_ci95": [
+          0.895,
+          0.9965
+        ],
+        "loss_rate": 0.0,
+        "draw_rate": 0.02,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 17.7
+      },
+      "dqn_as_p1": {
+        "matches": 50,
+        "categories": {
+          "win": 49,
+          "draw_repetition": 1
+        },
+        "win_rate": 0.98,
+        "win_rate_ci95": [
+          0.895,
+          0.9965
+        ],
+        "loss_rate": 0.0,
+        "draw_rate": 0.02,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 21.56
+      }
+    },
+    "greedy": {
+      "opponent": "greedy",
+      "opening_seeds": [
+        0,
+        79
+      ],
+      "overall": {
+        "matches": 100,
+        "categories": {
+          "draw_repetition": 25,
+          "loss": 6,
+          "win": 66,
+          "draw_no_legal_actions": 3,
+          "truncated": 0
+        },
+        "win_rate": 0.66,
+        "win_rate_ci95": [
+          0.5628,
+          0.7454
+        ],
+        "loss_rate": 0.06,
+        "draw_rate": 0.28,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 27.56
+      },
+      "dqn_as_p0": {
+        "matches": 50,
+        "categories": {
+          "draw_repetition": 9,
+          "loss": 5,
+          "win": 36
+        },
+        "win_rate": 0.72,
+        "win_rate_ci95": [
+          0.5833,
+          0.8253
+        ],
+        "loss_rate": 0.1,
+        "draw_rate": 0.18,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 27.78
+      },
+      "dqn_as_p1": {
+        "matches": 50,
+        "categories": {
+          "draw_repetition": 16,
+          "win": 30,
+          "loss": 1,
+          "draw_no_legal_actions": 3
+        },
+        "win_rate": 0.6,
+        "win_rate_ci95": [
+          0.4618,
+          0.7239
+        ],
+        "loss_rate": 0.02,
+        "draw_rate": 0.38,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 27.34
+      }
+    },
+    "minimax:depth=2": {
+      "opponent": "minimax:depth=2",
+      "opening_seeds": [
+        0,
+        79
+      ],
+      "overall": {
+        "matches": 100,
+        "categories": {
+          "win": 73,
+          "draw_repetition": 10,
+          "loss": 17,
+          "truncated": 0
+        },
+        "win_rate": 0.73,
+        "win_rate_ci95": [
+          0.6357,
+          0.8073
+        ],
+        "loss_rate": 0.17,
+        "draw_rate": 0.1,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 24.38
+      },
+      "dqn_as_p0": {
+        "matches": 50,
+        "categories": {
+          "win": 37,
+          "draw_repetition": 8,
+          "loss": 5
+        },
+        "win_rate": 0.74,
+        "win_rate_ci95": [
+          0.6045,
+          0.8413
+        ],
+        "loss_rate": 0.1,
+        "draw_rate": 0.16,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 23.72
+      },
+      "dqn_as_p1": {
+        "matches": 50,
+        "categories": {
+          "win": 36,
+          "loss": 12,
+          "draw_repetition": 2
+        },
+        "win_rate": 0.72,
+        "win_rate_ci95": [
+          0.5833,
+          0.8253
+        ],
+        "loss_rate": 0.24,
+        "draw_rate": 0.04,
+        "truncation_rate": 0.0,
+        "forfeit_by_dqn": 0,
+        "mean_plies": 25.04
+      }
+    }
+  },
+  "elapsed_seconds": 94.6
+}
