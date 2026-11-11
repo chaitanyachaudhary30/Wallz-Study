@@ -1,0 +1,48 @@
+{
+  "source": {
+    "commit": "99cd1ef3c048fde4d3f5d78571e66c23ed992f48",
+    "dirty": false
+  },
+  "command": "python scripts/final_minimax.py --results-dir final_minimax_hop paired experiments/results/final_minimax/vs_greedy_N5_open4_depth3_diag.jsonl minimax:depth=3 experiments/results/final_minimax_hop/vs_greedy_N5_hop_d3.jsonl minimax:depth=3,eval=hop --name paired_d3_default_vs_hop.json",
+  "python": "3.12.5",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "date": "2026-11-11T05:49:04+05:30",
+  "config": {
+    "a": "experiments/results/final_minimax/vs_greedy_N5_open4_depth3_diag.jsonl",
+    "spec_a": "minimax:depth=3",
+    "b": "experiments/results/final_minimax_hop/vs_greedy_N5_hop_d3.jsonl",
+    "spec_b": "minimax:depth=3,eval=hop",
+    "unit": "game = (opening seed, minimax seat); win = minimax goal win",
+    "bootstrap": "10000 resamples of openings (both seats kept together)"
+  },
+  "seeds": {
+    "bootstrap_rng": 0
+  },
+  "results": {
+    "games_paired": 100,
+    "openings": 50,
+    "win_rate_a": 0.45,
+    "win_rate_b": 0.5,
+    "difference_b_minus_a": 0.05,
+    "paired_bootstrap95": [
+      -0.05,
+      0.15
+    ],
+    "per_game_table": {
+      "both_win": 36,
+      "only_a_wins": 9,
+      "only_b_wins": 14,
+      "neither_wins": 41
+    },
+    "minimax_as_p0": {
+      "games": 50,
+      "win_rate_a": 0.44,
+      "win_rate_b": 0.6
+    },
+    "minimax_as_p1": {
+      "games": 50,
+      "win_rate_a": 0.46,
+      "win_rate_b": 0.4
+    }
+  }
+}
