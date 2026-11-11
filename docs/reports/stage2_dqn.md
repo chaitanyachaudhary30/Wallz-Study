@@ -100,9 +100,13 @@ unchanged (3x3: Gate X-16, 1000 states, seed 42; 4x4: `evaluation.ablation.agree
 | Board | Measure | Old file | Old | Final rules | Change | Material? |
 |---|---|---|---:|---:|---:|---|
 | 3x3 | value-sign agreement (Gate X-16) | `dqn/gate_x16.json` | 96.47% | 86.80% | -9.7 | yes (> 5) |
-| 3x3 | win rate vs greedy | `dqn/benchmark_N3.json` | 62.0% | 24.0% | -38.0 | yes (> 10) |
+| 3x3 | win rate vs greedy | `dqn/benchmark_N3.json` | 62.0% | 24.0% (25.0% over 16 distinct games) | -38.0 | yes (> 10) |
 | 4x4 | value-optimal agreement | `dqn/agreement_N4.json` | 93.3% | 75.7% | -17.6 | yes |
-| 4x4 | win rate vs greedy | `dqn/benchmark_N4.json` | 50.0% | 0.0% | -50.0 | yes |
+| 4x4 | win rate vs greedy | `dqn/benchmark_N4.json` | 50.0% | 0.0% (0.0% over 18 distinct games) | -50.0 | yes |
+
+The old benchmark files also replay repeated deterministic games, so their rates carry the same
+caveat; the drops are large enough that the verdict does not depend on it
+(`distinct_reanalysis.json`).
 
 **The 96.47% value-sign agreement does not hold under the final rules: it is 86.80%**
 (`release_dqn_3x3_eval.json`, `ground_truth_legacy_protocol`). Over all 3x3 states it is 82.9%.
@@ -147,7 +151,37 @@ the three training commits (d251df3, 9ee24ec, fa79c06): only the `run_config.jso
 rank-optimal 91.1-93.3% (92.5), sign agreement 97.7-97.9% (97.8).
 Per-status rates (WIN / LOSS / DRAW) are in each `*_eval.json` under `ground_truth_population`.
 
-### Matches (win / rule draw / truncated / loss, %)
+### Matches over distinct games (win / rule draw / truncated / loss, %)
+
+The agents are deterministic, so a repeated opening in the same seats replays the same game.
+On 3x3, opening_plies 2 gives only 8 distinct openings and so 16 distinct games against Greedy,
+Minimax and the exact solver; on 4x4 it gives 18. Random is seeded per match, so most of its
+games differ. `distinct_reanalysis.json` replays every match (all outcome counts reproduce the
+files exactly), keys each game by DQN seat and full action sequence, and counts each distinct
+game once. **These numbers replace the all-games table below for every claim.** Number of
+distinct games in brackets.
+
+| Model | vs random | vs greedy | vs minimax d2 | vs exact |
+|---|---|---|---|---|
+| release 3x3 | 74.6 / 0.6 / 0 / 24.9 (169) | 25.0 / 18.8 / 0 / 56.3 (16) | 12.5 / 12.5 / 0 / 75.0 (16) | 12.5 / 0 / 0 / 87.5 (16) |
+| final 3x3 s42 | 98.8 / 0.6 / 0 / 0.6 (162) | 62.5 / 25.0 / 0 / 12.5 (16) | 75.0 / 12.5 / 0 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s43 | 98.8 / 0 / 0 / 1.2 (161) | 62.5 / 25.0 / 0 / 12.5 (16) | 62.5 / 25.0 / 0 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s44 | 99.4 / 0 / 0 / 0.6 (166) | 62.5 / 25.0 / 0 / 12.5 (16) | 62.5 / 18.8 / 6.3 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s45 | 98.8 / 0 / 0 / 1.2 (162) | 75.0 / 12.5 / 0 / 12.5 (16) | 62.5 / 25.0 / 0 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s46 | 98.1 / 0.6 / 0 / 1.2 (162) | 62.5 / 25.0 / 0 / 12.5 (16) | 75.0 / 0 / 0 / 25.0 (16) | 25 / 50 / 0 / 25 (16) |
+| release 4x4 | 53.0 / 21.2 / 0 / 25.8 (198) | 0 / 5.6 / 0 / 94.4 (18) | 0 / 11.1 / 0 / 88.9 (18) | 0 / 0 / 0 / 100 (18) |
+| final 4x4 s42 | 94.8 / 1.0 / 0 / 4.2 (191) | 50.0 / 22.2 / 0 / 27.8 (18) | 38.9 / 22.2 / 0 / 38.9 (18) | 27.8 / 27.8 / 0 / 44.4 (18) |
+
+Wilson 95% win intervals over distinct games (same file): 3x3 retrained vs greedy 38.6-81.5%
+(62.5%) or 50.5-89.8% (75%); release 3x3 vs greedy 10.2-49.5%; 4x4 retrained vs greedy
+29.0-71.0%; 4x4 release vs greedy 0-17.6%. The old intervals were about four times narrower
+(for example 57.1-70.3% for 64% over 200 games).
+
+### Matches over all games (superseded)
+
+Kept for reference only: these count each repeat of a deterministic game as a new game, so
+their Wilson intervals (in the `*_eval.json` files, `tables.md` and `aggregate_3x3_seeds.json`)
+are too narrow. Use the distinct-game table above.
 
 | Model | vs random | vs greedy | vs minimax d2 | vs exact | Mean plies vs greedy |
 |---|---|---|---|---|---:|
@@ -164,11 +198,12 @@ Per-seating rates and mean lengths for every opponent are in the files and in
 `experiments/results/final_dqn/tables.md`. The only truncations: 4 of 100 games, 3x3 s44 vs
 minimax.
 
-**Against the exact solver** (`opening_values_vs_exact.json`): the 100 post-opening positions
-are worth 28 wins / 44 draws / 28 losses for the DQN side on 3x3, and 29 / 42 / 29 on 4x4.
-All five retrained 3x3 models reach exactly that value in every game. The release 3x3 model
-does not. The retrained 4x4 model loses 15 positions that are draws (as player 0: 6 draws,
-44 losses where the value is 21 draws, 29 losses).
+**Against the exact solver.** Over distinct games, the 16 distinct post-opening 3x3 positions
+(8 openings x 2 seats) are worth 4 wins / 8 draws / 4 losses for the DQN side, and the 18 on
+4x4 are worth 5 / 8 / 5. All five retrained 3x3 models reach the game value in all 16 distinct
+games (25 / 50 / 25%); the release 3x3 model does not. The retrained 4x4 model loses 3 of the 8
+drawn positions (all as player 0). The earlier wording, "100 positions, 28 / 44 / 28, loses 15
+drawn positions" (`opening_values_vs_exact.json`), counted repeated openings and is superseded.
 
 ## 6. 5x5 and 9x9 (Task 5)
 
@@ -215,7 +250,8 @@ seed->opening map is in the result file. Each opening is played in both seats.
 | minimax:depth=2 | 100 | 73.0 | 10.0 | 0.0 | 17.0 | 74.0 | 72.0 | 24.4 |
 
 Source: `final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json` (commit 352f546, clean; Wilson 95%
-win intervals there: greedy 56.3-74.5%, minimax 63.6-80.7%). No game was forfeited.
+win intervals there: greedy 56.3-74.5%, minimax 63.6-80.7%). No game was forfeited. All 100
+games per opponent are distinct (`distinct_reanalysis.json`), so these intervals stand.
 
 **Known limit.** On 5x5 with M=10, observation v1 cannot see who owns walls that are no longer
 anyone's latest wall, but HOP may only cross an opponent's wall. So the network can misjudge

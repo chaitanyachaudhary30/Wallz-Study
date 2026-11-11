@@ -101,27 +101,33 @@ Every non-terminal state of the exact solve: 138,646 on 3x3 (K1 M1) and 4,350 on
 The earlier 96.47% sign agreement (Gate X-16 protocol) falls to 86.80% for the release model
 under the final rules, and the retrained models reach 97.6-98.6% on the same protocol.
 
-Against the exact solver, the opening positions are worth 28 wins, 44 draws and 28 losses on 3x3.
-All five retrained 3x3 models get exactly that result, so they play these openings
-optimally. On 4x4 the retrained model loses 15 positions that are draws
-(`final_dqn/opening_values_vs_exact.json`).
+Against the exact solver, the 16 distinct 3x3 openings-and-seats are worth 4 wins, 8 draws and
+4 losses. All five retrained 3x3 models get exactly that result in all 16 games, so they play
+these openings optimally. On 4x4 the retrained model loses 3 of the 8 drawn positions, all as
+player 0 (`final_dqn/distinct_reanalysis.json`; this supersedes the all-games count in
+`final_dqn/opening_values_vs_exact.json`).
 
 ## 9. Comparison with Minimax and Greedy
 
-Both seatings, opening_plies 2; 200 games vs Greedy (seeds 0-99), 100 vs Minimax depth 2
-(seeds 0-49). Columns: win / rule draw / truncated / loss, in %.
+Both seatings, opening_plies 2. All agents here are deterministic, so a repeated opening replays
+the same game: of the 200 games vs Greedy and 100 vs Minimax depth 2, only 16 are distinct on
+3x3 and 18 on 4x4. Rates below count each distinct game once
+(`final_dqn/distinct_reanalysis.json`). Columns: win / rule draw / truncated / loss, in %.
 
-| Model | vs Greedy | vs Minimax d2 |
-|---|---|---|
-| release 3x3 | 24.0 / 16.5 / 0 / 59.5 | 18 / 10 / 0 / 72 |
-| retrained 3x3 (5 seeds) | win 64-76 (mean 66.4), loss 14.5 every seed | win 60-72 (mean 64.4), loss 18-28 |
-| release 4x4 | 0 / 6.5 / 0 / 93.5 | 0 / 13 / 0 / 87 |
-| retrained 4x4 s42 | 50.0 / 22.0 / 0 / 28.0 | 39 / 21 / 0 / 40 |
+| Model | Distinct games | vs Greedy | vs Minimax d2 |
+|---|---:|---|---|
+| release 3x3 | 16 | 25.0 / 18.8 / 0 / 56.3 | 12.5 / 12.5 / 0 / 75.0 |
+| retrained 3x3 (5 seeds) | 16 each | win 62.5-75.0 (mean 65.0), loss 12.5 every seed | win 62.5-75.0 (mean 67.5), loss 12.5-25.0 |
+| release 4x4 | 18 | 0 / 5.6 / 0 / 94.4 | 0 / 11.1 / 0 / 88.9 |
+| retrained 4x4 s42 | 18 | 50.0 / 22.2 / 0 / 27.8 | 38.9 / 22.2 / 0 / 38.9 |
 
-Sources: `final_dqn/aggregate_3x3_seeds.json` and the `*_eval.json` files; per-seed rows and
-per-seating rates are in `final_dqn/tables.md`. Truncation appears only once: 4% of games for
-3x3 seed 44 vs Minimax. Seating matters: on 3x3 the retrained models win 81% vs Greedy as player 0
-and 47-71% as player 1 (`final_dqn/final_dqn_3x3_s4*_eval.json`).
+With so few distinct games the intervals are wide: a 62.5% win rate vs Greedy on 3x3 has a
+Wilson 95% interval of 38.6-81.5%, and 4x4's 50% has 29.0-71.0%. The all-games rates and
+intervals in the `*_eval.json` files, `final_dqn/tables.md` and
+`final_dqn/aggregate_3x3_seeds.json` are **superseded**: they count repeats as new games, so
+their intervals are about four times too narrow. Truncation appears in one distinct game only
+(3x3 seed 44 vs Minimax). Seating matters: over distinct games the retrained 3x3 models win 75%
+vs Greedy as player 0 and 50-75% as player 1.
 
 ### 9.1 Larger board: 5x5 (no exact ground truth)
 
@@ -136,8 +142,10 @@ distinct-opening rule: 4 plies, the first 50 distinct openings (seeds 0..79), bo
 | greedy | 66 / 28 / 0 / 6 | 72 / 60 |
 | minimax:depth=2 | 73 / 10 / 0 / 17 | 74 / 72 |
 
-Source: `final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json`. These are match results only; there
-is no solver on 5x5, so they make no claim about optimal play.
+Source: `final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json`. All 100 games per opponent are
+distinct (`final_dqn/distinct_reanalysis.json`), so their Wilson intervals stand (vs Greedy
+56.3-74.5%, vs Minimax 63.6-80.7%). These are match results only; there is no solver on 5x5,
+so they make no claim about optimal play.
 
 Known limit: with M=10 the observation cannot show who owns walls that are no longer anyone's
 latest wall, yet HOP may only cross an opponent's wall, so the network can misjudge HOP.
@@ -154,7 +162,7 @@ observation (`final_dqn/encoding_alias_audit.json`).
   depends on wall owners the network cannot see.
 - **4x4 rests on one seed.** The 3x3 spread across five seeds is small (value-optimal
   96.0-96.5%), but the 4x4 number is a single run.
-- **Draw handling is the weak point:** the retrained 4x4 model still loses 15 drawn openings
-  against the exact solver, and about half of the 3x3 training episodes end in repetition.
+- **Draw handling is the weak point:** the retrained 4x4 model still loses 3 of its 8 drawn
+  distinct openings against the exact solver, and about half of the 3x3 training episodes end in repetition.
 - The release checkpoints were trained under the old HOP rule and should not be cited for the
   final game.
