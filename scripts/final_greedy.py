@@ -279,16 +279,17 @@ def cmd_run(args):
     focus_specs = {f for f, _ in pairs}
     uniq = {}
     for r in results:
-        seat = focus_seat(r, focus_specs)
+        # Self-play: both sides are Greedy, so a game is one game whichever seed sits where;
+        # count it once and read it from Player 0's side.
+        seat = 0 if args.pairing == 'self' else focus_seat(r, focus_specs)
         uniq.setdefault(game_key(r, seat), (seat, r))
     items = list(uniq.values())
-    res = {'overall': summarize(items),
-           'greedy_as_p0': summarize([x for x in items if x[0] == 0]),
-           'greedy_as_p1': summarize([x for x in items if x[0] == 1])}
     if args.pairing == 'self':
-        p0w = sum(r['outcome']['category'] == 'goal' and r['outcome']['winner'] == 0 for _, r in items)
-        lo, hi = wilson(p0w, len(items))
-        res['p0_goal_win_rate'] = {'count': p0w, 'rate': p0w / len(items), 'wilson95': [lo, hi]}
+        res = {'overall': summarize(items), 'note': 'self-play: one row per distinct game, from Player 0'}
+    else:
+        res = {'overall': summarize(items),
+               'greedy_as_p0': summarize([x for x in items if x[0] == 0]),
+               'greedy_as_p1': summarize([x for x in items if x[0] == 1])}
     if args.board == 'N3':
         res['vs_exact_solver'] = solver_compare(items, n, rules)
     config = {'board': args.board, 'board_size': n, 'rules': configs[0].rules, 'pairing': args.pairing,
@@ -299,7 +300,9 @@ def cmd_run(args):
               'seed_selection': f'first seed of each distinct opening action sequence, seeds 0..{scanned - 1} scanned',
               'seed_to_opening': openings, 'seatings': 'both per opening seed and spec pair',
               'move_time_limit': None,
-              'counting': 'statistics over distinct games: same Greedy seat and same full action list count once'}
+              'counting': ('statistics over distinct games: the same full action list counts once; '
+                           'self-play results are from Player 0, other pairings from Greedy, '
+                           'with the same action list in different Greedy seats counted once per seat')}
     summary = provenance(config, seeds)
     summary.update({'match_log': str(log.relative_to(ROOT)).replace('\\', '/'),
                     'wall_seconds': round(time.time() - t0, 1),
@@ -326,7 +329,11 @@ def cmd_tables(args):
     for path in sorted(OUT.glob('*_summary.json')):
         s = json.loads(path.read_text(encoding='utf-8'))
         for part in ('greedy_as_p0', 'greedy_as_p1', 'overall'):
+            if part not in s['results']:
+                continue
             r = s['results'][part]
+            if s['config']['pairing'] == 'self':
+                part = 'self-play (W/L = P0)'
             draws = ', '.join(f'{k[5:]} {v}' for k, v in r['draws_by_type'].items()) or '0'
             rows.append(
                 f"| {s['config']['board']} | {s['config']['pairing']} | {part.replace('greedy_as_', '')} | "
