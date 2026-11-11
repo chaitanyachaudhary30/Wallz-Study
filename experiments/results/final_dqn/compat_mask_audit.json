@@ -1,0 +1,96 @@
+{
+  "provenance": {
+    "git": {
+      "commit": "5f00f4ffb43dfbca5ce424bf2d4bfcecf6174cda",
+      "dirty": false
+    },
+    "command": "python scripts/audit_dqn_compat.py --seeds 3:200 4:100 5:40",
+    "config": {
+      "boards_seeds": {
+        "3": 200,
+        "4": 100,
+        "5": 40
+      },
+      "plies": 40,
+      "rule_cells": {
+        "default_K3_M10": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "K": 3,
+          "M": 10
+        },
+        "train3_K1_M1": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "K": 1,
+          "M": 1
+        },
+        "train4_K1_M0": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "K": 1,
+          "M": 0
+        },
+        "K2_M3": {
+          "A": true,
+          "B": true,
+          "C": true,
+          "K": 2,
+          "M": 3
+        },
+        "A0_K1_M2": {
+          "A": false,
+          "B": true,
+          "C": true,
+          "K": 1,
+          "M": 2
+        },
+        "B0C0_M2": {
+          "A": true,
+          "B": false,
+          "C": false,
+          "K": 3,
+          "M": 2
+        },
+        "all_off_M0": {
+          "A": false,
+          "B": false,
+          "C": false,
+          "K": 1,
+          "M": 0
+        }
+      },
+      "playouts": "per seed s: biased type-first playout (seed 2s+1) and uniform playout (seed 2s)"
+    },
+    "seeds": null,
+    "checkpoints": [],
+    "python": "3.12.5",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.2.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date": "2026-11-11T03:11:19+05:30"
+  },
+  "mask_audit": {
+    "positions": 107525,
+    "ids_checked": 5952580,
+    "mismatches": [],
+    "collisions": 0,
+    "legal_action_types": {
+      "MOVE": 245720,
+      "WALL": 262771,
+      "BLOCK": 166628,
+      "REPLACE": 440371,
+      "HOP": 10197
+    },
+    "per_board": {
+      "3": 45827,
+      "4": 41741,
+      "5": 19957
+    },
+    "verdict": "held",
+    "elapsed_seconds": 286.3
+  }
+}

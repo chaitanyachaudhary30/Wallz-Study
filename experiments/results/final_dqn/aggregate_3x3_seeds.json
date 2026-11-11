@@ -1,0 +1,309 @@
+{
+  "provenance": {
+    "git": {
+      "commit": "c07c394358039d4501ff2259ed363e2469671ee1",
+      "dirty": false
+    },
+    "command": "python scripts/make_stage2_dqn_tables.py",
+    "config": {
+      "inputs": [
+        "final_dqn_3x3_s42_eval.json",
+        "final_dqn_3x3_s43_eval.json",
+        "final_dqn_3x3_s44_eval.json",
+        "final_dqn_3x3_s45_eval.json",
+        "final_dqn_3x3_s46_eval.json"
+      ]
+    },
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "checkpoints": [],
+    "python": "3.12.5",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.2.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date": "2026-11-11T07:26:39+05:30"
+  },
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46
+  ],
+  "files": [
+    "final_dqn_3x3_s42_eval.json",
+    "final_dqn_3x3_s43_eval.json",
+    "final_dqn_3x3_s44_eval.json",
+    "final_dqn_3x3_s45_eval.json",
+    "final_dqn_3x3_s46_eval.json"
+  ],
+  "value_optimal_rate": {
+    "mean": 0.9617,
+    "min": 0.9597,
+    "max": 0.9655,
+    "values": [
+      0.9603,
+      0.9618,
+      0.9614,
+      0.9655,
+      0.9597
+    ]
+  },
+  "rank_optimal_rate": {
+    "mean": 0.9253,
+    "min": 0.911,
+    "max": 0.9328,
+    "values": [
+      0.911,
+      0.9328,
+      0.9199,
+      0.9322,
+      0.9304
+    ]
+  },
+  "sign_agreement": {
+    "mean": 0.9779,
+    "min": 0.9768,
+    "max": 0.9792,
+    "values": [
+      0.9772,
+      0.9792,
+      0.9782,
+      0.9768,
+      0.978
+    ]
+  },
+  "value_class_agreement": {
+    "mean": 0.8836,
+    "min": 0.864,
+    "max": 0.8967,
+    "values": [
+      0.895,
+      0.8967,
+      0.8957,
+      0.864,
+      0.8667
+    ]
+  },
+  "mae_vs_discounted_value": {
+    "mean": 0.1783,
+    "min": 0.1645,
+    "max": 0.1882,
+    "values": [
+      0.1762,
+      0.1825,
+      0.1645,
+      0.18,
+      0.1882
+    ]
+  },
+  "legacy_sign_agreement": {
+    "mean": 0.9823,
+    "min": 0.9758,
+    "max": 0.9855,
+    "values": [
+      0.9807,
+      0.9758,
+      0.9855,
+      0.9839,
+      0.9855
+    ]
+  },
+  "random_win_rate": {
+    "mean": 0.99,
+    "min": 0.985,
+    "max": 0.995,
+    "values": [
+      0.99,
+      0.99,
+      0.995,
+      0.99,
+      0.985
+    ]
+  },
+  "random_draw_rate": {
+    "mean": 0.002,
+    "min": 0.0,
+    "max": 0.005,
+    "values": [
+      0.005,
+      0.0,
+      0.0,
+      0.0,
+      0.005
+    ]
+  },
+  "random_truncation_rate": {
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0,
+    "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "random_loss_rate": {
+    "mean": 0.008,
+    "min": 0.005,
+    "max": 0.01,
+    "values": [
+      0.005,
+      0.01,
+      0.005,
+      0.01,
+      0.01
+    ]
+  },
+  "greedy_win_rate": {
+    "mean": 0.664,
+    "min": 0.64,
+    "max": 0.76,
+    "values": [
+      0.64,
+      0.64,
+      0.64,
+      0.76,
+      0.64
+    ]
+  },
+  "greedy_draw_rate": {
+    "mean": 0.191,
+    "min": 0.095,
+    "max": 0.215,
+    "values": [
+      0.215,
+      0.215,
+      0.215,
+      0.095,
+      0.215
+    ]
+  },
+  "greedy_truncation_rate": {
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0,
+    "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "greedy_loss_rate": {
+    "mean": 0.145,
+    "min": 0.145,
+    "max": 0.145,
+    "values": [
+      0.145,
+      0.145,
+      0.145,
+      0.145,
+      0.145
+    ]
+  },
+  "minimax:depth=2_win_rate": {
+    "mean": 0.644,
+    "min": 0.6,
+    "max": 0.72,
+    "values": [
+      0.7,
+      0.6,
+      0.6,
+      0.6,
+      0.72
+    ]
+  },
+  "minimax:depth=2_draw_rate": {
+    "mean": 0.148,
+    "min": 0.0,
+    "max": 0.22,
+    "values": [
+      0.12,
+      0.22,
+      0.18,
+      0.22,
+      0.0
+    ]
+  },
+  "minimax:depth=2_truncation_rate": {
+    "mean": 0.008,
+    "min": 0.0,
+    "max": 0.04,
+    "values": [
+      0.0,
+      0.0,
+      0.04,
+      0.0,
+      0.0
+    ]
+  },
+  "minimax:depth=2_loss_rate": {
+    "mean": 0.2,
+    "min": 0.18,
+    "max": 0.28,
+    "values": [
+      0.18,
+      0.18,
+      0.18,
+      0.18,
+      0.28
+    ]
+  },
+  "exact_win_rate": {
+    "mean": 0.28,
+    "min": 0.28,
+    "max": 0.28,
+    "values": [
+      0.28,
+      0.28,
+      0.28,
+      0.28,
+      0.28
+    ]
+  },
+  "exact_draw_rate": {
+    "mean": 0.44,
+    "min": 0.44,
+    "max": 0.44,
+    "values": [
+      0.44,
+      0.44,
+      0.44,
+      0.44,
+      0.44
+    ]
+  },
+  "exact_truncation_rate": {
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0,
+    "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "exact_loss_rate": {
+    "mean": 0.28,
+    "min": 0.28,
+    "max": 0.28,
+    "values": [
+      0.28,
+      0.28,
+      0.28,
+      0.28,
+      0.28
+    ]
+  }
+}

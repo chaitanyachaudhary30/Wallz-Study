@@ -45,6 +45,7 @@ def run_tournament(
         print(f"--- Running series: DQN vs {opp_spec} ---")
         wins = 0
         draws = 0
+        truncated = 0
         losses = 0
         forfeits = 0
         plies_list = []
@@ -86,7 +87,9 @@ def run_tournament(
                         wins += 1
                     else:
                         losses += 1
-                elif 'draw' in cat or cat == 'truncated':
+                elif cat == 'truncated':
+                    truncated += 1  # runner cap: own column, never a draw (team decision)
+                elif cat.startswith('draw'):
                     draws += 1
                 else:
                     losses += 1
@@ -108,10 +111,12 @@ def run_tournament(
             'total_matches': n_total,
             'wins': wins,
             'draws': draws,
+            'truncated': truncated,
             'losses': losses,
             'forfeits': forfeits,
             'win_rate': round(wins / n_total, 4),
             'draw_rate': round(draws / n_total, 4),
+            'truncation_rate': round(truncated / n_total, 4),
             'loss_rate': round(losses / n_total, 4),
             'win_rate_wilson_ci95': [round(w_low, 4), round(w_high, 4)],
             'mean_plies': round(sum(plies_list) / len(plies_list), 1) if plies_list else 0.0,
@@ -122,13 +127,13 @@ def run_tournament(
     print(f"Tournament completed in {elapsed:.1f}s ({completed_matches} matches)")
     print("============================================================")
 
-    # Gate check for 5x5: win rate vs greedy > 50% with Wilson lower bound > 50%
+    # Gate check (defined for 5x5 in the plan; applied to whatever board is run): win rate vs greedy > 50% with Wilson lower bound > 50%
     vs_greedy = results.get('vs_greedy')
     gate_passed = False
     if vs_greedy is not None:
         ci_low = vs_greedy['win_rate_wilson_ci95'][0]
         gate_passed = (ci_low > 0.50)
-        print(f"5x5 Gate vs Greedy: Win Rate = {vs_greedy['win_rate'] * 100:.1f}%, 95% CI Lower Bound = {ci_low * 100:.1f}%")
+        print(f"{board_size}x{board_size} Gate vs Greedy: Win Rate = {vs_greedy['win_rate'] * 100:.1f}%, 95% CI Lower Bound = {ci_low * 100:.1f}%")
         print(f"Gate Status: {'PASSED' if gate_passed else 'FAILED'} (Requires lower bound > 50.0%)")
 
     return {

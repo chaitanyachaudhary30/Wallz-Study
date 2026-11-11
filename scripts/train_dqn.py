@@ -10,6 +10,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import sys
 import time
 from typing import Any, Dict
 import yaml
@@ -117,6 +118,100 @@ def evaluate_agent(
     return eval_results
 
 
+def make_q_probe(board_size: int, rules: dict, games: int = 8, plies: int = 12):
+    """Fixed probe positions (start position + uniform random playouts, seeds 0..games-1)
+    used to log the Q-value curve; independent of the training RNG."""
+    import random as _random
+    import numpy as _np
+    from agents.dqn.encoding import encode_observation
+    from wallz_engine import WallzEngine
+    try:
+        from modified_wallz.actions import ActionCodec
+    except ImportError:
+        from src.modified_wallz.actions import ActionCodec
+    codec = ActionCodec(board_size)
+    obs, masks = [], []
+    for g in range(games):
+        rng = _random.Random(g)
+        e = WallzEngine(board_size=board_size, rules=rules)
+        for _ in range(plies):
+            if e.is_terminal():
+                break
+            obs.append(encode_observation(e))
+            masks.append(codec.legal_mask(e))
+            e.apply_action(rng.choice(e.get_legal_actions()), update_clock=False)
+    return _np.stack(obs), _np.array(masks, dtype=bool)
+
+
+def q_probe_stats(model, probe) -> Dict[str, float]:
+    """Mean / min / max of the max legal Q over the probe set, and Q at the start position."""
+    import numpy as _np
+    import torch
+    obs, masks = probe
+    was_training = model.training
+    model.eval()
+    with torch.no_grad():
+        q = model(torch.as_tensor(obs, dtype=torch.float32)).cpu().numpy()
+    if was_training:
+        model.train()
+    best = _np.where(masks, q, -_np.inf).max(axis=1)
+    return {'mean_max_q': round(float(best.mean()), 4), 'min_max_q': round(float(best.min()), 4),
+            'max_max_q': round(float(best.max()), 4), 'start_max_q': round(float(best[0]), 4),
+            'probe_states': int(len(best))}
+
+
+_BUFFER_FIELDS = ('obs', 'actions', 'rewards', 'next_obs', 'terminated', 'truncated', 'next_mask')
+
+
+def save_resume_state(path: Path, trainer, sp_manager, episode: int, last_eval_step: int,
+                      elapsed: float) -> None:
+    """Everything needed to continue a run: networks, optimizer, replay buffer, snapshot
+    pool, counters and RNG states. Written to a temp file first, then renamed."""
+    import random as _random
+    import numpy as _np
+    import torch
+    buf = trainer.buffer
+    state = {
+        'online': trainer.online_net.state_dict(),
+        'target': trainer.target_net.state_dict(),
+        'optimizer': trainer.optimizer.state_dict(),
+        'buffer': {k: getattr(buf, k)[:buf.size].copy() for k in _BUFFER_FIELDS},
+        'buffer_ptr': buf.ptr, 'buffer_size': buf.size,
+        'pool': list(sp_manager.pool._snapshots),
+        'last_snapshot_step': sp_manager.last_snapshot_step,
+        'total_env_steps': trainer.total_env_steps,
+        'total_grad_steps': trainer.total_grad_steps,
+        'episode': episode, 'last_eval_step': last_eval_step, 'elapsed_seconds': elapsed,
+        'rng_python': _random.getstate(), 'rng_numpy': _np.random.get_state(),
+        'rng_torch': torch.get_rng_state(),
+    }
+    tmp = path.with_suffix('.tmp')
+    torch.save(state, tmp)
+    os.replace(tmp, path)
+
+
+def load_resume_state(path: Path, trainer, sp_manager) -> dict:
+    import random as _random
+    import numpy as _np
+    import torch
+    state = torch.load(path, map_location=trainer.device, weights_only=False)
+    trainer.online_net.load_state_dict(state['online'])
+    trainer.target_net.load_state_dict(state['target'])
+    trainer.optimizer.load_state_dict(state['optimizer'])
+    buf = trainer.buffer
+    for k in _BUFFER_FIELDS:
+        getattr(buf, k)[:state['buffer_size']] = state['buffer'][k]
+    buf.ptr, buf.size = state['buffer_ptr'], state['buffer_size']
+    sp_manager.pool._snapshots = list(state['pool'])
+    sp_manager.last_snapshot_step = state['last_snapshot_step']
+    trainer.total_env_steps = state['total_env_steps']
+    trainer.total_grad_steps = state['total_grad_steps']
+    _random.setstate(state['rng_python'])
+    _np.random.set_state(state['rng_numpy'])
+    torch.set_rng_state(state['rng_torch'])
+    return state
+
+
 def main():
     parser = argparse.ArgumentParser(description="Train DQN agent on Modified Wallz.")
     parser.add_argument("--config", type=str, default="configs/training.yaml", help="Path to config YAML")
@@ -127,7 +222,14 @@ def main():
     parser.add_argument("--output-dir", type=str, default=None, help="Output directory for checkpoints and logs")
     parser.add_argument("--eval-freq", type=int, default=None, help="Env steps between evaluations")
     parser.add_argument("--smoke", action="store_true", help="Run quick 2000-step smoke test")
+    parser.add_argument("--threads", type=int, default=None, help="torch CPU threads (default: torch's choice)")
+    parser.add_argument("--max-minutes", type=float, default=None,
+                        help="Pause after this many minutes: save resume.pt and exit with code 3")
+    parser.add_argument("--resume", action="store_true", help="Continue from <output-dir>/resume.pt")
     args = parser.parse_args()
+    if args.threads:
+        import torch
+        torch.set_num_threads(args.threads)
 
     cfg_dict = load_yaml_config(args.config, board_size=args.board_size)
 
@@ -205,9 +307,32 @@ def main():
     eval_matches = cfg_dict.get('eval_matches', 10)
     last_eval_step = 0
     episode = 0
+    probe = make_q_probe(board_size, rules)
+    t_start = time.time()
+    t_session = t_start
+
+    resume_file = output_dir / "resume.pt"
+    if args.resume and resume_file.exists():
+        state = load_resume_state(resume_file, trainer, sp_manager)
+        episode, last_eval_step = state['episode'], state['last_eval_step']
+        t_start = time.time() - state['elapsed_seconds']
+        print(f"Resumed from {resume_file} at step {trainer.total_env_steps}")
+    else:
+        with open(output_dir / "run_config.json", 'w', encoding='utf-8') as f:
+            import torch
+            from evaluation.match_runner import source_commit
+            json.dump({'command': 'python ' + ' '.join(sys.argv), 'config': cfg_dict,
+                       'git': source_commit(), 'torch': torch.__version__,
+                       'python': sys.version.split()[0],
+                       'started': time.strftime('%Y-%m-%dT%H:%M:%S%z')}, f, indent=2, default=str)
 
     with open(log_file, 'a', encoding='utf-8') as f_log:
         while trainer.total_env_steps < total_steps:
+            if args.max_minutes and time.time() - t_session > args.max_minutes * 60:
+                save_resume_state(resume_file, trainer, sp_manager, episode, last_eval_step,
+                                  time.time() - t_start)
+                print(f"Paused at step {trainer.total_env_steps}; resume with --resume")
+                sys.exit(3)
             ep_res = sp_manager.run_episode()
             episode += 1
 
@@ -253,6 +378,8 @@ def main():
                     'env_steps': trainer.total_env_steps,
                     'grad_steps': trainer.total_grad_steps,
                     'eval': eval_out,
+                    'q_probe': q_probe_stats(trainer.online_net, probe),
+                    'elapsed_seconds': round(time.time() - t_start, 1),
                     'timestamp': time.time(),
                 }
                 f_log.write(json.dumps(eval_entry) + "\n")
@@ -305,6 +432,8 @@ def main():
         filename="model.pt",
     )
 
+    if resume_file.exists():
+        resume_file.unlink()
     print(f"Training complete. Final checkpoint saved to {output_dir}")
 
 

@@ -1,0 +1,38 @@
+{
+  "provenance": {
+    "git": {
+      "commit": "c07c394358039d4501ff2259ed363e2469671ee1",
+      "dirty": false
+    },
+    "command": "python D:\\SEM V\\Wallz-Study-wt\\bot2-timing.py",
+    "config": {
+      "note": "timing runs only"
+    },
+    "seeds": [
+      42
+    ],
+    "checkpoints": [],
+    "python": "3.12.5",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.2.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date": "2026-11-11T07:26:13+05:30"
+  },
+  "timing_5x5": {
+    "command": "python -m scripts.train_dqn --board-size 5 --steps 10000 --eval-freq 10000 --threads 2 --output-dir checkpoints/final/timing5",
+    "config": "configs/training.yaml board_5 (K=3, M=10, batch 128, buffer 100k)",
+    "env_steps": 10052,
+    "seconds_incl_one_eval": 74.6,
+    "estimate_2M_steps_hours": 4.1,
+    "status": "waiting for the user decision; not started"
+  },
+  "timing_9x9": {
+    "command": "python -m scripts.train_dqn --board-size 9 --smoke --threads 2 --output-dir checkpoints/final/timing9",
+    "config": "smoke: batch 32, buffer 5000 (cheaper per step than board_9)",
+    "env_steps": 2056,
+    "seconds_incl_two_evals": 34.4,
+    "estimate_5M_steps_hours_lower_bound": 23.2,
+    "status": "skipped: the plan trains 9x9 only if compute permits; 5M steps exceed the shared-machine budget"
+  },
+  "machine": "shared Windows CPU, three bots, about 4 GB free, torch threads 2"
+}
