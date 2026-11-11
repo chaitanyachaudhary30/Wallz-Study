@@ -118,6 +118,12 @@ Input:  Directed reachable state graph where each node u in V represents a legal
 
 ## 4. Key Game-Theoretic Discoveries
 
+> **Stale (old HOP rule).** Items 2-4 below and the "Hop = Yes" rows of the table in Section 2
+> were solved under the pre-`4e346a8` HOP rule (a jump that needed no wall). Under the final
+> rule a hop needs an opponent's wall, so with M = 0 it never happens: N3 M0 with hop is the
+> same 45-state game as without it, a WIN in 3 for player 0 (`experiments/results/final_eval/solve_N3_K1_M0.json`).
+> Final-rule results: `docs/reports/stage2_solver_stats.md` Section 2. Item 1 still holds.
+
 Using the Exact Solver, several non-trivial game-theoretic properties of Modified Wallz were discovered and proven:
 
 ### 1. 3×3 Pure Pawn Race ($M=0$, No Hop)
