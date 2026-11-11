@@ -173,7 +173,7 @@ Minimax's goal-win rate per cell, primary run [`ablation_N5_K3_M10_open4/summary
 |---|---|---:|---:|---:|
 | A0B0C0 | 0.713 (0.605-0.800) | 0.075 | 0 | 24.1 |
 | A0B0C1 | 0.638 (0.528-0.734) | 0.088 | 0 | 26.2 |
-| A0B1C0 | 0.575 (0.466-0.677) | 0.025 | 0 | 15.2 |
+| A0B1C0 | 0.575 (0.466-0.677) | 0.025 | 0 | 15.3 |
 | A0B1C1 | 0.500 (0.393-0.607) | 0 | 0 | 16.3 |
 | A1B0C0 | 0.625 (0.515-0.723) | 0.213 | 0 | 41.9 |
 | A1B0C1 | 0.638 (0.528-0.734) | 0.163 | 0 | 34.4 |
@@ -216,16 +216,18 @@ only with 6-ply openings. So the size of each effect depends on which openings a
 ## 8. Statistical significance and limitations
 
 - **Which effects are supported (primary run).** On the win rate only B survives Holm at 5%;
-  A, C, AB, AC, BC and ABC do not. On the draw rate only B survives. On game length A, B, AB, AC,
-  BC and ABC survive; C does not.
+  A, C, AB, AC, BC and ABC do not. On the loss rate B (+0.297) and AB (+0.091) survive
+  [`effects.x_goal_loss`]. On the draw rate only B survives. On game length A, B, AB, AC, BC and
+  ABC survive; C does not.
 - **Power.** With 40 independent openings, the smallest win-rate effect found with 80% power is
   0.157 at a 5% level and 0.197 at Holm's strictest step, in the worst case [`analysis.json`
   `mde_win_rate_80pct_power`]. The paired standard errors are smaller (detectable effects of
   0.04-0.12 by effect). A (-0.081) and C (-0.037) are below their own detectable sizes (0.092 and
-  0.047), so the study could miss effects of that size. The 2-ply design, with 9 openings, cannot
-  reliably detect anything under 0.33.
-- **Effective sample of the pilot.** The pilot's 10 seeds held 8 distinct openings; its intervals
-  treated 10 units as independent, so they were likely too narrow.
+  0.047), so the study could miss effects of that size. For the 2-ply design (9 openings) the
+  worst-case bound is 0.33 and the paired estimates 0.06-0.20, so only large effects are found.
+- **Effective sample of the pilot.** The pilot's 10 seeds held 8 distinct openings, but its
+  bootstrap resampled 10 seeds as if they were independent. Its own match log is gone, so the
+  effect on its intervals cannot be checked.
 - **Opening length.** Effect sizes differ between 2-, 4- and 6-ply openings (Section 7), so they
   hold for this opening distribution only.
 - **Scope.** One pairing (depth-2 Minimax vs Greedy), one board (5x5), one K and M. The results

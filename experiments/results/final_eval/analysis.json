@@ -1,13 +1,13 @@
 {
   "run": {
     "source": {
-      "commit": "0f7825b672c686af6852038fe44d09da2ef9b365",
+      "commit": "d1de97beb685f7a87a8d1cfab058828f15ca7e69",
       "dirty": false
     },
     "command": "python scripts/stage2_analysis.py",
     "python": "3.12.5",
     "platform": "Windows-11-10.0.26200-SP0",
-    "date_utc": "2026-11-10T22:45:18+00:00"
+    "date_utc": "2026-11-11T00:18:50+00:00"
   },
   "solve_tables": {
     "solve_N3_K1_M0": [
@@ -932,29 +932,221 @@
   },
   "opening_counts_N5": {
     "plies2_seeds0-9 (pilot)": 8,
-    "plies2_seeds0-29 (final_eval open2)": 9,
-    "plies2_seeds0-1999 (all that exist)": 9,
-    "plies6_seeds10-49 (final_eval open6)": 40
+    "pilot_seed_to_opening_plies2": {
+      "0": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              1
+            ]
+          ]
+        ],
+        "same_as_seed": 0
+      },
+      "1": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              3
+            ]
+          ]
+        ],
+        "same_as_seed": 1
+      },
+      "2": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              3,
+              2
+            ]
+          ]
+        ],
+        "same_as_seed": 2
+      },
+      "3": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              3
+            ]
+          ]
+        ],
+        "same_as_seed": 1
+      },
+      "4": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              1
+            ]
+          ]
+        ],
+        "same_as_seed": 4
+      },
+      "5": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              1
+            ]
+          ]
+        ],
+        "same_as_seed": 5
+      },
+      "6": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              1,
+              2
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              3,
+              2
+            ]
+          ]
+        ],
+        "same_as_seed": 6
+      },
+      "7": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              3,
+              2
+            ]
+          ]
+        ],
+        "same_as_seed": 7
+      },
+      "8": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              1
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              1
+            ]
+          ]
+        ],
+        "same_as_seed": 4
+      },
+      "9": {
+        "opening": [
+          [
+            "MOVE",
+            [
+              0,
+              3
+            ]
+          ],
+          [
+            "MOVE",
+            [
+              4,
+              3
+            ]
+          ]
+        ],
+        "same_as_seed": 9
+      }
+    },
+    "plies2_distinct_in_seeds0-1999": 9,
+    "plies4_distinct_in_seeds0-1999": 99,
+    "smallest_opening_plies_with_at_least_30_distinct": 4
   },
   "ablations": {
-    "ablation_N5_K3_M10_open2": {
-      "file": "experiments/results/final_eval/ablation_N5_K3_M10_open2/summary.json",
-      "n_matches": 480,
-      "opening_seeds": 30,
+    "ablation_N5_K3_M10_open2_pilot_comparison": {
+      "file": "experiments/results/final_eval/ablation_N5_K3_M10_open2_pilot_comparison/summary.json",
+      "n_matches": 144,
+      "opening_seeds": 9,
       "opening_plies": 2,
       "distinct_openings": 9,
       "replica_groups_that_differ": 0,
       "independent_units_per_cell": 9,
-      "games_per_cell": 60,
+      "games_per_cell": 18,
       "outcome_totals_x": {
-        "win": 307,
-        "loss": 165,
-        "draw": 8,
+        "win": 93,
+        "loss": 49,
+        "draw": 2,
         "truncated": 0,
         "forfeit_win": 0,
         "forfeit_loss": 0
       },
-      "replays_verified": 480,
+      "replays_verified": 144,
       "replays_failed": 0,
       "win_rate_effects": {
         "A": {
@@ -1055,6 +1247,127 @@
       "mde_win_rate_80pct_power": {
         "alpha_0.05": 0.3301699567731136,
         "alpha_0.05_over_7 (Holm first step)": 0.416218434179595,
+        "assumption": "worst-case sd 0.5 per unit, cells independent (pairing ignored)"
+      }
+    },
+    "ablation_N5_K3_M10_open4": {
+      "file": "experiments/results/final_eval/ablation_N5_K3_M10_open4/summary.json",
+      "n_matches": 640,
+      "opening_seeds": 40,
+      "opening_plies": 4,
+      "distinct_openings": 40,
+      "replica_groups_that_differ": 0,
+      "independent_units_per_cell": 40,
+      "games_per_cell": 80,
+      "outcome_totals_x": {
+        "win": 362,
+        "loss": 231,
+        "draw": 47,
+        "truncated": 0,
+        "forfeit_win": 0,
+        "forfeit_loss": 0
+      },
+      "replays_verified": 640,
+      "replays_failed": 0,
+      "win_rate_effects": {
+        "A": {
+          "estimate": -0.08124999999999993,
+          "ci95": [
+            -0.14687499999999992,
+            -0.018750000000000044
+          ],
+          "p_value": 0.0116,
+          "holm_adjusted_p": 0.0696,
+          "survives_holm": false,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.032685549326416166,
+          "mde_80pct_from_bootstrap_se": 0.09157134470964765
+        },
+        "B": {
+          "estimate": -0.175,
+          "ci95": [
+            -0.25937499999999997,
+            -0.08750000000000002
+          ],
+          "p_value": 0.0,
+          "holm_adjusted_p": 0.0,
+          "survives_holm": true,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.04384646860860708,
+          "mde_80pct_from_bootstrap_se": 0.12283960875684448
+        },
+        "C": {
+          "estimate": -0.03749999999999998,
+          "ci95": [
+            -0.07187500000000002,
+            -0.006249999999999978
+          ],
+          "p_value": 0.0222,
+          "holm_adjusted_p": 0.111,
+          "survives_holm": false,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.01674137892328636,
+          "mde_80pct_from_bootstrap_se": 0.046902396070795216
+        },
+        "AB": {
+          "estimate": -0.03749999999999998,
+          "ci95": [
+            -0.078125,
+            0.0031250000000000444
+          ],
+          "p_value": 0.0918,
+          "holm_adjusted_p": 0.27540000000000003,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.02072742152406882,
+          "mde_80pct_from_bootstrap_se": 0.058069633230508344
+        },
+        "AC": {
+          "estimate": 0.03749999999999998,
+          "ci95": [
+            0.0,
+            0.07499999999999996
+          ],
+          "p_value": 0.0586,
+          "holm_adjusted_p": 0.2344,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.019133004483755812,
+          "mde_80pct_from_bootstrap_se": 0.05360273836662303
+        },
+        "BC": {
+          "estimate": -0.006249999999999978,
+          "ci95": [
+            -0.046875,
+            0.03437499999999993
+          ],
+          "p_value": 0.8278,
+          "holm_adjusted_p": 1.0,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.02072742152406879,
+          "mde_80pct_from_bootstrap_se": 0.05806963323050827
+        },
+        "ABC": {
+          "estimate": -0.006249999999999978,
+          "ci95": [
+            -0.03125,
+            0.018750000000000044
+          ],
+          "p_value": 0.7156,
+          "holm_adjusted_p": 1.0,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.012755336322503894,
+          "mde_80pct_from_bootstrap_se": 0.035735158911082074
+        }
+      },
+      "holm_survivors": [
+        "B"
+      ],
+      "mde_win_rate_80pct_power": {
+        "alpha_0.05": 0.15661336175435647,
+        "alpha_0.05_over_7 (Holm first step)": 0.1974297384234594,
         "assumption": "worst-case sd 0.5 per unit, cells independent (pairing ignored)"
       }
     },

@@ -310,7 +310,7 @@ Rates are for Minimax (the focus agent). W-L-D-T = goal wins, goal losses, rule 
 |---|---:|---|---|---|---:|---|
 | A0B0C0 | 80 | 57-17-6-0 | 0.7125 (0.605-0.800) | 0.0750 (0.035-0.154) | 0 | 24.1 (11.8) |
 | A0B0C1 | 80 | 51-22-7-0 | 0.6375 (0.528-0.734) | 0.0875 (0.043-0.170) | 0 | 26.2 (13.2) |
-| A0B1C0 | 80 | 46-32-2-0 | 0.5750 (0.466-0.677) | 0.0250 (0.007-0.087) | 0 | 15.2 (7.8) |
+| A0B1C0 | 80 | 46-32-2-0 | 0.5750 (0.466-0.677) | 0.0250 (0.007-0.087) | 0 | 15.3 (7.8) |
 | A0B1C1 | 80 | 40-40-0-0 | 0.5000 (0.393-0.607) | 0.0000 (0.000-0.046) | 0 | 16.3 (7.4) |
 | A1B0C0 | 80 | 50-13-17-0 | 0.6250 (0.515-0.723) | 0.2125 (0.137-0.314) | 0 | 41.9 (36.1) |
 | A1B0C1 | 80 | 51-16-13-0 | 0.6375 (0.528-0.734) | 0.1625 (0.097-0.258) | 0 | 34.4 (21.8) |
@@ -338,11 +338,17 @@ Effects on rule-draw rate (`effects.rule_draw`): only B survives Holm (-0.122, C
 p 0.1668.
 
 Effects on game length in plies (`effects.length_plies`): A +7.0, B -15.4, AB -6.0, AC -1.9,
-BC +2.3 and ABC +2.85 survive Holm; C does not (-0.4, Holm p 0.5974).
+BC +2.3 and ABC +2.8 survive Holm; C does not (-0.4, Holm p 0.5974).
 
-**Reading.** Only B has a supported effect on who wins: it lowers Minimax's win rate against
-Greedy by about 0.18, lowers the draw rate by about 0.12 and shortens games by about 15 plies.
-A (-0.08) and C (-0.04) have raw 95% intervals that exclude zero but do not survive Holm. The
+Effects on Minimax's goal-loss rate (`effects.x_goal_loss`): B (+0.297, CI (+0.231, +0.359))
+and AB (+0.091, CI (+0.034, +0.147), Holm p 0.0072) survive Holm. Win, loss and draw rates sum
+to 1 here (no truncations, no forfeits), so the AB loss effect is balanced by AB's draw effect
+(-0.053) and win effect (-0.037), neither of which survives Holm.
+
+**Reading.** On the win rate only B survives Holm: it lowers Minimax's win rate against
+Greedy by about 0.18, lowers the draw rate by about 0.12, raises the loss rate by about 0.30 and
+shortens games by about 15 plies. AB raises Minimax's loss rate by about 0.09. A (-0.08) and
+C (-0.04) have raw 95% win-rate intervals that exclude zero but do not survive Holm. The
 **pilot's AB interaction (+0.11) is not supported**: it is -0.037 here (Holm p 0.28) and -0.042
 in the 2-ply comparison.
 
@@ -388,7 +394,9 @@ pairing ignored, the smallest effect on win rate found with 80% power is
 These bounds are conservative: the paired bootstrap standard errors of the primary run give
 MDEs of 0.04-0.12 depending on the effect (`mde_80pct_from_bootstrap_se`). A (-0.081) and
 C (-0.037) are below their own bootstrap MDEs (0.092 and 0.047), which fits their raw but not
-Holm-level evidence. The 2-ply design cannot reliably find any win-rate effect under 0.33.
+Holm-level evidence. For the 2-ply design the worst-case bound is 0.33; its paired bootstrap
+MDEs are 0.06-0.20 by effect, so it can still find large effects such as B (-0.403). All
+bootstrap-based MDEs are estimated from the same data, so treat them as rough.
 
 ## 5. Task 5 inputs (not done here)
 
@@ -428,6 +436,16 @@ the capped-cell labels and that `truncated` is never merged into draws. **No wro
 no unsupported claim found.** It flagged two wording points, both fixed here: where the commit
 is stored in `analysis.json`, and that the 1.0 GB peak memory is not in a file. Not checked by
 it: the `logs/*.jsonl` match logs and a rerun of the bootstrap.
+
+A second fresh reviewer checked the redone Section 4 (distinct openings) the same way. It
+recomputed the Wilson intervals, the per-cell mean plies from the primary `matches.jsonl`, the
+Holm steps, the MDE values, and both seed lists with `first_distinct_openings` (they equal
+`design.opening_seeds` and every `opening_map` entry). It found no wrong number but four points,
+all fixed: one length rounded half-even (A0B1C0 15.25 printed 15.2, now 15.3; ABC +2.85, now
++2.8); "only B affects who wins" ignored the AB effect on the loss rate (now reported); the
+2-ply "nothing under 0.33" was only the worst-case bound (now given next to the paired
+estimates); and "the pilot's intervals were likely too narrow" cannot be tested without the
+pilot's log (now worded as such). Not checked by it: a rerun of the bootstrap.
 
 ## 8. Not done, and limits
 
