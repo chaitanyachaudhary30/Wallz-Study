@@ -23,6 +23,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from scripts.final_dqn_lib import git_state, sha256  # noqa: E402
 
 
+def same_weights(a: Path, b: Path):
+    if not b.is_file():
+        return None
+    import torch
+    sa, sb = torch.load(a, weights_only=True), torch.load(b, weights_only=True)
+    return sa.keys() == sb.keys() and all(torch.equal(sa[k], sb[k]) for k in sa)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--run', required=True)
@@ -48,6 +56,9 @@ def main():
         'checkpoint': (run / 'final.pt').as_posix(),
         'sha256': sha256(final),
         'size_bytes': final.stat().st_size,
+        # train_dqn.py saves the same weights twice; the evaluation JSONs cite model.pt
+        'model_pt_sha256': sha256(run / 'model.pt') if (run / 'model.pt').is_file() else None,
+        'model_pt_same_weights': same_weights(final, run / 'model.pt'),
         'train_commit': commit,
         'train_dirty': dirty,
         'train_git_source': 'run_config.json' if git else 'commit log at run start (--train-commit)',

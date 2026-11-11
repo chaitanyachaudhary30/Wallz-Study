@@ -2,6 +2,8 @@
   "checkpoint": "checkpoints/final/3x3_s43/final.pt",
   "sha256": "524eb9f4c549ef1786c928d1ed7cbb9edba787973a674e22f76a7efb767a40a6",
   "size_bytes": 1104475,
+  "model_pt_sha256": "89d84e793d773cecc0b0390c94142fc0e79b4bf93425ebb4a4e5a24ff0c7047f",
+  "model_pt_same_weights": true,
   "train_commit": "9ee24ec",
   "train_dirty": false,
   "train_git_source": "commit log at run start (--train-commit)",
@@ -74,7 +76,7 @@
     "step": 200000
   },
   "manifest_written_at_commit": {
-    "commit": "fa79c0607e6f8391dd70afc131f992646350c702",
+    "commit": "301595ae0a1db12618e1a595bc7524ce10391669",
     "dirty": true
   },
   "note": "Same configs/training.yaml board_3 values and code for all five seeds; --max-minutes differed but no run paused (each finished in one session). Training code is identical across d251df3, 9ee24ec, fa79c06 (only the run_config.json write changed). Commit and dirty flag reconstructed from the commit log at run start."

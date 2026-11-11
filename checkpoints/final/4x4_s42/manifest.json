@@ -2,6 +2,8 @@
   "checkpoint": "checkpoints/final/4x4_s42/final.pt",
   "sha256": "3b1445a4b4e9bd440b27f400a9bc72d3bc5d453d143ee39403bb093b20772132",
   "size_bytes": 1590939,
+  "model_pt_sha256": "3d44aebafc45b476b50deebb93202db7a8e5f12d951fe112657d2128feb1e440",
+  "model_pt_same_weights": true,
   "train_commit": "fa79c06",
   "train_dirty": false,
   "train_git_source": "commit log at run start (--train-commit)",
@@ -74,8 +76,8 @@
     "step": 500006
   },
   "manifest_written_at_commit": {
-    "commit": "cb836938980bf242bed9050324221995c413eab3",
-    "dirty": false
+    "commit": "301595ae0a1db12618e1a595bc7524ce10391669",
+    "dirty": true
   },
   "note": "configs/training.yaml board_4 values, 500k steps. Ran in 3 lock chunks via --max-minutes/--resume (pause at 250,090 and 499,986). Started at fa79c06 with a clean tree; later chunks ran with an uncommitted edit to the run_config.json write only, which a resumed run does not execute. Commit reconstructed from the commit log."
 }
