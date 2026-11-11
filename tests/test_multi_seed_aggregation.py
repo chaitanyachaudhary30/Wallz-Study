@@ -58,6 +58,25 @@ class TestMultiSeedAggregation(unittest.TestCase):
         lo, hi = g['pooled']['win_rate_ci95']
         self.assertTrue(lo < 0.8 < hi)
 
+    def test_manifest_sha_mismatch_exits(self):
+        import hashlib
+        import json
+        import tempfile
+        from pathlib import Path
+        from scripts.run_multi_seed_3x3 import check_manifests
+        with tempfile.TemporaryDirectory() as d:
+            ck, man = Path(d, 'ck', '3x3_s42'), Path(d, 'man', '3x3_s42')
+            ck.mkdir(parents=True)
+            man.mkdir(parents=True)
+            (ck / 'final.pt').write_bytes(b'weights')
+            good = hashlib.sha256(b'weights').hexdigest()
+            (man / 'manifest.json').write_text(json.dumps({'sha256': good}))
+            self.assertEqual(check_manifests([42], Path(d, 'ck'), Path(d, 'man')), {42: good})
+            (man / 'manifest.json').write_text(json.dumps({'sha256': '0' * 64}))
+            with self.assertRaises(SystemExit) as cm:
+                check_manifests([42], Path(d, 'ck'), Path(d, 'man'))
+            self.assertIn('!= manifest', str(cm.exception.code))
+
     def test_missing_checkpoint_exits_without_training(self):
         self.assertEqual(checkpoint_path('checkpoints/final', 42).as_posix(), 'checkpoints/final/3x3_s42/final.pt')
         with self.assertRaises(SystemExit) as cm:
