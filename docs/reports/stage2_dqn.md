@@ -251,4 +251,24 @@ and a smoke run of `eval_dqn_final.py` give the same numbers (4x4 s42 value-opti
 
 ## 11. Independent break attempt
 
-See the section appended below after the review.
+A fresh subagent saw only this PR's diff, the codec and the engine (as a black box), and
+tried to break the mask-equals-engine claim with its own scripts. **Verdict: HELD for every
+reachable position.**
+
+| Attack | Positions / ids | Result |
+|---|---|---|
+| Random playouts on 5x5 and 6x6 (6x6 not tested above), 48 rule cells (A/B/C on/off x K 1, 3 x M 0, 1, 10), up to 150 plies, biased 20/60/90% toward walls, hops and blocks, both sides to move | 3,719 / 463,532 | 0 mismatches |
+| The same on 3x3, 4x4 and 7x7 | 10,196 / 1,381,521 | 0 mismatches |
+| `sum(mask) == len(legal)`, decoded set == `get_legal_actions()`, no duplicate ids, `decode(encode(a)) == a`, no exception other than `ValueError` | all of the above | passed |
+| Raw keys mutated and loaded with `restore_state_key` (3x3-6x6) | 4,800 keys, none rejected | 1,512 mismatches, all in unreachable states (a pawn with no path, a block on a pawn, both pawns on one cell); 0 among the 3,334 legal-looking ones (310,851 ids) |
+
+Where it breaks, unreachable only (3x3, A B C on, K=1, M=10, P0 walled in):
+`((0,2),(2,2),((0,1,'V'),(1,1,'H')),(),8,10,(1,1,'H'),None,True,True,False,False,(),1)`.
+Id 13 = `('WALL',(0,0,'V'))` is in the mask, but `apply_action` raises. The cause is the engine:
+`get_legal_actions` skips the path check for a wall that misses both shortest paths, which
+assumes both paths are open, while the validator always checks. The codec only encodes
+`get_legal_actions`. Legal play never reaches such a state, but `restore_state_key` accepts
+it without checking. Reported for the engine owner; no engine change here.
+
+Not covered by the reviewer: exhaustive enumeration, boards above 7x7, the explicit
+`(old, new)` REPLACE form (the codec never emits it), clock-driven endings.
