@@ -1,0 +1,81 @@
+{
+  "checkpoint": "checkpoints/final/3x3_s46/final.pt",
+  "sha256": "c0117dedd258ed917d0cecfdd19cef5b59ad2c224b7c36c8dc00f6cf5221e12f",
+  "size_bytes": 1104475,
+  "train_commit": "fa79c06",
+  "train_dirty": false,
+  "train_git_source": "commit log at run start (--train-commit)",
+  "seed": 46,
+  "steps": 200032,
+  "command": "python D:\\SEM V\\Wallz-Study-wt\\bot2-dqn\\scripts\\train_dqn.py --board-size 3 --seed 46 --output-dir checkpoints/final/3x3_s46 --threads 2 --resume --max-minutes 24",
+  "config": {
+    "lr": 0.0001,
+    "batch_size": 128,
+    "gamma": 0.99,
+    "target_update_freq": 1000,
+    "train_freq": 4,
+    "grad_clip": 10.0,
+    "huber_delta": 1.0,
+    "double_dqn": true,
+    "dueling": false,
+    "channels": 64,
+    "blocks": 3,
+    "hidden": 256,
+    "snapshot_interval": 20000,
+    "snapshot_pool_size": 10,
+    "mixture": [
+      0.5,
+      0.4,
+      0.1
+    ],
+    "eval_freq": 10000,
+    "eval_matches": 20,
+    "seed": 46,
+    "device": "cpu",
+    "board_size": 3,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 1,
+      "M": 1
+    },
+    "total_steps": 200000,
+    "buffer_capacity": 20000,
+    "min_buffer_size": 1000,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.05,
+    "epsilon_decay_steps": 20000,
+    "mirror_prob": 0.5
+  },
+  "started": "2026-11-11T06:05:25+0530",
+  "wall_seconds": 915.9,
+  "torch": "2.15.0+cpu",
+  "python": "3.12.5",
+  "meta": {
+    "N": 3,
+    "blocks": 3,
+    "channels": 64,
+    "codec_version": 1,
+    "commit": "fa79c06",
+    "double": true,
+    "dueling": false,
+    "gamma": 0.99,
+    "hidden": 256,
+    "obs_version": 1,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 1,
+      "M": 1
+    },
+    "seed": 46,
+    "step": 200032
+  },
+  "manifest_written_at_commit": {
+    "commit": "fa79c0607e6f8391dd70afc131f992646350c702",
+    "dirty": true
+  },
+  "note": "Same configs/training.yaml board_3 values and code for all five seeds; --max-minutes differed but no run paused (each finished in one session). Training code is identical across d251df3, 9ee24ec, fa79c06 (only the run_config.json write changed). Commit and dirty flag reconstructed from the commit log at run start."
+}

@@ -12,6 +12,10 @@ dist/
 checkpoints/*
 !checkpoints/.gitkeep
 !checkpoints/release/
+# Stage 2 runs: weights stay local, only each run's manifest.json is tracked
+!checkpoints/final/
+checkpoints/final/*/*
+!checkpoints/final/*/manifest.json
 
 # Generated experiment artifacts (regenerable)
 experiments/logs/*

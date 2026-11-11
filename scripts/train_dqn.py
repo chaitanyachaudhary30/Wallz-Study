@@ -319,7 +319,11 @@ def main():
         print(f"Resumed from {resume_file} at step {trainer.total_env_steps}")
     else:
         with open(output_dir / "run_config.json", 'w', encoding='utf-8') as f:
+            import torch
+            from evaluation.match_runner import source_commit
             json.dump({'command': 'python ' + ' '.join(sys.argv), 'config': cfg_dict,
+                       'git': source_commit(), 'torch': torch.__version__,
+                       'python': sys.version.split()[0],
                        'started': time.strftime('%Y-%m-%dT%H:%M:%S%z')}, f, indent=2, default=str)
 
     with open(log_file, 'a', encoding='utf-8') as f_log:
