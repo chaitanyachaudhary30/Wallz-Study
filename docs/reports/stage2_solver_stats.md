@@ -3,11 +3,12 @@
 - **Base:** `main` = `70e2351` (Stage 1 engine freeze). No engine rule was changed.
 - **Branch:** `bot3-chaitanya/solver-stats`.
 - **Commits that produced results:** `f930e8e` (N = 3 and N = 4, M = 0 solves), `8944f16`
-  (M = 1 solves, cross-checks, both match ablations), `0f7825b` (`analysis.json`). Every
+  (M = 1 solves, cross-checks, 6-ply ablation), `4ef8124` (4-ply primary and 2-ply
+  pilot-comparison ablations), `d1de97b` (`analysis.json`). Every
   result JSON records the commit and a dirty flag (all `false`) in `run.source` (and in
   `source` for solver, cross-check and ablation files), plus the command, Python version
-  (3.12.5), platform and UTC date. Solver code is identical in all three commits; later commits
-  only add analysis code and docs.
+  (3.12.5), platform and UTC date. The engine, solver and match-play code are the same in all these
+  commits; they differ only in analysis code, the opening picker and docs.
 - **Machine:** Windows 11, Python 3.12.5, numpy 2.2.0, pytest 9.2.0. Heavy jobs ran under the
   shared `HEAVY.lock`. Peak memory of the largest solve cell was about 1.0 GB resident, read
   from the OS process list during the run (not recorded in a result file).
@@ -21,7 +22,8 @@
 | `evaluation/state_graph.py` | one shared tuple per distinct action | memory on 400k-state graphs; same values |
 | `evaluation/ablation.py` | `solver_sweep(keep_solutions=False)` for `solve --abc all` | peak memory = one cell's graph, not eight |
 | `evaluation/match_runner.py` | `run_metadata()` (commit, dirty, command, Python, platform, date) | provenance in every result |
-| `scripts/run_experiments.py` | provenance taken at program start; full CLI config saved; `rule_draw` response; effects resampled per **distinct opening** (`effects`) next to per seed (`effects_by_seed`); `replicas` check | see Section 4.1 |
+| `scripts/run_experiments.py` | provenance taken at program start; full CLI config saved; `rule_draw` response; effects resampled per **distinct opening** (`effects`) next to per seed (`effects_by_seed`); `replicas` check; `ablation --distinct-openings N` with a recorded `opening_map` | see Section 4 |
+| `evaluation/ablation.py` | `first_distinct_openings()`: first seed of each distinct opening, scanning seeds in order | Section 4.2 |
 | `evaluation/metrics.py` | `draw_rate`, `x_goal_loss_rate` (+ Wilson), `sd_length_plies`; `unit_table(unit='opening')` | separate draw and truncation columns; replica seeds |
 | `scripts/crosscheck_solvers.py` (new) | retrograde vs `agents/exact_solver.py`, canonical-merge check | Task 1 |
 | `scripts/stage2_analysis.py` (new) | builds `final_eval/analysis.json` from the result files | every table below |
@@ -257,96 +259,119 @@ python scripts/run_multi_seed_3x3.py --checkpoint-dir checkpoints/final --seeds 
   index; Minimax without a time limit is a fixed search). With `opening_plies = 2` on 5x5 there
   are only **9** possible openings in total, and the pilot's seeds 0-9 drew only **8** of them
   (`analysis.json` `opening_counts_N5`). Two pilot seeds were exact replicas, and resampling
-  seeds treated them as independent. More seeds at 2 plies cannot add evidence.
+  seeds treated them as independent, so the pilot's effective sample was 8 openings, not 10
+  seeds. The pilot's own `matches.jsonl` was in the git-ignored `experiments/logs/` and is not
+  on this machine, so N = 8 comes from the seed -> opening map for seeds 0-9
+  (`analysis.json` `opening_counts_N5.pilot_seed_to_opening_plies2`: seed 3 repeats seed 1,
+  seed 8 repeats seed 4). More seeds at 2 plies cannot add evidence.
 
-The rerun of the pilot design confirms this: `ablation_N5_K3_M10_open2` (30 seeds, 480
-logged matches) contains 9 distinct openings and 144 distinct games; every replica group
-gave the identical game (`replicas.groups_with_differing_replicas = 0`).
+### 4.2 Design (conductor decision)
 
-### 4.2 Design (decided with the conductor)
-
-- **Primary:** N = 5, K = 3, M = 10, `minimax:depth=2` vs `greedy`, both seatings, all 8 cells,
-  `max_plies 200`, **`opening_plies 6`, seeds 10-49 = 40 distinct openings**, 640 matches.
-  `opening_plies 6` is 3 pawn moves each, so no opening can reach a goal row 4 rows away.
-  Seeds 10-49 draw 40 distinct openings (`analysis.json` `opening_counts_N5`), so there are no
-  replicas (`replicas.distinct_games = 640`).
-- **Pilot comparison:** the specified `opening_plies 2` with 30 seeds (480 logged matches,
-  144 distinct games).
-- The brief asked for `opening_plies 2` and seeds sized to 3 hours of lock time. Because only 9
-  openings exist at 2 plies, the conductor set the primary at 30-40 distinct openings, at most
-  640 matches. The primary run took 207 s for 640 matches (`ablation_N5_K3_M10_open6/stdout.txt`).
-- Effects are resampled by **distinct opening** (paired: one unit holds that opening's games in
-  all 8 cells and both seatings), 10,000 bootstrap draws, percentile 95% intervals, two-sided
-  bootstrap p-values, Holm over the 7 effects of each response. A p-value printed 0.0000 means
-  no bootstrap draw fell on the other side of zero (p < 0.0002).
+- **Opening length.** The smallest `opening_plies` with at least 30 distinct openings on N5 is
+  **4**: 2 plies give 9 openings, 4 plies give 99 (seeds 0-1999, `analysis.json`
+  `opening_counts_N5`). 4 plies is 2 pawn moves each, so no opening reaches a goal row.
+- **Openings picked.** Seeds are scanned 0, 1, 2, ... and only the first seed of each distinct
+  action sequence is kept (`--distinct-openings`, `evaluation/ablation.py`
+  `first_distinct_openings`). No replica seed is played. The seed -> opening map is in each
+  `summary.json` `opening_map`.
+- **Primary:** N5 K3 M10, `minimax:depth=2` vs `greedy`, both seatings, all 8 cells,
+  `max_plies 200`, `opening_plies 4`, **40 distinct openings** (seeds 0-9, 12, 14-24, 26, 28-31,
+  33-35, 37, 38, 40-44, 47, 50, 52): 640 matches, 195 s (`ablation_open4_stdout.txt`).
+- **Direct comparison with the pilot:** `opening_plies 2`, all **9** distinct openings
+  (seeds 0, 1, 2, 4, 5, 6, 7, 9, 20): 144 matches.
+- **Sensitivity check, kept from the earlier round:** `opening_plies 6`, seeds 10-49
+  (40 distinct openings), 640 matches (`ablation_N5_K3_M10_open6/`). It was the primary under
+  the previous decision and is reported only to show how much the results depend on the
+  opening length. An earlier 2-ply run with 30 replica seeds was removed from the PR (it gave
+  the same 144 distinct games; it stays in the branch history, commit `2cd2fba`).
+- **Unit of analysis:** the distinct opening, paired across the 8 cells and both seatings.
+  10,000 bootstrap draws over openings, percentile 95% intervals, two-sided bootstrap p-values,
+  Holm over the 7 effects of each response. A p-value printed 0.0000 means no bootstrap draw fell
+  on the other side of zero (p < 0.0002).
 
 ```
-python scripts/run_experiments.py ablation --x minimax:depth=2 --y greedy -N 5 -K 3 -M 10 --seeds 40 --seed-start 10 --opening-plies 6 --max-plies 200 --n-boot 10000 --out-dir experiments/results/final_eval/ablation_N5_K3_M10_open6 --log-dir experiments/results/final_eval/logs
-python scripts/run_experiments.py verify-replay experiments/results/final_eval/logs/ablation_N5_K3_M10_open6/matches.jsonl
-python scripts/run_experiments.py ablation --x minimax:depth=2 --y greedy -N 5 -K 3 -M 10 --seeds 30 --seed-start 0 --opening-plies 2 --max-plies 200 --n-boot 10000 --out-dir experiments/results/final_eval/ablation_N5_K3_M10_open2 --log-dir experiments/results/final_eval/logs
-python scripts/run_experiments.py verify-replay experiments/results/final_eval/logs/ablation_N5_K3_M10_open2/matches.jsonl
+python scripts/run_experiments.py ablation --x minimax:depth=2 --y greedy -N 5 -K 3 -M 10 --distinct-openings 40 --opening-plies 4 --max-plies 200 --n-boot 10000 --out-dir experiments/results/final_eval/ablation_N5_K3_M10_open4 --log-dir experiments/results/final_eval/logs
+python scripts/run_experiments.py verify-replay experiments/results/final_eval/logs/ablation_N5_K3_M10_open4/matches.jsonl
+python scripts/run_experiments.py ablation --x minimax:depth=2 --y greedy -N 5 -K 3 -M 10 --distinct-openings 40 --opening-plies 2 --max-plies 200 --n-boot 10000 --out-dir experiments/results/final_eval/ablation_N5_K3_M10_open2_pilot_comparison --log-dir experiments/results/final_eval/logs
+python scripts/run_experiments.py verify-replay experiments/results/final_eval/logs/ablation_N5_K3_M10_open2_pilot_comparison/matches.jsonl
 ```
 
-**Replays:** 640/640 and 480/480 verified (`verify_replay.txt` in each folder, and
-`replay_verification` in each `summary.json`). No forfeits, no truncations.
+(`--distinct-openings 40` at 2 plies stops at the 9 that exist.)
 
-### 4.3 Primary results (`ablation_N5_K3_M10_open6/summary.json`)
+**Replays:** 640/640 (4 plies), 144/144 (2 plies) and 640/640 (6 plies) verified
+(`verify_replay.txt` in each folder, and `replay_verification` in each `summary.json`).
+No forfeits, no truncations. `replicas.distinct_games` equals the match count in all three runs.
+
+### 4.3 Primary results (`ablation_N5_K3_M10_open4/summary.json`)
 
 Rates are for Minimax (the focus agent). W-L-D-T = goal wins, goal losses, rule draws, truncations.
 
 | Cell | Games | W-L-D-T | Win rate (95% Wilson) | Draw rate (95% Wilson) | Truncation rate | Mean plies (SD) |
 |---|---:|---|---|---|---:|---|
-| A0B0C0 | 80 | 69-6-5-0 | 0.8625 (0.770-0.921) | 0.0625 (0.027-0.138) | 0 | 27.1 (11.1) |
-| A0B0C1 | 80 | 59-16-5-0 | 0.7375 (0.632-0.821) | 0.0625 (0.027-0.138) | 0 | 27.7 (12.0) |
-| A0B1C0 | 80 | 29-50-1-0 | 0.3625 (0.266-0.472) | 0.0125 (0.002-0.067) | 0 | 15.1 (5.3) |
-| A0B1C1 | 80 | 26-54-0-0 | 0.3250 (0.232-0.434) | 0.0000 (0.000-0.046) | 0 | 17.2 (5.8) |
-| A1B0C0 | 80 | 64-10-6-0 | 0.8000 (0.700-0.873) | 0.0750 (0.035-0.154) | 0 | 39.0 (24.9) |
-| A1B0C1 | 80 | 51-19-10-0 | 0.6375 (0.528-0.734) | 0.1250 (0.069-0.215) | 0 | 37.8 (21.5) |
-| A1B1C0 | 80 | 29-46-5-0 | 0.3625 (0.266-0.472) | 0.0625 (0.027-0.138) | 0 | 18.1 (13.7) |
-| A1B1C1 | 80 | 27-47-6-0 | 0.3375 (0.243-0.446) | 0.0750 (0.035-0.154) | 0 | 22.7 (21.8) |
+| A0B0C0 | 80 | 57-17-6-0 | 0.7125 (0.605-0.800) | 0.0750 (0.035-0.154) | 0 | 24.1 (11.8) |
+| A0B0C1 | 80 | 51-22-7-0 | 0.6375 (0.528-0.734) | 0.0875 (0.043-0.170) | 0 | 26.2 (13.2) |
+| A0B1C0 | 80 | 46-32-2-0 | 0.5750 (0.466-0.677) | 0.0250 (0.007-0.087) | 0 | 15.2 (7.8) |
+| A0B1C1 | 80 | 40-40-0-0 | 0.5000 (0.393-0.607) | 0.0000 (0.000-0.046) | 0 | 16.3 (7.4) |
+| A1B0C0 | 80 | 50-13-17-0 | 0.6250 (0.515-0.723) | 0.2125 (0.137-0.314) | 0 | 41.9 (36.1) |
+| A1B0C1 | 80 | 51-16-13-0 | 0.6375 (0.528-0.734) | 0.1625 (0.097-0.258) | 0 | 34.4 (21.8) |
+| A1B1C0 | 80 | 34-45-1-0 | 0.4250 (0.323-0.534) | 0.0125 (0.002-0.067) | 0 | 15.3 (9.4) |
+| A1B1C1 | 80 | 33-46-1-0 | 0.4125 (0.311-0.522) | 0.0125 (0.002-0.067) | 0 | 18.2 (18.8) |
 
-Totals: 354 wins, 248 losses, 38 draws, 0 truncated (`analysis.json`). Draw types per cell are in
-`summary.json` `draw_breakdown` (A-off draws are mostly no-legal-action, A-on draws mostly repetition).
+Totals: 362 wins, 231 losses, 47 draws, 0 truncated (`analysis.json`). Draw types are in
+`summary.json` `draw_breakdown`: A-off draws are mostly no-legal-action, the A1B0 draws are
+almost all repetition (16 of 17 and 13 of 13).
 
 Effects on Minimax's goal-win rate (40 openings, `effects.x_goal_win`):
 
 | Effect | Estimate | 95% CI | Raw p | Holm p | Survives Holm |
 |---|---:|---|---:|---:|---|
-| A | -0.037 | (-0.103, +0.025) | 0.2622 | 0.7866 | no |
-| B | -0.413 | (-0.497, -0.328) | 0.0000 | 0.0000 | **yes** |
-| C | -0.088 | (-0.150, -0.028) | 0.0020 | 0.0100 | **yes** |
-| AB | +0.044 | (-0.000, +0.091) | 0.0656 | 0.2624 | no |
-| AC | -0.006 | (-0.028, +0.013) | 0.6616 | 0.7866 | no |
-| BC | +0.056 | (+0.016, +0.109) | 0.0012 | 0.0072 | **yes** |
-| ABC | +0.013 | (-0.012, +0.037) | 0.3662 | 0.7866 | no |
+| A | -0.081 | (-0.147, -0.019) | 0.0116 | 0.0696 | no |
+| B | -0.175 | (-0.259, -0.088) | 0.0000 | 0.0000 | **yes** |
+| C | -0.037 | (-0.072, -0.006) | 0.0222 | 0.1110 | no |
+| AB | -0.037 | (-0.078, +0.003) | 0.0918 | 0.2754 | no |
+| AC | +0.037 | (+0.000, +0.075) | 0.0586 | 0.2344 | no |
+| BC | -0.006 | (-0.047, +0.034) | 0.8278 | 1.0000 | no |
+| ABC | -0.006 | (-0.031, +0.019) | 0.7156 | 1.0000 | no |
 
-Effects on rule-draw rate (`effects.rule_draw`): only AC survives Holm (+0.019, CI
-(+0.006, +0.034), Holm p 0.0168); A's raw interval excludes zero (+0.050) but its Holm p is 0.1344.
+Effects on rule-draw rate (`effects.rule_draw`): only B survives Holm (-0.122, CI
+(-0.172, -0.075)). A (+0.053) and AB (-0.053) have raw intervals that exclude zero but Holm
+p 0.1668.
 
-Effects on game length in plies (`effects.length_plies`): A +7.6, B -14.6, C +1.5, AB -3.4,
-BC +1.8, ABC +1.1 survive Holm; AC does not (+0.2, Holm p 0.7660).
+Effects on game length in plies (`effects.length_plies`): A +7.0, B -15.4, AB -6.0, AC -1.9,
+BC +2.3 and ABC +2.85 survive Holm; C does not (-0.4, Holm p 0.5974).
 
-**Reading.** B lowers Minimax's win rate against Greedy by about 0.41 and shortens games by
-about 15 plies. C lowers it by about 0.09. The BC interaction (+0.06) means C hurts Minimax less
-when B is on. The **pilot's AB interaction (+0.11) is not supported**: on the final engine it is
-+0.044 with a 95% interval touching zero and Holm p 0.26; in the 2-ply rerun it is -0.042.
+**Reading.** Only B has a supported effect on who wins: it lowers Minimax's win rate against
+Greedy by about 0.18, lowers the draw rate by about 0.12 and shortens games by about 15 plies.
+A (-0.08) and C (-0.04) have raw 95% intervals that exclude zero but do not survive Holm. The
+**pilot's AB interaction (+0.11) is not supported**: it is -0.037 here (Holm p 0.28) and -0.042
+in the 2-ply comparison.
 
-### 4.4 Pilot comparison (`ablation_N5_K3_M10_open2/summary.json`, 9 openings)
+### 4.4 Pilot comparison and sensitivity to opening length
 
-| Effect | Pilot (`7e2d6da`, 10 seeds, seed bootstrap) | Final engine, 2 plies, 9 openings | Final engine, 6 plies, 40 openings |
-|---|---|---|---|
-| A | -0.04 (-0.26, 0.19) | -0.014 (-0.181, +0.097) | -0.037 (-0.103, +0.025) |
-| B | -0.01 (-0.15, 0.13) | **-0.403 (-0.472, -0.306)** | **-0.413 (-0.497, -0.328)** |
-| C | -0.06 (-0.19, 0.08) | -0.069 (-0.194, +0.014) | **-0.088 (-0.150, -0.028)** |
-| AB | +0.11 (0.03, 0.20) | -0.042 (-0.111, +0.028) | +0.044 (-0.000, +0.091) |
-| AC | +0.01 (-0.04, 0.06) | -0.042 (-0.083, +0.000) | -0.006 (-0.028, +0.013) |
-| BC | -0.06 (-0.15, 0.03) | +0.014 (-0.028, +0.056) | **+0.056 (+0.016, +0.109)** |
-| ABC | -0.04 (-0.21, 0.11) | +0.042 (+0.000, +0.083) | +0.013 (-0.012, +0.037) |
+Win-rate effects, estimate (95% CI). Bold = survives Holm.
 
-Bold = survives Holm. Pilot numbers are from `person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json`
-(no Holm there). In the 2-ply rerun only B survives. Resampling seeds instead of openings on that
-run (`effects_by_seed`, 30 "units") would have declared B, C, AB, AC and ABC significant: that
-is what counting replicas as evidence does.
+| Effect | Pilot (`7e2d6da`, 10 seeds = 8 openings, seed bootstrap) | 2 plies, 9 openings (direct comparison) | **4 plies, 40 openings (primary)** | 6 plies, 40 openings (sensitivity) |
+|---|---|---|---|---|
+| A | -0.04 (-0.26, 0.19) | -0.014 (-0.181, +0.097) | -0.081 (-0.147, -0.019) | -0.037 (-0.103, +0.025) |
+| B | -0.01 (-0.15, 0.13) | **-0.403 (-0.472, -0.306)** | **-0.175 (-0.259, -0.088)** | **-0.413 (-0.497, -0.328)** |
+| C | -0.06 (-0.19, 0.08) | -0.069 (-0.194, +0.014) | -0.037 (-0.072, -0.006) | **-0.088 (-0.150, -0.028)** |
+| AB | +0.11 (0.03, 0.20) | -0.042 (-0.111, +0.028) | -0.037 (-0.078, +0.003) | +0.044 (-0.000, +0.091) |
+| AC | +0.01 (-0.04, 0.06) | -0.042 (-0.083, +0.000) | +0.037 (+0.000, +0.075) | -0.006 (-0.028, +0.013) |
+| BC | -0.06 (-0.15, 0.03) | +0.014 (-0.028, +0.056) | -0.006 (-0.047, +0.034) | **+0.056 (+0.016, +0.109)** |
+| ABC | -0.04 (-0.21, 0.11) | +0.042 (+0.000, +0.083) | -0.006 (-0.031, +0.019) | +0.013 (-0.012, +0.037) |
+
+Sources: `person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json` (no Holm there),
+`final_eval/ablation_N5_K3_M10_open2_pilot_comparison/`, `.../ablation_N5_K3_M10_open4/`,
+`.../ablation_N5_K3_M10_open6/`, all `summary.json` `effects.x_goal_win`.
+
+- The pilot's results do not carry over to the final engine. With the same 2-ply openings, B
+  goes from -0.01 to -0.40. The HOP change, the Greedy changes and the Minimax fix all came in
+  between; these files cannot say which one caused it.
+- **The size of B depends on the opening length** (-0.40, -0.18, -0.41 at 2, 4 and 6 plies),
+  and C and BC are supported only at 6 plies. The sign of B is the same in all three; its size
+  and the small effects are not stable. Effects here describe these two agents on these opening
+  distributions, not the mechanics in general.
+- In the 2-ply comparison only B survives Holm.
 
 ### 4.5 Power (`analysis.json` `ablations.*.mde_win_rate_80pct_power`)
 
@@ -357,13 +382,13 @@ pairing ignored, the smallest effect on win rate found with 80% power is
 
 | Design | n (openings) | MDE at alpha 0.05 | MDE at alpha 0.05/7 (Holm's first step) |
 |---|---:|---:|---:|
-| primary, 6 plies | 40 | 0.157 | 0.197 |
-| pilot design, 2 plies | 9 | 0.330 | 0.416 |
+| primary, 4 plies | 40 | 0.157 | 0.197 |
+| pilot comparison, 2 plies | 9 | 0.330 | 0.416 |
 
 These bounds are conservative: the paired bootstrap standard errors of the primary run give
-MDEs of 0.03-0.12 depending on the effect (`mde_80pct_from_bootstrap_se`). C (-0.088) and BC
-(+0.056) were detected below the worst-case bound because their real variance is smaller.
-The 2-ply design cannot reliably find any win-rate effect under 0.33.
+MDEs of 0.04-0.12 depending on the effect (`mde_80pct_from_bootstrap_se`). A (-0.081) and
+C (-0.037) are below their own bootstrap MDEs (0.092 and 0.047), which fits their raw but not
+Holm-level evidence. The 2-ply design cannot reliably find any win-rate effect under 0.33.
 
 ## 5. Task 5 inputs (not done here)
 
@@ -376,7 +401,7 @@ The 2-ply design cannot reliably find any win-rate effect under 0.33.
 - solves: every `experiments/results/solves/solve_*.json` (M = 0, still valid; not `final_eval/`);
 - greedy: `experiments/results/greedy/summary.json` (partly stale).
 
-So Task 5 must point `make_tables.py` at `final_eval/ablation_N5_K3_M10_open6/summary.json` and
+So Task 5 must point `make_tables.py` at `final_eval/ablation_N5_K3_M10_open4/summary.json` and
 `final_eval/solve_*.json`, and read `effects` (per opening), not `effects_by_seed`.
 
 ## 6. Tests run (one file at a time)
@@ -386,7 +411,7 @@ So Task 5 must point `make_tables.py` at `final_eval/ablation_N5_K3_M10_open6/su
 | `tests.test_solver_final_rules` (new) | 18 pass |
 | `tests.test_retrograde` | 17 pass |
 | `tests.test_exact_solver` | 9 pass |
-| `tests.test_match_runner` | 16 pass |
+| `tests.test_match_runner` | 17 pass (1 new: `test_first_distinct_openings`) |
 | `tests.test_metrics_holm` | 5 pass (1 new) |
 | `tests.test_multi_seed_aggregation` (new) | 4 pass |
 | `tests.test_golden_regression` | pass |
