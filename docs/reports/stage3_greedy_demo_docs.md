@@ -30,7 +30,7 @@
 |---|---:|---:|---:|
 | N3 random / minimax2 / self | 80 / 16 / 80 | 68 / 16 / 10 | 12 s / 4 s / 14 s |
 | N5 random / minimax2 / self | 500 / 100 / 500 | 500 / 100 / 273 | 97 s / 39 s / 119 s |
-| N9 random / minimax2 / self | 100 / 20 / 100 | 100 / 20 / 19 | 64 s / 53 s / 79 s |
+| N9 random / minimax2 / self | 100 / 20 / 100 | 100 / 20 / 19 | 64 s / 54 s / 79 s |
 
 Seeded Greedy differs from plain Greedy only in breaking exact score ties, so many self-play seed pairs replay the same game (N3: 80 matches, 10 games; N9: 100 matches, 19 games).
 
@@ -158,6 +158,7 @@ Confirmed: `Dockerfile:39` ran `python -m web.backend.app --port 5000` and `web/
 | `docs/implementation_status.md` | New "Final Status" table; old phase rows marked superseded or stale; real test counts (Section 2); artifacts point to final folders |
 | `docs/web_demo.md` | Arena speed/batch sizes, removed the non-existent "Early vs Final DQN" button, minimax availability on N >= 7, release DQN note, consistency section, Docker |
 | `docs/setup.md` | Test-count lines |
+| `docs/exact_solver.md` | Stale "41/41 tests passing" header replaced with the real solver test files and counts (found by the independent reviewer) |
 | `experiments/results/STALE.md` | `greedy/` rows marked superseded by `final_greedy/` |
 
 `file:///` links and mojibake: a search of every tracked text file (Python scan for `file:///`, `â€`, `Ã`, `Â`, `ðŸ`, U+FFFD) found none at `d91549c`. The only odd byte is a UTF-8 BOM at the start of `experiments/results/final_dqn/tables.md` (Member 4's file, left alone).
@@ -221,6 +222,19 @@ Confirmed: `Dockerfile:39` ran `python -m web.backend.app --port 5000` and `web/
 | **52 files** | **405 passed, 0 failed; 3 files not run** | |
 
 All files are pytest files, and `tests/conftest.py` refuses to start without torch unless `WALLZ_SKIP_DQN=1`. Frontend: Vitest 11 passed (3 files).
+
+## Independent break attempt
+
+A fresh reviewer that saw only the diff, the result files and the checkout tried to find one unsupported doc claim or one demo rule error. **Verdict: FOUND one stale doc claim, fixed; the demo held.**
+
+| Attack | Size | Result |
+|---|---|---|
+| Report and `tables.md` cells vs the 9 summary JSONs (W/L/draw/trunc sums, CIs, solver table, wall times, commits, replay checks) | all 9 sets | held, except N9 minimax wall time written 53 s for 53.6 s (now 54 s) |
+| Test-count tables vs files | 52 files, 405 tests | held |
+| API vs a fresh `WallzEngine` after every ply (legal set, pawns, inventory, hop, block, timers, walls + latest, turn, terminal), random human-vs-human games, N 4-6, K 1-3, M 1/2/4/10, random A/B/C | 120 games, 11,520 legal plies, 3,471 random (mostly illegal) actions | held: every legal action accepted, every illegal one rejected, 0 mismatches |
+| Other docs' claims | `docs/exact_solver.md:5-6` | **found:** "41/41 tests passing" for `test_exact_solver.py` + `test_agents.py` (really 9 + 13); fixed |
+
+Not covered by the reviewer: frontend source (it relied on the audit table), undo / AI-step / Arena endpoints, N3-N4 with M <= 1, N7-N9, Docker, Vitest.
 
 ## Commands
 

@@ -2,8 +2,8 @@
 
 **Module**: `agents/exact_solver.py`  
 **CLI Tool**: `scripts/solve_tiny_board.py`  
-**Test Suite**: `tests/test_exact_solver.py` & `tests/test_agents.py`  
-**Status**: Implemented, Verified, and Empirically Benchmarked (41/41 tests passing)  
+**Test Suite**: `tests/test_exact_solver.py` (9 tests), `tests/test_retrograde.py` (17), `tests/test_solver_final_rules.py` (18); counted 2026-11-11, all passing (`docs/implementation_status.md` Section 2)  
+**Status**: Implemented and verified under the final rules; final-rule solves in `experiments/results/final_eval/` (`docs/reports/stage2_solver_stats.md`)  
 
 ---
 
