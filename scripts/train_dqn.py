@@ -226,6 +226,8 @@ def main():
     parser.add_argument("--max-minutes", type=float, default=None,
                         help="Pause after this many minutes: save resume.pt and exit with code 3")
     parser.add_argument("--resume", action="store_true", help="Continue from <output-dir>/resume.pt")
+    parser.add_argument("--keep-resume", action="store_true",
+                        help="At the end, keep resume.pt (full state) so the run can be extended later")
     args = parser.parse_args()
     if args.threads:
         import torch
@@ -432,7 +434,11 @@ def main():
         filename="model.pt",
     )
 
-    if resume_file.exists():
+    if args.keep_resume:
+        # keep full state so a later run can --resume with a larger --steps
+        save_resume_state(resume_file, trainer, sp_manager, episode, last_eval_step,
+                          time.time() - t_start)
+    elif resume_file.exists():
         resume_file.unlink()
     print(f"Training complete. Final checkpoint saved to {output_dir}")
 
