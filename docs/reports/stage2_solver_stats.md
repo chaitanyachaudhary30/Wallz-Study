@@ -4,7 +4,8 @@
 - **Branch:** `bot3-chaitanya/solver-stats`.
 - **Commits that produced results:** `f930e8e` (N = 3 and N = 4, M = 0 solves), `8944f16`
   (M = 1 solves, cross-checks, 6-ply ablation), `4ef8124` (4-ply primary and 2-ply
-  pilot-comparison ablations), `d1de97b` (`analysis.json`). Every
+  pilot-comparison ablations), `87fd485` (`analysis.json`). PR #2 (merged) held the first
+  round; this follow-up PR holds the distinct-opening rework. Every
   result JSON records the commit and a dirty flag (all `false`) in `run.source` (and in
   `source` for solver, cross-check and ablation files), plus the command, Python version
   (3.12.5), platform and UTC date. The engine, solver and match-play code are the same in all these
@@ -282,8 +283,10 @@ python scripts/run_multi_seed_3x3.py --checkpoint-dir checkpoints/final --seeds 
 - **Sensitivity check, kept from the earlier round:** `opening_plies 6`, seeds 10-49
   (40 distinct openings), 640 matches (`ablation_N5_K3_M10_open6/`). It was the primary under
   the previous decision and is reported only to show how much the results depend on the
-  opening length. An earlier 2-ply run with 30 replica seeds was removed from the PR (it gave
-  the same 144 distinct games; it stays in the branch history, commit `2cd2fba`).
+  opening length. The earlier 2-ply run with 30 seeds (`ablation_N5_K3_M10_open2/`,
+  merged in PR #2) is kept unchanged but superseded: its 480 matches replay the same 144 distinct
+  games as the pilot comparison (`replicas.groups_with_differing_replicas = 0`), and its
+  win-rate `effects` equal the pilot comparison's (`experiments/results/STALE.md`).
 - **Unit of analysis:** the distinct opening, paired across the 8 cells and both seatings.
   10,000 bootstrap draws over openings, percentile 95% intervals, two-sided bootstrap p-values,
   Holm over the 7 effects of each response. A p-value printed 0.0000 means no bootstrap draw fell
