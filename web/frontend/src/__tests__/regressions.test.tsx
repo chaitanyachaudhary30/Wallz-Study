@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Board } from '../components/Board';
 import { buildOverlayLookup, getHeatmapColor } from '../components/Heatmap';
+import { TerminalBanner } from '../components/TerminalBanner';
 import stateInitial from './fixtures/state_initial_5x5.json';
 
 describe('Regression fixes (bug hunt 2026-11-08)', () => {
@@ -32,6 +33,13 @@ describe('Regression fixes (bug hunt 2026-11-08)', () => {
     container.querySelectorAll('polyline').forEach((pl) => expect(pl.getAttribute('pointer-events')).toBe('none'));
     const pawnGroup = screen.getByText('P0').closest('g');
     expect(pawnGroup?.getAttribute('pointer-events')).toBe('none');
+  });
+
+  it('a ply-cap stop is shown as truncated, not as a draw', () => {
+    render(<TerminalBanner terminal={{ over: true, winner: null, reason: 'truncated' }} />);
+    const text = screen.getByTestId('terminal-banner').textContent || '';
+    expect(text).toContain('truncated');
+    expect(text).not.toMatch(/^Draw/);
   });
 
   it('in Wall-H mode only horizontal slots accept clicks', () => {
