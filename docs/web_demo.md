@@ -5,7 +5,7 @@ The Modified Wallz Web Application provides a rich, interactive visualization an
 
 The application is structured into two completely decoupled layers:
 - **Backend (Python / Flask)**: Runs the canonical game engine (`WallzEngine`), maintains transactional session histories, introspects agent decision models, and executes verified replay checks.
-- **Frontend (React 18 / TypeScript / Vite)**: A responsive SVG board and dashboard interface that contains **zero game logic**, strictly rendering data returned by the backend (Contract C-STATE and Contract C-EXPL).
+- **Frontend (React 18 / TypeScript / Vite)**: An SVG board and dashboard that draws what the backend sends (Contract C-STATE and Contract C-EXPL). It holds no copy of the rules: legal targets, block timers, wall counts, hop/block flags, paths and the terminal reason all come from the engine through the API. Section 7 lists every place the frontend touches game data and how the team checks it.
 
 ---
 
@@ -64,10 +64,9 @@ Interactive human vs AI or AI vs AI match environment:
 
 ### 2. Arena (`/arena`)
 Head-to-head automated testing and benchmarking suite:
-- **Match Controls**: Configure P0 and P1 AI agents, speed slider (0.25s to 3s per ply), Start, Pause, Step, and Reset.
+- **Match Controls**: Configure P0 and P1 AI agents, speed slider (0.1 s to 1.5 s per ply), Play/Pause, Step, and Reset.
 - **Dual Think Panels**: Side-by-side inspection of both players' internal decision processes simultaneously.
-- **Batch Tournaments**: Run synchronous batches ($n \in \{10, 20, 50\}$ games) with balanced colors and alternating opening seeds. Displays win/draw/loss counts, win rates with Wilson 95% confidence interval error bars, and links every match directly into the Replay viewer.
-- **Early vs. Final DQN Button**: Automatically sets up an arena match between an early checkpoint and the final trained DQN model to observe policy maturation.
+- **Batch Tournaments**: Run synchronous batches ($n \in \{6, 10, 20, 50\}$ games) through `evaluation.match_runner.run_match`, alternating colors, opening seeds `seed + i // 2` with 2 opening plies. Shows wins, draws, losses and, separately, truncated games (200-ply runner cap), with the Wilson 95% interval of the win rate. Each batch game can be fetched as a verified replay (`/api/arena/batch/<bid>/<idx>`). The Arena is a demo, not the study's evidence: the study's match numbers are in `experiments/results/final_*`.
 
 ### 3. Training (`/training`)
 Visual dashboard for reinforcement learning and model evaluation:
@@ -78,15 +77,15 @@ Visual dashboard for reinforcement learning and model evaluation:
 
 ### 4. Replays (`/replays`)
 Inspection and verification tool for recorded matches:
-- **Experiment Replay Browser**: Discovers and indexes all experiment runs stored under `experiments/results/`. Filter by configuration, agent type, or outcome.
-- **Replay Scrubber**: Interactive timeline slider, play/pause, step forward/backward, and playback speed control.
-- **Engine Verification Badge**: Every replay is verified dynamically by executing each action through a fresh `WallzEngine`. If any action is invalid, the player flags the replay as corrupted and pinpoints the exact failing ply.
-- **JSON Replay Upload**: Drag-and-drop or upload custom `run_match` JSON output files for instant verification and playback.
+- **Experiment Replay Browser**: Discovers and indexes match logs stored under `experiments/results/`, with a filename/ID filter. Older folders may hold games played under earlier rules; `experiments/results/STALE.md` says which.
+- **Replay Scrubber**: Timeline slider, play/pause and step forward/backward.
+- **Engine Verification Badge**: Every replay is verified by executing each action through a fresh `WallzEngine` and comparing logged state ids. If any action is illegal (or a different legal action was swapped in), the replay is flagged with the failing ply.
+- **JSON Replay Upload**: Upload a `run_match` JSON result for verification and playback.
 
 ### 5. Rules (`/rules`)
 Interactive rulebook and verification showcase:
-- **Live Rule Scenarios (9 Scenarios)**: Step through canonical scenarios demonstrating every core mechanic: basic moves, wall placement and budget exhaustion, latest-wall repositioning, one-time hops, $K$-ply block decay, path preservation rejections, no-legal-move draws, five-fold repetition, and goal wins.
-- **Rule Invariant Badges**: Live assertions (✓/✗) confirm that invariants hold at every step.
+- **Live Rule Scenarios (9 Scenarios)**: Step through the scenarios in `tests/scenarios/*.json` (the same files `tests/test_scenarios.py` runs): basic moves, wall placement and budget exhaustion, latest-wall repositioning, the one-time hop across an opponent's wall, $K$-ply block expiry, path preservation rejections, no-legal-move draws, five-fold repetition, and goal wins.
+- **Rule Invariant Badges**: Each scenario expectation is checked against the engine at its ply and shown as ✓/✗ with its message.
 - **Play From This State**: Launch an interactive game session starting immediately from any scenario frame.
 - **Official Specification Viewer**: Embedded markdown view querying `/api/rules` directly from `docs/game_rules.md`, ensuring zero documentation drift.
 
@@ -146,12 +145,44 @@ When `/step` or `/analyze` is called, the backend generates an explanation envel
 ## 6. Performance & Availability Limits
 
 1. **Minimax Interactive Latency**:
-   - On boards with $N \ge 7$, search depth is restricted to $D \le 2$ in interactive play to maintain response times $< 1.5$ seconds per move. Depths $D \ge 3$ are marked unavailable with an explanatory reason.
+   - On boards with $N \ge 7$ only `minimax:depth=1` is offered; `minimax:depth=2` and `minimax:depth=3,time_limit=2.0` are marked unavailable ("too slow for interactive play", `web/backend/registry.py`).
 2. **Exact Solver Tractability**:
    - The retrograde solver is offered only for $N \le 4$ with $M \le 1$; otherwise it is marked unavailable with the reason.
    - Solves never block a request. Each runs in a separate process (one at a time) and is written to `experiments/cache/exact/<config>__<source-hash>.pkl`. Until it finishes the agent shows "solving in background". The server pre-solves the preset configs at start-up (disable with `--no-warmup`). On later starts a cached solution is available immediately and loads in about 0.5 s when first used. The source hash covers the engine and solver files, so a rule change automatically invalidates old caches.
    - Before 2026-11-09 the warm-up ran on a thread inside the server. Its pure-Python search held the GIL and made the first page load take about 47 s.
 3. **DQN Compatibility Gate**:
    - Checkpoints are strictly validated against board size and rules (`meta.N == config.N` and `meta.rules == config.rules`). Incompatible models are disabled with a message indicating the configuration they were trained for.
+   - The demo discovers `checkpoints/release/*` and `checkpoints/dqn_*`. The two release models were trained under the old 2-cell HOP rule (`experiments/results/STALE.md`); they still play only legal moves (the engine's legal mask), but their strength is measured in `experiments/results/final_dqn/` (`release_dqn_*_eval.json`). The final-rule retrained weights (`checkpoints/final/*`) are kept local; only their `manifest.json` is in git, so the demo does not list them.
 4. **Arena Batch Caps**:
    - Batch tournaments are capped at $n \le 50$ games synchronously to prevent server worker timeouts.
+
+---
+
+## 7. How the Demo Stays Consistent with the Engine
+
+The browser cannot run the Python engine, so the rules live only on the server:
+
+1. Every game, arena match, scenario and replay runs on `WallzEngine` (`web/backend/sessions.py`, `arena.py` via `evaluation.match_runner.run_match`, `scenarios.py`, `replays.py`).
+2. `web/backend/serialize.py::state_json` sends the engine's own data: `legal` is `engine.get_legal_actions()` grouped by type, and `inventory`, `hop`, `block`, `blocked` (with `remaining` timers), `walls` (with `owner` and `latest`), `paths` (`engine.shortest_path_cells`) and `terminal` (`winner`, `terminal_reason`) are read straight from engine fields.
+3. The frontend only highlights the `legal` lists, sends the clicked action back, and shows the server's answer. A click on anything else is sent too and rejected by the engine with HTTP 400 and the engine's error text; the state is unchanged.
+4. Undo rebuilds a fresh engine and replays the kept history.
+
+Checks:
+
+| Check | File | What it proves |
+|---|---|---|
+| API vs engine, ply by ply | `tests/web/test_engine_sync.py` | After every scripted ply the served state equals a shadow `WallzEngine` that replays the same actions (legal set, inventory, walls + latest, hop/block flags, block timers, side to move, terminal). Covers MOVE, WALL with inventory running out, REPLACE of the latest wall only, the one-time HOP across an opponent's wall, BLOCK lasting exactly K plies for K = 1, 2, 3, a path-sealing wall being rejected, and the terminal reasons `goal`, `no_legal_actions`, `repetition` and `truncated`. Also checks the Arena counts come from the match outcome. |
+| Single-source guard | `tests/test_single_source.py` | No BFS / legality code in `web/backend` (AST) or `web/frontend/src` (regex). |
+| Scenarios | `tests/test_scenarios.py`, `tests/web/test_api_data.py` | The 9 scenario files pass in pytest and through `/api/scenarios`. |
+| Replays | `tests/web/test_api_data.py` | A tampered or substituted replay fails verification at the right ply. |
+
+The frontend audit (every place `web/frontend/src` touches game data, with file:line) is in `docs/reports/stage3_greedy_demo_docs.md`.
+
+## 8. Docker
+
+```bash
+docker build -t wallz-demo .
+docker run --rm -p 5000:5000 wallz-demo
+```
+
+Inside the container the server binds `0.0.0.0` (`Dockerfile` CMD passes `--host 0.0.0.0`), so the published port is reachable. Run outside Docker, `python -m web.backend.app` keeps its default `--host 127.0.0.1`.

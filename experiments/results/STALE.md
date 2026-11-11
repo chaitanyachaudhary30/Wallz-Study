@@ -32,9 +32,9 @@ uncommitted changes, so the exact code cannot be recovered from git.
 | `solves/solve_N4_K1_M0.json` | `b4eb0a9`, dirty; committed in `4e346a8` | valid, unverified provenance | all 8 cells equal `final_eval/solve_N4_K1_M0.json` |
 | `solves/solve_N3_K2_M0.json`, `solve_N3_K3_M0.json`, `solve_N4_K2_M0.json`, `solve_N4_K3_M0.json` | `b4eb0a9`, dirty; committed in `4e346a8` | probably valid, not rerun | M = 0, so HOP cannot change them; B-on and B-off cells are already equal inside each file. Dirty tree |
 | `agreement/agreement_3x3.json` | `4c57b01` | stale | before the Greedy change, Minimax fix and HOP change |
-| `greedy/greedy_vs_greedy_self_N{3,5,9}*.jsonl`, `greedy_vs_random_N{3,5,9}*.jsonl` | `b4eb0a9`, dirty; committed in `4e346a8` | replays legal, provenance unverified | `verify-replay` passes on the final engine for all 100/100/40 games each; dirty tree, so the Greedy code that chose the moves is not recoverable |
-| `greedy/greedy_vs_minimax2_N{3,5,9}*.jsonl` | `b4eb0a9`, dirty | stale | before the Minimax fix (`ce55e0c`); replays are still legal |
-| `greedy/summary.json` | `b4eb0a9`, dirty | partly stale | its Minimax rows are stale (see above) |
+| `greedy/greedy_vs_greedy_self_N{3,5,9}*.jsonl`, `greedy_vs_random_N{3,5,9}*.jsonl` | `b4eb0a9`, dirty; committed in `4e346a8` | superseded by `final_greedy/` | `verify-replay` passes on the final engine for all 100/100/40 games each; dirty tree, so the Greedy code that chose the moves is not recoverable. Also 2-ply openings repeat (deterministic agents), so its game counts overstate the distinct games. Use `final_greedy/` |
+| `greedy/greedy_vs_minimax2_N{3,5,9}*.jsonl` | `b4eb0a9`, dirty | stale; superseded by `final_greedy/` | before the Minimax fix (`ce55e0c`); replays are still legal |
+| `greedy/summary.json` | `b4eb0a9`, dirty | superseded by `final_greedy/` | its Minimax rows are stale (see above); its "draws" merge truncated games into draws (`scripts/run_greedy_matches.py` `summarise`) |
 | `minimax/x7_equivalence.json`, `x8_node_reduction.json` | added in `f87cfad` (no source field) | stale | before the HOP change and the Minimax fix |
 | `features/x5_feature_study.json`, `x5_feature_study_4x4.json` | added in `e64b109` (no source field) | stale | before the HOP change and the Minimax fix |
 | `engine/benchmark_performance.json` | added in `4c57b01`, last `060b22c` (no source field) | stale | engine timing before the HOP change |

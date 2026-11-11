@@ -5,7 +5,7 @@ Modified Wallz is a deterministic, sequential, two-player zero-sum adversarial g
 
 The canonical engine implementation in `wallz_engine.py` serves as the **single source of truth** for all rules, validations, legal move generations, and state transitions.
 
-**Status: frozen at Stage 1** (engine as of `main` = `ce55e0c`, verified in `docs/reports/stage1_engine_freeze.md`, tests in `tests/test_stage1_engine_freeze.py`). This file describes the current rules only; Section 3.4 notes the one earlier HOP rule whose results are stale.
+**Status: frozen at Stage 1** (engine as of `main` = `ce55e0c`, verified in `docs/reports/stage1_engine_freeze.md`, tests in `tests/test_stage1_engine_freeze.py`). `wallz_engine.py` and `src/modified_wallz/` have not changed since (checked at `main` = `d91549c`). This file describes the final rules only; Section 3.4 notes the one earlier HOP rule whose results are stale (`experiments/results/STALE.md`).
 
 ---
 
@@ -144,6 +144,7 @@ The canonical method `apply_action(action, update_clock=True)` executes a strict
    - Swaps active player (`current_player = 1 - current_player`) and increments `turn_count += 1`.
 9. **Step Limit Truncation Check** (only when the engine was built with `max_plies`; the engine default is `None`, i.e. off):
    - If `turn_count >= max_plies`: sets `is_draw = True`, `is_truncated = True`, `terminal_reason = 'truncated'`.
+   - `is_draw = True` here is only the engine's flag for its own optional cap. The team counts a truncated game as its own outcome, never as a draw (Section 6, item 3).
 10. **No-Legal-Actions Draw Check**:
     - If non-terminal and `has_legal_action(current_player) == False`: sets `is_draw = True`, `terminal_reason = 'no_legal_actions'`.
     - Example: the mover's only open neighbour holds the opponent's pawn (or a blocked cell), and it has no walls, no `REPLACE`, no block and no hop left. Its path still exists (paths ignore pawns), but it cannot act.
@@ -159,8 +160,10 @@ Steps 1-3 raise before anything changes, so a rejected action leaves the whole s
 When evaluating the end of a match, precedence is strictly evaluated as:
 1. **Clock Timeout**: Instantaneous forfeit upon clock expiry.
 2. **Goal Reached**: Immediate win for the player reaching their goal row.
-3. **Max Plies Truncation**: Off in the engine by default. With `max_plies` set, the engine stops at that ply (`terminal_reason = 'truncated'`, `is_truncated = True`, `is_draw = True`).
-   The match runner (`evaluation/match_runner.py`, `MatchConfig.max_plies = 200`) and `WallzEnv` (`max_plies = 200`) do **not** pass the cap to the engine. They stop the game themselves and report it as `truncated`, a separate outcome that is not a rule draw.
+3. **Max Plies Truncation**: not a rule of the game. It is a cap that stops a long game, and **a truncated game is its own outcome, never a draw**. Report draw and truncation rates separately.
+   - Match runner (`evaluation/match_runner.py`, `MatchConfig.max_plies = 200`) and `WallzEnv` (`max_plies = 200`): they do **not** pass the cap to the engine. They stop the game themselves and record `outcome.category = 'truncated'` (the engine is not terminal).
+   - Engine's own optional cap (`max_plies` in `WallzConfig`, default `None` = off): the engine stops at that ply with `terminal_reason = 'truncated'`, `is_truncated = True` and `is_draw = True`. That `is_draw` flag exists only for this optional cap; read `terminal_reason`, not `is_draw`, to tell it apart from a rule draw.
+   - Web demo (`web/backend/sessions.py`): passes its 200-ply cap to the engine, so a capped demo game ends with `terminal.reason = 'truncated'`. The demo shows it as "truncated, not a rule draw", and the Arena counts it in its own `truncated` column (`web/backend/arena.py`).
 4. **No Legal Actions**: Draw declared if the player to move has zero legal actions (`terminal_reason = 'no_legal_actions'`; the match runner reports `draw_no_legal_actions`).
 5. **N-Fold Repetition**: Draw declared when the same canonical position occurs `repetition_limit` times, default 5 (`terminal_reason = 'repetition'`).
 
