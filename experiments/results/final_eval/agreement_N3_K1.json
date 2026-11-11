@@ -1,0 +1,3113 @@
+{
+  "source": {
+    "commit": "265b261577ed71ce5744a296395e898c29d8cf32",
+    "dirty": false
+  },
+  "run": {
+    "source": {
+      "commit": "265b261577ed71ce5744a296395e898c29d8cf32",
+      "dirty": false
+    },
+    "command": "python scripts\\agreement_final.py --Ms 0 1 --max-states 300 --seed 42 --dqn-dir D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final --manifest-dir checkpoints/final --out experiments/results/final_eval/agreement_N3_K1.json",
+    "python": "3.12.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date_utc": "2026-11-11T05:32:53+00:00"
+  },
+  "config": {
+    "Ms": [
+      0,
+      1
+    ],
+    "max_states": 300,
+    "seed": 42,
+    "dqn_dir": "D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final",
+    "dqn_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "manifest_dir": "checkpoints/final",
+    "out": "experiments/results/final_eval/agreement_N3_K1.json"
+  },
+  "dqn_checkpoints": {
+    "dqn_s42": {
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s42/final.pt",
+      "sha256": "343ccc5ed083f9d55fc6301b810e05bb94033177797538525e5b39840657c32f"
+    },
+    "dqn_s43": {
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s43/final.pt",
+      "sha256": "524eb9f4c549ef1786c928d1ed7cbb9edba787973a674e22f76a7efb767a40a6"
+    },
+    "dqn_s44": {
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s44/final.pt",
+      "sha256": "facb727a8436debb1be5bd38aac38826a586e1ece3e4f859c4ff289b1998a3ac"
+    },
+    "dqn_s45": {
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s45/final.pt",
+      "sha256": "648b7606a205ba689f258dccadd67df20f1e9f10d6d555a69300cd1b1cc9bb94"
+    },
+    "dqn_s46": {
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s46/final.pt",
+      "sha256": "c0117dedd258ed917d0cecfdd19cef5b59ad2c224b7c36c8dc00f6cf5221e12f"
+    }
+  },
+  "cells": [
+    {
+      "config_label": "N3_A0B0C0_K1_M0",
+      "states": 45,
+      "sampled_nodes": 33,
+      "sampled_keys_sha256": "751b588a9e8ab87fd5aee82fa2f71d0e69d89ff008200e4742c2401ad2ac896a",
+      "solve_seconds": 0.0
+    },
+    {
+      "config_label": "N3_A0B0C1_K1_M0",
+      "states": 642,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "f56dec5557d3839ecb646e93b37b29fb76b8e9c70260bd3994dec5df668f6136",
+      "solve_seconds": 0.13
+    },
+    {
+      "config_label": "N3_A0B1C0_K1_M0",
+      "states": 45,
+      "sampled_nodes": 33,
+      "sampled_keys_sha256": "76256580df7466653c121c4c8dd494063b58c03e2606983687b215aef1b31e6a",
+      "solve_seconds": 0.0
+    },
+    {
+      "config_label": "N3_A0B1C1_K1_M0",
+      "states": 642,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "941dc44fe4ebcd5ad8fa0924ccb0f0e3a5d2f2457771fc2fe8952b0be57ea91f",
+      "solve_seconds": 0.13
+    },
+    {
+      "config_label": "N3_A1B0C0_K1_M0",
+      "states": 45,
+      "sampled_nodes": 33,
+      "sampled_keys_sha256": "751b588a9e8ab87fd5aee82fa2f71d0e69d89ff008200e4742c2401ad2ac896a",
+      "solve_seconds": 0.0
+    },
+    {
+      "config_label": "N3_A1B0C1_K1_M0",
+      "states": 642,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "f56dec5557d3839ecb646e93b37b29fb76b8e9c70260bd3994dec5df668f6136",
+      "solve_seconds": 0.13
+    },
+    {
+      "config_label": "N3_A1B1C0_K1_M0",
+      "states": 45,
+      "sampled_nodes": 33,
+      "sampled_keys_sha256": "76256580df7466653c121c4c8dd494063b58c03e2606983687b215aef1b31e6a",
+      "solve_seconds": 0.01
+    },
+    {
+      "config_label": "N3_A1B1C1_K1_M0",
+      "states": 642,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "941dc44fe4ebcd5ad8fa0924ccb0f0e3a5d2f2457771fc2fe8952b0be57ea91f",
+      "solve_seconds": 0.15
+    },
+    {
+      "config_label": "N3_A0B0C0_K1_M1",
+      "states": 1341,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "35362844ff965517ddeb11d0c3fa4857326be90f9633143dd625e7dd7a487115",
+      "solve_seconds": 0.2
+    },
+    {
+      "config_label": "N3_A0B0C1_K1_M1",
+      "states": 16696,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "b2d345513cca8bb65fe73e3f91f1f7ea9d6bc09bb5fcc86e7934a4073db16129",
+      "solve_seconds": 3.8
+    },
+    {
+      "config_label": "N3_A0B1C0_K1_M1",
+      "states": 4893,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "2c2dd028fc3dc31ca0a667c0676fe89f15f93488c684998bc76939fdbc0eb92c",
+      "solve_seconds": 0.48
+    },
+    {
+      "config_label": "N3_A0B1C1_K1_M1",
+      "states": 59240,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "99400d171673f0b39a4f2a5fae57c895e7c7eb4a8d439ef375ed2ffb1ecd82c0",
+      "solve_seconds": 12.78
+    },
+    {
+      "config_label": "N3_A1B0C0_K1_M1",
+      "states": 3861,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "7b0aba9650335ceffd43b2f3071a355297611d7356e3ae8b7321d7c4fe3167b1",
+      "solve_seconds": 0.86
+    },
+    {
+      "config_label": "N3_A1B0C1_K1_M1",
+      "states": 46886,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "aa33f75c0d7722288a2f9547c58e1c06e5de27ab2651b77617d080109253c763",
+      "solve_seconds": 18.42
+    },
+    {
+      "config_label": "N3_A1B1C0_K1_M1",
+      "states": 12821,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "2e4c5dff706ebfb19b0c2f0074f88e40c00904ffecca6b5cc3cdabc67bf75827",
+      "solve_seconds": 2.79
+    },
+    {
+      "config_label": "N3_A1B1C1_K1_M1",
+      "states": 150710,
+      "sampled_nodes": 300,
+      "sampled_keys_sha256": "2ea119375a43a1e113d829a7121716ed946641dcef96e0255d52e64d923ad1b1",
+      "solve_seconds": 53.71
+    }
+  ],
+  "rows": [
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 0.8787878787878788,
+          "value_optimal_ci95": [
+            0.7267415674973484,
+            0.9518391673241576
+          ],
+          "rank_optimal_rate": 0.8787878787878788
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 0.6363636363636364,
+          "value_optimal_ci95": [
+            0.35379677689163724,
+            0.8483377638586862
+          ],
+          "rank_optimal_rate": 0.6363636363636364
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.0
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.06
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8133333333333334,
+          "value_optimal_ci95": [
+            0.7653802718106468,
+            0.8533631787241056
+          ],
+          "rank_optimal_rate": 0.79
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 0.9371428571428572,
+          "value_optimal_ci95": [
+            0.8909628376039045,
+            0.9645428165615695
+          ],
+          "rank_optimal_rate": 0.9257142857142857
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.8863636363636364
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.4444444444444444,
+          "value_optimal_ci95": [
+            0.3411937567641278,
+            0.5527262070272198
+          ],
+          "rank_optimal_rate": 0.4444444444444444
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.06
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.16
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.16
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 0.8787878787878788,
+          "value_optimal_ci95": [
+            0.7267415674973484,
+            0.9518391673241576
+          ],
+          "rank_optimal_rate": 0.8787878787878788
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 0.6363636363636364,
+          "value_optimal_ci95": [
+            0.35379677689163724,
+            0.8483377638586862
+          ],
+          "rank_optimal_rate": 0.6363636363636364
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.0
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8133333333333334,
+          "value_optimal_ci95": [
+            0.7653802718106468,
+            0.8533631787241056
+          ],
+          "rank_optimal_rate": 0.79
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 0.9371428571428572,
+          "value_optimal_ci95": [
+            0.8909628376039045,
+            0.9645428165615695
+          ],
+          "rank_optimal_rate": 0.9257142857142857
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.8863636363636364
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.4444444444444444,
+          "value_optimal_ci95": [
+            0.3411937567641278,
+            0.5527262070272198
+          ],
+          "rank_optimal_rate": 0.4444444444444444
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.06
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.16
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.18
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 0.8787878787878788,
+          "value_optimal_ci95": [
+            0.7267415674973484,
+            0.9518391673241576
+          ],
+          "rank_optimal_rate": 0.8787878787878788
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 0.6363636363636364,
+          "value_optimal_ci95": [
+            0.35379677689163724,
+            0.8483377638586862
+          ],
+          "rank_optimal_rate": 0.6363636363636364
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.0
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B0C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8133333333333334,
+          "value_optimal_ci95": [
+            0.7653802718106468,
+            0.8533631787241056
+          ],
+          "rank_optimal_rate": 0.79
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 0.9371428571428572,
+          "value_optimal_ci95": [
+            0.8909628376039045,
+            0.9645428165615695
+          ],
+          "rank_optimal_rate": 0.9257142857142857
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.8863636363636364
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.4444444444444444,
+          "value_optimal_ci95": [
+            0.3411937567641278,
+            0.5527262070272198
+          ],
+          "rank_optimal_rate": 0.4444444444444444
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.08
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.2
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.19
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B0C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 0.8787878787878788,
+          "value_optimal_ci95": [
+            0.7267415674973484,
+            0.9518391673241576
+          ],
+          "rank_optimal_rate": 0.8787878787878788
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 0.6363636363636364,
+          "value_optimal_ci95": [
+            0.35379677689163724,
+            0.8483377638586862
+          ],
+          "rank_optimal_rate": 0.6363636363636364
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.0
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "sampled_states": 33,
+      "population_states": 33,
+      "rates": {
+        "all": {
+          "n": 33,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8957265699643882,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "WIN": {
+          "n": 17,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8156763396284354,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 5,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.5655085052479191,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 11,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7411599827511859,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.01
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B1C0_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8133333333333334,
+          "value_optimal_ci95": [
+            0.7653802718106468,
+            0.8533631787241056
+          ],
+          "rank_optimal_rate": 0.79
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 0.9371428571428572,
+          "value_optimal_ci95": [
+            0.8909628376039045,
+            0.9645428165615695
+          ],
+          "rank_optimal_rate": 0.9257142857142857
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.8863636363636364
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.4444444444444444,
+          "value_optimal_ci95": [
+            0.3411937567641278,
+            0.5527262070272198
+          ],
+          "rank_optimal_rate": 0.4444444444444444
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.07
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.22
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "sampled_states": 300,
+      "population_states": 592,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9966666666666667,
+          "value_optimal_ci95": [
+            0.9813628354450568,
+            0.9994113574238592
+          ],
+          "rank_optimal_rate": 0.9966666666666667
+        },
+        "WIN": {
+          "n": 175,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9785195390781564,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "LOSS": {
+          "n": 44,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9197016822179859,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 81,
+          "value_optimal_rate": 0.9876543209876543,
+          "value_optimal_ci95": [
+            0.9333295783588225,
+            0.9978174061393479
+          ],
+          "rank_optimal_rate": 0.9876543209876543
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.24
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B1C1_K1_M0",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 1024,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.93,
+          "value_optimal_ci95": [
+            0.8953632441625534,
+            0.953763406039394
+          ],
+          "rank_optimal_rate": 0.8933333333333333
+        },
+        "WIN": {
+          "n": 176,
+          "value_optimal_rate": 0.9715909090909091,
+          "value_optimal_ci95": [
+            0.9352287342904869,
+            0.9878057582852017
+          ],
+          "rank_optimal_rate": 0.9545454545454546
+        },
+        "LOSS": {
+          "n": 81,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.954720325877871,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.9012345679012346
+        },
+        "DRAW": {
+          "n": 43,
+          "value_optimal_rate": 0.627906976744186,
+          "value_optimal_ci95": [
+            0.47859538265273166,
+            0.7562386110622568
+          ],
+          "rank_optimal_rate": 0.627906976744186
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.05
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 1024,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.98,
+          "value_optimal_ci95": [
+            0.9570598132699448,
+            0.9908024939322289
+          ],
+          "rank_optimal_rate": 0.97
+        },
+        "WIN": {
+          "n": 176,
+          "value_optimal_rate": 0.9886363636363636,
+          "value_optimal_ci95": [
+            0.9595189905082895,
+            0.996878194570135
+          ],
+          "rank_optimal_rate": 0.9715909090909091
+        },
+        "LOSS": {
+          "n": 81,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.954720325877871,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 43,
+          "value_optimal_rate": 0.9069767441860465,
+          "value_optimal_ci95": [
+            0.7839701160146731,
+            0.9632289548966534
+          ],
+          "rank_optimal_rate": 0.9069767441860465
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.14
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 1024,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.98,
+          "value_optimal_ci95": [
+            0.9570598132699448,
+            0.9908024939322289
+          ],
+          "rank_optimal_rate": 0.97
+        },
+        "WIN": {
+          "n": 176,
+          "value_optimal_rate": 0.9886363636363636,
+          "value_optimal_ci95": [
+            0.9595189905082895,
+            0.996878194570135
+          ],
+          "rank_optimal_rate": 0.9715909090909091
+        },
+        "LOSS": {
+          "n": 81,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.954720325877871,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 43,
+          "value_optimal_rate": 0.9069767441860465,
+          "value_optimal_ci95": [
+            0.7839701160146731,
+            0.9632289548966534
+          ],
+          "rank_optimal_rate": 0.9069767441860465
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.13
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 15317,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9,
+          "value_optimal_ci95": [
+            0.8608327216490343,
+            0.9290525343527771
+          ],
+          "rank_optimal_rate": 0.8733333333333333
+        },
+        "WIN": {
+          "n": 182,
+          "value_optimal_rate": 0.9340659340659341,
+          "value_optimal_ci95": [
+            0.888301994277689,
+            0.9618844010180899
+          ],
+          "rank_optimal_rate": 0.9010989010989011
+        },
+        "LOSS": {
+          "n": 66,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9449955327483907,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9696969696969697
+        },
+        "DRAW": {
+          "n": 52,
+          "value_optimal_rate": 0.6538461538461539,
+          "value_optimal_ci95": [
+            0.5180330221508072,
+            0.7684917192606138
+          ],
+          "rank_optimal_rate": 0.6538461538461539
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.07
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 15317,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9366666666666666,
+          "value_optimal_ci95": [
+            0.9032079605174259,
+            0.9590834439512181
+          ],
+          "rank_optimal_rate": 0.9233333333333333
+        },
+        "WIN": {
+          "n": 182,
+          "value_optimal_rate": 0.9615384615384616,
+          "value_optimal_ci95": [
+            0.9227489451256344,
+            0.9812467156951937
+          ],
+          "rank_optimal_rate": 0.9395604395604396
+        },
+        "LOSS": {
+          "n": 66,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9449955327483907,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 52,
+          "value_optimal_rate": 0.7692307692307693,
+          "value_optimal_ci95": [
+            0.6386595708887027,
+            0.8627587265812838
+          ],
+          "rank_optimal_rate": 0.7692307692307693
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.21
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 15317,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9366666666666666,
+          "value_optimal_ci95": [
+            0.9032079605174259,
+            0.9590834439512181
+          ],
+          "rank_optimal_rate": 0.9233333333333333
+        },
+        "WIN": {
+          "n": 182,
+          "value_optimal_rate": 0.9615384615384616,
+          "value_optimal_ci95": [
+            0.9227489451256344,
+            0.9812467156951937
+          ],
+          "rank_optimal_rate": 0.9395604395604396
+        },
+        "LOSS": {
+          "n": 66,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9449955327483907,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 52,
+          "value_optimal_rate": 0.7692307692307693,
+          "value_optimal_ci95": [
+            0.6386595708887027,
+            0.8627587265812838
+          ],
+          "rank_optimal_rate": 0.7692307692307693
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.21
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3656,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9466666666666667,
+          "value_optimal_ci95": [
+            0.9151301612527315,
+            0.966908374615958
+          ],
+          "rank_optimal_rate": 0.9266666666666666
+        },
+        "WIN": {
+          "n": 168,
+          "value_optimal_rate": 0.9821428571428571,
+          "value_optimal_ci95": [
+            0.9488198608200019,
+            0.9939087916134018
+          ],
+          "rank_optimal_rate": 0.9761904761904762
+        },
+        "LOSS": {
+          "n": 83,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9557631365612795,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9397590361445783
+        },
+        "DRAW": {
+          "n": 49,
+          "value_optimal_rate": 0.7346938775510204,
+          "value_optimal_ci95": [
+            0.5973744384734165,
+            0.8378886875485057
+          ],
+          "rank_optimal_rate": 0.7346938775510204
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.04
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3656,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9933333333333333,
+          "value_optimal_ci95": [
+            0.9760219257685385,
+            0.9981698899670288
+          ],
+          "rank_optimal_rate": 0.9933333333333333
+        },
+        "WIN": {
+          "n": 168,
+          "value_optimal_rate": 0.9880952380952381,
+          "value_optimal_ci95": [
+            0.9576380186368249,
+            0.9967292591352631
+          ],
+          "rank_optimal_rate": 0.9880952380952381
+        },
+        "LOSS": {
+          "n": 83,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9557631365612795,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 49,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9272997032640949,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 1.0
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.09
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3656,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9933333333333333,
+          "value_optimal_ci95": [
+            0.9760219257685385,
+            0.9981698899670288
+          ],
+          "rank_optimal_rate": 0.9933333333333333
+        },
+        "WIN": {
+          "n": 168,
+          "value_optimal_rate": 0.9940476190476191,
+          "value_optimal_ci95": [
+            0.9670573913601588,
+            0.9989485117506134
+          ],
+          "rank_optimal_rate": 0.9940476190476191
+        },
+        "LOSS": {
+          "n": 83,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.9557631365612795,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 49,
+          "value_optimal_rate": 0.9795918367346939,
+          "value_optimal_ci95": [
+            0.8930623153224584,
+            0.9963884204614692
+          ],
+          "rank_optimal_rate": 0.9795918367346939
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.1
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 53711,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9333333333333333,
+          "value_optimal_ci95": [
+            0.8992762041322797,
+            0.9564328232030161
+          ],
+          "rank_optimal_rate": 0.8866666666666667
+        },
+        "WIN": {
+          "n": 184,
+          "value_optimal_rate": 0.9619565217391305,
+          "value_optimal_ci95": [
+            0.9235659531688607,
+            0.9814518916535855
+          ],
+          "rank_optimal_rate": 0.9293478260869565
+        },
+        "LOSS": {
+          "n": 57,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.936858991216536,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.8596491228070176
+        },
+        "DRAW": {
+          "n": 59,
+          "value_optimal_rate": 0.7796610169491526,
+          "value_optimal_ci95": [
+            0.6586705755334912,
+            0.8664592747567625
+          ],
+          "rank_optimal_rate": 0.7796610169491526
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.07
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 53711,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.99,
+          "value_optimal_ci95": [
+            0.9710159953649371,
+            0.9965934432372818
+          ],
+          "rank_optimal_rate": 0.9666666666666667
+        },
+        "WIN": {
+          "n": 184,
+          "value_optimal_rate": 0.9891304347826086,
+          "value_optimal_ci95": [
+            0.9612400316909089,
+            0.9970141569446223
+          ],
+          "rank_optimal_rate": 0.9619565217391305
+        },
+        "LOSS": {
+          "n": 57,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.936858991216536,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.9649122807017544
+        },
+        "DRAW": {
+          "n": 59,
+          "value_optimal_rate": 0.9830508474576272,
+          "value_optimal_ci95": [
+            0.9100406253761469,
+            0.9970018433070186
+          ],
+          "rank_optimal_rate": 0.9830508474576272
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.19
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 53711,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9833333333333333,
+          "value_optimal_ci95": [
+            0.9615840563782944,
+            0.9928606279572277
+          ],
+          "rank_optimal_rate": 0.96
+        },
+        "WIN": {
+          "n": 184,
+          "value_optimal_rate": 0.9836956521739131,
+          "value_optimal_ci95": [
+            0.9531669982400931,
+            0.9944399216328211
+          ],
+          "rank_optimal_rate": 0.9565217391304348
+        },
+        "LOSS": {
+          "n": 57,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.936858991216536,
+            0.9999999999999999
+          ],
+          "rank_optimal_rate": 0.9649122807017544
+        },
+        "DRAW": {
+          "n": 59,
+          "value_optimal_rate": 0.9661016949152542,
+          "value_optimal_ci95": [
+            0.8845621301839242,
+            0.9906542869664985
+          ],
+          "rank_optimal_rate": 0.9661016949152542
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.2
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A0B1C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3001,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.87,
+          "value_optimal_ci95": [
+            0.8272186992368379,
+            0.9034251625648376
+          ],
+          "rank_optimal_rate": 0.87
+        },
+        "WIN": {
+          "n": 107,
+          "value_optimal_rate": 0.9345794392523364,
+          "value_optimal_ci95": [
+            0.8710830600904749,
+            0.9679521036025789
+          ],
+          "rank_optimal_rate": 0.9345794392523364
+        },
+        "LOSS": {
+          "n": 12,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7574992425007574,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 181,
+          "value_optimal_rate": 0.8232044198895028,
+          "value_optimal_ci95": [
+            0.761080652509153,
+            0.8718937428650485
+          ],
+          "rank_optimal_rate": 0.8232044198895028
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.08
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3001,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9633333333333334,
+          "value_optimal_ci95": [
+            0.9355455130036123,
+            0.9794049085318193
+          ],
+          "rank_optimal_rate": 0.9633333333333334
+        },
+        "WIN": {
+          "n": 107,
+          "value_optimal_rate": 0.9719626168224299,
+          "value_optimal_ci95": [
+            0.920790524955237,
+            0.9904197065823805
+          ],
+          "rank_optimal_rate": 0.9719626168224299
+        },
+        "LOSS": {
+          "n": 12,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7574992425007574,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 181,
+          "value_optimal_rate": 0.9558011049723757,
+          "value_optimal_ci95": [
+            0.9152197167625562,
+            0.9774364818420869
+          ],
+          "rank_optimal_rate": 0.9558011049723757
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.38
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 3001,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9633333333333334,
+          "value_optimal_ci95": [
+            0.9355455130036123,
+            0.9794049085318193
+          ],
+          "rank_optimal_rate": 0.9633333333333334
+        },
+        "WIN": {
+          "n": 107,
+          "value_optimal_rate": 0.9719626168224299,
+          "value_optimal_ci95": [
+            0.920790524955237,
+            0.9904197065823805
+          ],
+          "rank_optimal_rate": 0.9719626168224299
+        },
+        "LOSS": {
+          "n": 12,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.7574992425007574,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 181,
+          "value_optimal_rate": 0.9558011049723757,
+          "value_optimal_ci95": [
+            0.9152197167625562,
+            0.9774364818420869
+          ],
+          "rank_optimal_rate": 0.9558011049723757
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.32
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B0C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 43434,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8666666666666667,
+          "value_optimal_ci95": [
+            0.8235273610289742,
+            0.9005341236393531
+          ],
+          "rank_optimal_rate": 0.8666666666666667
+        },
+        "WIN": {
+          "n": 98,
+          "value_optimal_rate": 0.9081632653061225,
+          "value_optimal_ci95": [
+            0.8346022720739837,
+            0.950931340909316
+          ],
+          "rank_optimal_rate": 0.9081632653061225
+        },
+        "LOSS": {
+          "n": 20,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8388698745050667,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 182,
+          "value_optimal_rate": 0.8296703296703297,
+          "value_optimal_ci95": [
+            0.7683793041826431,
+            0.8773318821179484
+          ],
+          "rank_optimal_rate": 0.8296703296703297
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.12
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 43434,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.95,
+          "value_optimal_ci95": [
+            0.9191522802928904,
+            0.9694686327091473
+          ],
+          "rank_optimal_rate": 0.95
+        },
+        "WIN": {
+          "n": 98,
+          "value_optimal_rate": 0.9285714285714286,
+          "value_optimal_ci95": [
+            0.8598383015319639,
+            0.9649719921005007
+          ],
+          "rank_optimal_rate": 0.9285714285714286
+        },
+        "LOSS": {
+          "n": 20,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8388698745050667,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 182,
+          "value_optimal_rate": 0.9560439560439561,
+          "value_optimal_ci95": [
+            0.915672421293379,
+            0.9775613864224394
+          ],
+          "rank_optimal_rate": 0.9560439560439561
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.53
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 43434,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.95,
+          "value_optimal_ci95": [
+            0.9191522802928904,
+            0.9694686327091473
+          ],
+          "rank_optimal_rate": 0.95
+        },
+        "WIN": {
+          "n": 98,
+          "value_optimal_rate": 0.9285714285714286,
+          "value_optimal_ci95": [
+            0.8598383015319639,
+            0.9649719921005007
+          ],
+          "rank_optimal_rate": 0.9285714285714286
+        },
+        "LOSS": {
+          "n": 20,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8388698745050667,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 182,
+          "value_optimal_rate": 0.9560439560439561,
+          "value_optimal_ci95": [
+            0.915672421293379,
+            0.9775613864224394
+          ],
+          "rank_optimal_rate": 0.9560439560439561
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.53
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B0C1_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 9817,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.82,
+          "value_optimal_ci95": [
+            0.7725658602716683,
+            0.8593423445297808
+          ],
+          "rank_optimal_rate": 0.8133333333333334
+        },
+        "WIN": {
+          "n": 120,
+          "value_optimal_rate": 0.925,
+          "value_optimal_ci95": [
+            0.8635894316089088,
+            0.9600433379935513
+          ],
+          "rank_optimal_rate": 0.925
+        },
+        "LOSS": {
+          "n": 26,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8712669561953784,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9230769230769231
+        },
+        "DRAW": {
+          "n": 154,
+          "value_optimal_rate": 0.7077922077922078,
+          "value_optimal_ci95": [
+            0.6316062288477287,
+            0.7738635585847351
+          ],
+          "rank_optimal_rate": 0.7077922077922078
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.08
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 9817,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9466666666666667,
+          "value_optimal_ci95": [
+            0.9151301612527315,
+            0.966908374615958
+          ],
+          "rank_optimal_rate": 0.9433333333333334
+        },
+        "WIN": {
+          "n": 120,
+          "value_optimal_rate": 0.9666666666666667,
+          "value_optimal_ci95": [
+            0.9174184205147198,
+            0.9869626598330794
+          ],
+          "rank_optimal_rate": 0.9666666666666667
+        },
+        "LOSS": {
+          "n": 26,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8712669561953784,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9615384615384616
+        },
+        "DRAW": {
+          "n": 154,
+          "value_optimal_rate": 0.922077922077922,
+          "value_optimal_ci95": [
+            0.8687443442168858,
+            0.9548661615053065
+          ],
+          "rank_optimal_rate": 0.922077922077922
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.3
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "sampled_states": 300,
+      "population_states": 9817,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9533333333333334,
+          "value_optimal_ci95": [
+            0.9232019646862172,
+            0.9720013254491692
+          ],
+          "rank_optimal_rate": 0.95
+        },
+        "WIN": {
+          "n": 120,
+          "value_optimal_rate": 0.975,
+          "value_optimal_ci95": [
+            0.9290687625956524,
+            0.9914619799012145
+          ],
+          "rank_optimal_rate": 0.975
+        },
+        "LOSS": {
+          "n": 26,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8712669561953784,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9615384615384616
+        },
+        "DRAW": {
+          "n": 154,
+          "value_optimal_rate": 0.9285714285714286,
+          "value_optimal_ci95": [
+            0.8766307639631303,
+            0.9596506726163265
+          ],
+          "rank_optimal_rate": 0.9285714285714286
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.32
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B1C0_K1_M1",
+      "applicable": false,
+      "reason": "checkpoint trained on N3_A1B1C1_K1_M1 only"
+    },
+    {
+      "agent": "greedy",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.8966666666666666,
+          "value_optimal_ci95": [
+            0.8570590047878968,
+            0.9262438740805661
+          ],
+          "rank_optimal_rate": 0.8633333333333333
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9523809523809523,
+          "value_optimal_ci95": [
+            0.9049747529263358,
+            0.9767448787932959
+          ],
+          "rank_optimal_rate": 0.9115646258503401
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 0.8666666666666667
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.8048780487804879,
+          "value_optimal_ci95": [
+            0.7260616310567942,
+            0.8652270313378776
+          ],
+          "rank_optimal_rate": 0.8048780487804879
+        }
+      },
+      "spec": "greedy",
+      "applicable": true,
+      "seconds": 0.14
+    },
+    {
+      "agent": "minimax:depth=2",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9533333333333334,
+          "value_optimal_ci95": [
+            0.9232019646862172,
+            0.9720013254491692
+          ],
+          "rank_optimal_rate": 0.9333333333333333
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9387755102040817,
+          "value_optimal_ci95": [
+            0.8877428802050145,
+            0.9674588678538765
+          ],
+          "rank_optimal_rate": 0.8979591836734694
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.959349593495935,
+          "value_optimal_ci95": [
+            0.9083610166076456,
+            0.9825139014003265
+          ],
+          "rank_optimal_rate": 0.959349593495935
+        }
+      },
+      "spec": "minimax:depth=2",
+      "applicable": true,
+      "seconds": 0.46
+    },
+    {
+      "agent": "minimax:depth=2,eval=hop",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9666666666666667,
+          "value_optimal_ci95": [
+            0.9397375485424309,
+            0.9817952501263492
+          ],
+          "rank_optimal_rate": 0.9466666666666667
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9727891156462585,
+          "value_optimal_ci95": [
+            0.9321278426537846,
+            0.9893686145569583
+          ],
+          "rank_optimal_rate": 0.9319727891156463
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 1.0
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.9512195121951219,
+          "value_optimal_ci95": [
+            0.8976526872286598,
+            0.9774545331154544
+          ],
+          "rank_optimal_rate": 0.9512195121951219
+        }
+      },
+      "spec": "minimax:depth=2,eval=hop",
+      "applicable": true,
+      "seconds": 0.47
+    },
+    {
+      "agent": "dqn_s42",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9666666666666667,
+          "value_optimal_ci95": [
+            0.9397375485424309,
+            0.9817952501263492
+          ],
+          "rank_optimal_rate": 0.92
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9727891156462585,
+          "value_optimal_ci95": [
+            0.9321278426537846,
+            0.9893686145569583
+          ],
+          "rank_optimal_rate": 0.8979591836734694
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.9512195121951219,
+          "value_optimal_ci95": [
+            0.8976526872286598,
+            0.9774545331154544
+          ],
+          "rank_optimal_rate": 0.9512195121951219
+        }
+      },
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s42/final.pt",
+      "applicable": true,
+      "seconds": 1.36
+    },
+    {
+      "agent": "dqn_s43",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9533333333333334,
+          "value_optimal_ci95": [
+            0.9232019646862172,
+            0.9720013254491692
+          ],
+          "rank_optimal_rate": 0.93
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9591836734693877,
+          "value_optimal_ci95": [
+            0.9138168781025923,
+            0.9811616954474097
+          ],
+          "rank_optimal_rate": 0.9183673469387755
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9666666666666667
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.9349593495934959,
+          "value_optimal_ci95": [
+            0.8768940620641227,
+            0.9666777629522757
+          ],
+          "rank_optimal_rate": 0.9349593495934959
+        }
+      },
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s43/final.pt",
+      "applicable": true,
+      "seconds": 0.17
+    },
+    {
+      "agent": "dqn_s44",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9733333333333334,
+          "value_optimal_ci95": [
+            0.9482704597024538,
+            0.9864270932330232
+          ],
+          "rank_optimal_rate": 0.9266666666666666
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9727891156462585,
+          "value_optimal_ci95": [
+            0.9321278426537846,
+            0.9893686145569583
+          ],
+          "rank_optimal_rate": 0.891156462585034
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9333333333333333
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.967479674796748,
+          "value_optimal_ci95": [
+            0.9193601684162935,
+            0.9872824472555366
+          ],
+          "rank_optimal_rate": 0.967479674796748
+        }
+      },
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s44/final.pt",
+      "applicable": true,
+      "seconds": 0.17
+    },
+    {
+      "agent": "dqn_s45",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.97,
+          "value_optimal_ci95": [
+            0.943976849008093,
+            0.9841383267940355
+          ],
+          "rank_optimal_rate": 0.9366666666666666
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9659863945578231,
+          "value_optimal_ci95": [
+            0.9228517246378743,
+            0.985385790742498
+          ],
+          "rank_optimal_rate": 0.9047619047619048
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9666666666666667
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.967479674796748,
+          "value_optimal_ci95": [
+            0.9193601684162935,
+            0.9872824472555366
+          ],
+          "rank_optimal_rate": 0.967479674796748
+        }
+      },
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s45/final.pt",
+      "applicable": true,
+      "seconds": 0.16
+    },
+    {
+      "agent": "dqn_s46",
+      "config_label": "N3_A1B1C1_K1_M1",
+      "sampled_states": 300,
+      "population_states": 138646,
+      "rates": {
+        "all": {
+          "n": 300,
+          "value_optimal_rate": 0.9766666666666667,
+          "value_optimal_ci95": [
+            0.952627445667121,
+            0.9886524844017043
+          ],
+          "rank_optimal_rate": 0.9466666666666667
+        },
+        "WIN": {
+          "n": 147,
+          "value_optimal_rate": 0.9863945578231292,
+          "value_optimal_ci95": [
+            0.9517533298153685,
+            0.9962610110561151
+          ],
+          "rank_optimal_rate": 0.9387755102040817
+        },
+        "LOSS": {
+          "n": 30,
+          "value_optimal_rate": 1.0,
+          "value_optimal_ci95": [
+            0.8864829086095221,
+            1.0
+          ],
+          "rank_optimal_rate": 0.9333333333333333
+        },
+        "DRAW": {
+          "n": 123,
+          "value_optimal_rate": 0.959349593495935,
+          "value_optimal_ci95": [
+            0.9083610166076456,
+            0.9825139014003265
+          ],
+          "rank_optimal_rate": 0.959349593495935
+        }
+      },
+      "spec": "dqn:path=D:/SEM V/Wallz-Study-wt/bot2-dqn/checkpoints/final/3x3_s46/final.pt",
+      "applicable": true,
+      "seconds": 0.16
+    }
+  ]
+}
