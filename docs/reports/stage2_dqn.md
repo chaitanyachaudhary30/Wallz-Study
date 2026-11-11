@@ -200,7 +200,7 @@ Source: `training_timing_5x5_9x9.json` (built from the timing runs'
 |---|---|
 | `scripts/train_dqn.py` | Q-probe and elapsed time logged at each eval; `--threads`; `--max-minutes` / `--resume` with full state (networks, optimizer, buffer, snapshot pool, counters, RNG); `run_config.json` with command, config, git, torch, Python |
 | `scripts/benchmark_dqn.py` | `truncated` kept as its own column, not a draw; gate label uses the real board size |
-| `scripts/run_multi_seed_3x3.py` | imported `validate_cell`, which never existed; now uses `evaluate_cell_x16`; `truncated` kept separate. Bot 3 owns the next change; not run here |
+| `scripts/run_multi_seed_3x3.py` | no change in the end: my fix (it imported `validate_cell`, which never existed) conflicted with Bot 3's rewrite merged in PR #2/#3, which already fixes it and loads `checkpoints/final/3x3_s<seed>/final.pt`; the merge takes main's version. Not run here |
 | `docs/dqn.md` | rewritten to match the code: plain conv stack, plane 13 constant, batch 128, epsilon 10%, -1e9 masking, no -1 reward, snapshot fallback, working commands |
 | `README.md` | DQN status, network description, codec location, `run_match` needs `-K 1 -M 1`, training command uses `--board-size` |
 | `.gitignore` | tracks `checkpoints/final/*/manifest.json` only |
@@ -242,6 +242,12 @@ python -m scripts.train_dqn --board-size 9 --smoke --threads 2 --output-dir chec
 
 `--max-minutes` changes only when a run pauses, never the training itself; the exact value per
 run is in its `manifest.json`.
+
+**Branch history.** `merge-tree` against `origin/main` (330153f) reported one conflict, in
+`scripts/run_multi_seed_3x3.py`. I resolved it with a merge commit (15e34c8) instead of a rebase,
+so that the commits cited by every result JSON and manifest (5f00f4f, 34d0b0e, d251df3, 9ee24ec,
+fa79c06, cb83693, c07c394) stay in the branch history. After the merge, the DQN test files above
+and a smoke run of `eval_dqn_final.py` give the same numbers (4x4 s42 value-optimal 96.34%).
 
 ## 11. Independent break attempt
 
