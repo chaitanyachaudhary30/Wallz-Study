@@ -7,7 +7,8 @@ Generates markdown and LaTeX publication tables for:
 4. Table X-17: Rule R3 Stalemate vs Repetition Draw Breakdown
 
 Reads only the final result folders (experiments/results/final_eval, final_minimax,
-final_minimax_hop, final_dqn). Older folders are read only with --include-stale, and
+final_minimax_hop, final_dqn incl. 5x5/ and distinct_reanalysis.json, final_greedy). Match
+tables count distinct games wherever a distinct count exists. Older folders are read only with --include-stale, and
 those tables are titled "STALE baseline". The 4-ply factorial ablation is the primary
 result; the 2- and 6-ply runs are labelled sensitivity checks. Writes .md and .tex files
 plus manifest.json (inputs per table, commit) to the output directory.
@@ -354,8 +355,8 @@ def make_greedy_table(summary_data: dict) -> tuple[str, str]:
 # ---------------------------------------------------------------------------
 
 R = Path("experiments/results")
-FINAL_EVAL, FINAL_MINIMAX, FINAL_MINIMAX_HOP, FINAL_DQN = (
-    R / "final_eval", R / "final_minimax", R / "final_minimax_hop", R / "final_dqn")
+FINAL_EVAL, FINAL_MINIMAX, FINAL_MINIMAX_HOP, FINAL_DQN, FINAL_GREEDY = (
+    R / "final_eval", R / "final_minimax", R / "final_minimax_hop", R / "final_dqn", R / "final_greedy")
 # The 4-ply ablation is the primary result, fixed beforehand (shortest opening length
 # with at least 30 distinct openings); 2- and 6-ply runs are sensitivity checks only.
 ABLATIONS = [
@@ -418,38 +419,163 @@ def make_multi_seed_table(data: Dict[str, Any]) -> Tuple[str, str]:
     return "\n".join(md), "\n".join(tex)
 
 
-def make_vs_greedy_table(paths: List[Path]) -> Tuple[str, str]:
-    """Minimax-vs-Greedy match summaries from final_minimax/ and final_minimax_hop/."""
-    md = ["### Minimax vs Greedy (final engine)\n",
-          "| Run | Minimax spec | N | Opening plies | Games | Win rate (95% Wilson) | Draw rate | Truncation rate | Mean plies |",
-          "| :--- | :--- | :---: | :---: | ---: | :---: | ---: | ---: | ---: |"]
-    tex = [r"\begin{table}[htbp]", r"\centering", r"\caption{Minimax vs Greedy (final engine)}",
-           r"\label{tab:minimax_vs_greedy}", r"\begin{tabular}{llccrcrrr}", r"\toprule",
-           r"Run & Spec & N & Open. & Games & Win (95\% CI) & Draw & Trunc. & Plies \\", r"\midrule"]
-    for p in paths:
-        d = _load(p)
-        o = d.get('results', {}).get('overall', {})
-        if 'minimax_win_rate' not in o:
-            continue
-        c = d.get('config', {})
-        row = [f"{p.parent.name}/{p.stem}", c.get('minimax_spec', '-'), str(c.get('board_size', '-')),
-               str(c.get('opening_plies', '-')), str(o.get('matches', '-')),
-               f"{o['minimax_win_rate'] * 100:.1f}% {format_ci(o.get('minimax_win_rate_wilson95'))}",
-               f"{o.get('draw_rate', 0) * 100:.1f}%", f"{o.get('truncation_rate', 0) * 100:.1f}%",
-               f"{o.get('mean_length_plies_incl_opening', 0):.1f}"]
-        md.append("| " + " | ".join(f"`{x}`" if i < 2 else x for i, x in enumerate(row)) + " |")
-        tex.append(" & ".join(x.replace('_', r'\_').replace('%', r'\%') for x in row) + r" \\")
-    tex.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+def _simple_table(title: str, label: str, header: List[str], rows: List[List[str]], note: str = "") -> Tuple[str, str]:
+    """Markdown + LaTeX for a plain table of strings."""
+    md = [f"### {title}\n", "| " + " | ".join(header) + " |", "| " + " | ".join([":---"] * len(header)) + " |"]
+    md += ["| " + " | ".join(r) + " |" for r in rows]
+    if note:
+        md += ["", note]
+
+    def esc(x):
+        return x.replace('\\', '').replace('_', r'\_').replace('%', r'\%').replace('`', '')
+
+    tex = [r"\begin{table}[htbp]", r"\centering", f"\\caption{{{esc(title)}}}", f"\\label{{tab:{label}}}",
+           r"\begin{tabular}{" + "l" * len(header) + "}", r"\toprule",
+           " & ".join(esc(h) for h in header) + r" \\", r"\midrule"]
+    tex += [" & ".join(esc(x) for x in r) + r" \\" for r in rows]
+    tex += [r"\bottomrule", r"\end{tabular}", r"\end{table}"]
     return "\n".join(md), "\n".join(tex)
 
 
+def _pct_ci(rate, ci):
+    return "-" if rate is None else f"{rate * 100:.1f} [{ci[0] * 100:.1f}, {ci[1] * 100:.1f}]"
+
+
+# Role of each Minimax run, by the tag used in <folder>/opening_maps.json
+MINIMAX_ROLES = {
+    'N5_open4_distinct': 'main (Member 1)',
+    'N5': 'earlier design: 2-ply openings, 9 distinct (superseded by N5_open4_distinct)',
+    'N9_timed': 'larger board, timed, load-affected',
+    'N5_depth1_diag': 'diagnostic', 'N5_depth3_diag': 'diagnostic',
+    'N5_open4_depth1_diag': 'diagnostic', 'N5_open4_depth3_diag': 'diagnostic',
+    'N5_hop_d1': 'new contribution (hop scorer)', 'N5_hop_d2': 'new contribution (hop scorer)',
+    'N5_hop_d3': 'new contribution (hop scorer)',
+    'N5_default_repro': 'diagnostic (reproduction check of N5_open4_distinct)',
+    'N9_hop_timed': 'new contribution (hop scorer), timed, load-affected',
+}
+
+
+def make_vs_greedy_table(maps: List[Path]) -> Tuple[str, str]:
+    """Minimax vs Greedy over DISTINCT games, from final_minimax*/opening_maps.json."""
+    header = ["Run", "Role", "Spec", "N", "Opening plies", "Matches", "Distinct games",
+              "Minimax W-L-D-T", "Win % [95% Wilson]", "Mean plies"]
+    rows = []
+    for p in maps:
+        d = _load(p)
+        for tag, v in d.get('results', {}).items():
+            o = v.get('distinct_game_results', {}).get('overall')
+            if not o:
+                continue
+            src = _load(p.parent / f"vs_greedy_{tag}_summary.json")
+            rows.append([f"`{p.parent.name}/{tag}`", MINIMAX_ROLES.get(tag, '-'),
+                         f"`{src['config']['minimax_spec']}`", str(v['board_size']), str(v['opening_plies']),
+                         str(v['matches']), str(v['distinct_games']),
+                         f"{o['minimax_goal_wins']}-{o['greedy_goal_wins']}-{o['draws_total']}-{o['truncated']}",
+                         _pct_ci(o['minimax_win_rate'], o['minimax_win_rate_wilson95']),
+                         f"{o.get('mean_length_plies_incl_opening', 0):.1f}"])
+    return _simple_table("Minimax vs Greedy, distinct games (final engine)", "minimax_vs_greedy", header, rows,
+                         "Counts are over distinct games (both agents are deterministic). "
+                         "Rows marked diagnostic are checks, not results. "
+                         "`vs_greedy_N9_timed_r2` replays the same 20 N9 games (not listed).")
+
+
+def make_minimax_paired_table(paths: List[Path], head_to_head: Path) -> Tuple[str, str]:
+    """Default scorer vs hop-aware scorer, paired over the same openings."""
+    header = ["Pairing", "Games", "Default win %", "Hop win %", "Difference", "Paired bootstrap 95%",
+              "Default / hop win % as P0", "as P1"]
+    rows = []
+    for p in paths:
+        r = _load(p)['results']
+        lo, hi = r['paired_bootstrap95']
+        rows.append([f"`{p.stem}`", str(r['games_paired']), f"{r['win_rate_a'] * 100:.0f}",
+                     f"{r['win_rate_b'] * 100:.0f}", f"{r['difference_b_minus_a'] * 100:+.0f}",
+                     f"[{lo * 100:+.0f}, {hi * 100:+.0f}]",
+                     f"{r['minimax_as_p0']['win_rate_a'] * 100:.0f} / {r['minimax_as_p0']['win_rate_b'] * 100:.0f}",
+                     f"{r['minimax_as_p1']['win_rate_a'] * 100:.0f} / {r['minimax_as_p1']['win_rate_b'] * 100:.0f}"])
+    note = ""
+    if head_to_head.exists():
+        o = _load(head_to_head)['results']['overall']
+        note = (f"Head to head at depth 2 (`{head_to_head.name}`): hop scorer {o['minimax_goal_wins']}, "
+                f"default {o['greedy_goal_wins']}, draws {o['draws_total']}, truncated {o['truncated']} "
+                f"of {o['matches']} distinct games; hop win rate "
+                f"{_pct_ci(o['minimax_win_rate'], o['minimax_win_rate_wilson95'])}. "
+                "New contribution (Wallz-Study).")
+    return _simple_table("Minimax default vs hop-aware scorer vs Greedy (paired, distinct games)",
+                         "minimax_default_vs_hop", header, rows, note)
+
+
+def make_greedy_campaign_table(paths: List[Path]) -> Tuple[str, str]:
+    """final_greedy/*_summary.json: Greedy's side, distinct games."""
+    header = ["Board", "Pairing", "Seat", "Matches run", "Distinct games", "Greedy W-L-D-T",
+              "Win % [95% Wilson]", "Draw % [95% Wilson]", "Trunc % [95% Wilson]", "Mean plies"]
+    rows = []
+    for p in paths:
+        d = _load(p)
+        c = d['config']
+        for seat, o in d['results'].items():
+            if not isinstance(o, dict) or 'games' not in o:
+                continue
+            seat_name = {'overall': 'all', 'greedy_as_p0': 'P0', 'greedy_as_p1': 'P1'}.get(seat, seat)
+            if c['pairing'] == 'self':
+                seat_name = 'W/L = P0'
+            w, l, dr, t = (o['greedy_goal_wins'], o['greedy_goal_losses'], o['draws_total'], o['truncated'])
+            rows.append([c['board'], c['pairing'], seat_name,
+                         str(d['matches_run']) if seat == 'overall' else "", str(o['games']),
+                         f"{w['count']}-{l['count']}-{dr['count']}-{t['count']}",
+                         _pct_ci(w['rate'], w['wilson95']), _pct_ci(dr['rate'], dr['wilson95']),
+                         _pct_ci(t['rate'], t['wilson95']), f"{o['mean_length_plies_incl_opening']:.1f}"])
+    return _simple_table("Greedy match campaign, distinct games (final engine)", "greedy_campaign", header, rows,
+                         "Source: experiments/results/final_greedy/*_summary.json. Truncation is its own "
+                         "outcome, never a draw. Mean plies include the opening.")
+
+
+def make_dqn_distinct_table(data: Dict[str, Any]) -> Tuple[str, str]:
+    """final_dqn/distinct_reanalysis.json: DQN match rates over distinct games (supersedes all-games rates)."""
+    header = ["Model", "N", "Opponent", "Games run", "Distinct games", "Win % [95% Wilson]", "Draw %",
+              "Trunc %", "Loss %", "Win % as P0 / P1"]
+    rows = []
+    for f, r in data.get('results', {}).items():
+        model = f.replace('5x5/', '').replace('_eval.json', '')
+        for opp, v in r['by_opponent'].items():
+            dd = v['distinct']
+            p0, p1 = v.get('distinct_as_p0', {}), v.get('distinct_as_p1', {})
+            rows.append([f"`{model}`", str(r['board_size']), opp, str(v['games']), str(v['distinct_games']),
+                         _pct_ci(dd['win_rate'], dd['win_ci95']), f"{dd['draw_rate'] * 100:.1f}",
+                         f"{dd['truncated_rate'] * 100:.1f}", f"{dd['loss_rate'] * 100:.1f}",
+                         f"{p0.get('win_rate', 0) * 100:.1f} / {p1.get('win_rate', 0) * 100:.1f}"])
+    return _simple_table("DQN matches, distinct games (corrected; supersedes all-games rates)", "dqn_distinct",
+                         header, rows, "Source: experiments/results/final_dqn/distinct_reanalysis.json. "
+                         "`release_*` models were trained under the old HOP rule (stale baselines).")
+
+
+def make_dqn_5x5_table(ev: Dict[str, Any], distinct: Dict[str, Any]) -> Tuple[str, str]:
+    """5x5 DQN seed 42 at 500k steps (short of the 2M plan): match results only."""
+    header = ["Opponent", "Games", "Distinct", "W / D / T / L %", "Win % [95% Wilson]", "Win % as P0 / P1"]
+    rows = []
+    dist = distinct.get('results', {}).get('5x5/final_dqn_5x5_s42_500k_eval.json', {}).get('by_opponent', {})
+    for opp, v in dist.items():
+        dd = v['distinct']
+        rows.append([opp, str(v['games']), str(v['distinct_games']),
+                     f"{dd['win_rate'] * 100:.0f} / {dd['draw_rate'] * 100:.0f} / {dd['truncated_rate'] * 100:.0f} / "
+                     f"{dd['loss_rate'] * 100:.0f}", _pct_ci(dd['win_rate'], dd['win_ci95']),
+                     f"{v['distinct_as_p0']['win_rate'] * 100:.0f} / {v['distinct_as_p1']['win_rate'] * 100:.0f}"])
+    step = ev.get('checkpoint_meta', {}).get('step')
+    return _simple_table(f"DQN 5x5, seed 42, {step} steps (planned 2M), larger-board match results", "dqn_5x5",
+                         header, rows, "Sources: final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json, "
+                         "final_dqn/distinct_reanalysis.json. No exact solver on 5x5: no claim about optimal play.")
+
+
 def make_dqn_aggregate_table(data: Dict[str, Any]) -> Tuple[str, str]:
-    """final_dqn/aggregate_3x3_seeds.json: mean / min / max over the five 3x3 seeds."""
-    md = ["### DQN 3x3, five seeds (Member 2 evaluation)\n",
+    """final_dqn/aggregate_3x3_seeds.json: exact-ground-truth metrics, mean / min / max over the five 3x3 seeds.
+    Its all-games match rates are superseded by distinct_reanalysis.json and are left out."""
+    md = ["### DQN 3x3, five seeds: exact ground truth (Member 4 evaluation)\n",
           "| Metric | Mean | Min | Max |", "| :--- | ---: | ---: | ---: |"]
-    tex = [r"\begin{table}[htbp]", r"\centering", r"\caption{DQN 3x3, five seeds}", r"\label{tab:dqn_seeds}",
+    tex = [r"\begin{table}[htbp]", r"\centering", r"\caption{DQN 3x3, five seeds: exact ground truth}",
+           r"\label{tab:dqn_seeds}",
            r"\begin{tabular}{lrrr}", r"\toprule", r"Metric & Mean & Min & Max \\", r"\midrule"]
     for k, v in data.items():
+        if k.endswith(('_win_rate', '_draw_rate', '_loss_rate', '_truncation_rate')):
+            continue  # superseded all-games match rates
         if isinstance(v, dict) and {'mean', 'min', 'max'} <= set(v):
             row = [k, f"{v['mean']:.4f}", f"{v['min']:.4f}", f"{v['max']:.4f}"]
             md.append(f"| `{k}` | {row[1]} | {row[2]} | {row[3]} |")
@@ -495,17 +621,33 @@ def generate_all_tables(output_dir: str = "experiments/results/final_eval/tables
     if p.exists():
         write("multi_seed_3x3", *make_multi_seed_table(_load(p)), [p])
 
-    # 5. Minimax vs Greedy
-    mm = sorted(FINAL_MINIMAX.glob("*_summary.json")) + sorted(FINAL_MINIMAX_HOP.glob("*_summary.json"))
-    if mm:
-        write("minimax_vs_greedy", *make_vs_greedy_table(mm), mm)
+    # 5. Minimax vs Greedy over distinct games, and default vs hop-aware scorer
+    maps = [p for p in (FINAL_MINIMAX / "opening_maps.json", FINAL_MINIMAX_HOP / "opening_maps.json") if p.exists()]
+    if maps:
+        write("minimax_vs_greedy", *make_vs_greedy_table(maps), maps)
+    paired = sorted(FINAL_MINIMAX_HOP.glob("paired_d*_default_vs_hop.json"))
+    h2h = FINAL_MINIMAX_HOP / "vs_minimax_N5_hop_d2_vs_default_d2_summary.json"
+    if paired:
+        write("minimax_default_vs_hop", *_label(*make_minimax_paired_table(paired, h2h),
+                                                 "New contribution (Wallz-Study)"), paired + [h2h])
 
-    # 6. DQN evaluation by Member 2
+    # 6. Greedy campaign
+    greedy = sorted(FINAL_GREEDY.glob("*_summary.json"))
+    if greedy:
+        write("greedy_campaign", *make_greedy_campaign_table(greedy), greedy)
+
+    # 7. DQN: exact ground truth (3x3 seeds), distinct-game matches, 5x5
     p = FINAL_DQN / "aggregate_3x3_seeds.json"
     if p.exists():
         write("dqn_3x3_seeds", *make_dqn_aggregate_table(_load(p)), [p])
+    dr = FINAL_DQN / "distinct_reanalysis.json"
+    if dr.exists():
+        write("dqn_distinct", *make_dqn_distinct_table(_load(dr)), [dr])
+        ev5 = FINAL_DQN / "5x5" / "final_dqn_5x5_s42_500k_eval.json"
+        if ev5.exists():
+            write("dqn_5x5", *make_dqn_5x5_table(_load(ev5), _load(dr)), [ev5, dr])
 
-    # 7. Stale baselines, only on request
+    # 8. Stale baselines, only on request
     if include_stale:
         lab = "STALE baseline (pre-freeze rules or agents; see experiments/results/STALE.md)"
         s = STALE_INPUTS
