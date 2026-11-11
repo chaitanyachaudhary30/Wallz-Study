@@ -1,0 +1,17 @@
+  9 distinct openings at 2 plies; seeds [0, 1, 2, 4, 5, 6, 7, 9, 20]
+  10/144 matches (2s)
+  20/144 matches (5s)
+  30/144 matches (8s)
+  40/144 matches (11s)
+  50/144 matches (13s)
+  60/144 matches (15s)
+  70/144 matches (18s)
+  80/144 matches (20s)
+  90/144 matches (24s)
+  100/144 matches (28s)
+  110/144 matches (32s)
+  120/144 matches (34s)
+  130/144 matches (36s)
+  140/144 matches (39s)
+  144/144 matches (40s)
+wrote experiments\results\final_eval\ablation_N5_K3_M10_open2_pilot_comparison\summary.json
