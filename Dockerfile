@@ -36,4 +36,6 @@ COPY --from=frontend-builder /app/frontend/dist /app/web/frontend/dist
 EXPOSE 5000
 
 # Start unified Flask server
-CMD ["python", "-m", "web.backend.app", "--port", "5000"]
+# Bind to all interfaces inside the container only, so `docker run -p 5000:5000` is reachable.
+# Outside Docker the server keeps its 127.0.0.1 default.
+CMD ["python", "-m", "web.backend.app", "--host", "0.0.0.0", "--port", "5000"]

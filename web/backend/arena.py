@@ -70,9 +70,10 @@ def run_arena_batch(
     records: List[Dict[str, Any]] = []
     categories: Dict[str, int] = collections.defaultdict(int)
 
+    # truncated (runner ply cap) is its own outcome, never a draw
     spec_stats = {
-        p0_spec: {"wins": 0, "draws": 0, "losses": 0},
-        p1_spec: {"wins": 0, "draws": 0, "losses": 0},
+        p0_spec: {"wins": 0, "draws": 0, "losses": 0, "truncated": 0},
+        p1_spec: {"wins": 0, "draws": 0, "losses": 0, "truncated": 0},
     }
 
     for i in range(n):
@@ -99,11 +100,15 @@ def run_arena_batch(
         res = run_match(match_cfg)
         records.append(res)
 
-        winner = res.get("winner")
-        reason = res.get("terminal_reason", "unknown")
-        categories[reason] += 1
+        # run_match reports the result under "outcome" (it has no top-level winner/reason)
+        outcome = res["outcome"]
+        winner = outcome["winner"]
+        categories[outcome["category"]] += 1
 
-        if winner is None:
+        if outcome["category"] == "truncated":
+            spec_stats[p0_spec]["truncated"] += 1
+            spec_stats[p1_spec]["truncated"] += 1
+        elif winner is None:
             spec_stats[p0_spec]["draws"] += 1
             spec_stats[p1_spec]["draws"] += 1
         elif winner == p0_seat:
@@ -113,7 +118,7 @@ def run_arena_batch(
             spec_stats[p1_spec]["wins"] += 1
             spec_stats[p0_spec]["losses"] += 1
 
-    lengths = [r.get("length", 0) for r in records]
+    lengths = [r["length_plies"] for r in records]
     mean_length = round(statistics.mean(lengths), 2) if lengths else 0.0
 
     by_spec = {}
@@ -127,6 +132,7 @@ def run_arena_batch(
             "wins": w,
             "draws": d,
             "losses": l,
+            "truncated": st["truncated"],
             "win_rate": wr,
             "ci": [round(ci_lo, 4), round(ci_hi, 4)],
         }

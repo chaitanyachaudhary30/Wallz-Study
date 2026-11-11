@@ -14,6 +14,11 @@ from web.backend.serialize import action_to_json, parse_action, state_json
 from web.backend.sessions import GameSession, SESSION_STORE
 
 
+def _checks(engine, exp: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """check_expectation results plus 'message', the field the Rules page shows (it was blank)."""
+    return [dict(c, message=c["msg"]) for c in check_expectation(engine, exp)]
+
+
 def list_scenarios() -> List[Dict[str, Any]]:
     """Returns directory of all 9 canonical rule demonstration scenarios."""
     scenarios = load_scenarios()
@@ -51,7 +56,7 @@ def get_scenario(name: str) -> Dict[str, Any]:
     # Frame 0: Initial state before any script plies
     init_checks = []
     for exp in ply_expectations.get(0, []):
-        init_checks.extend(check_expectation(engine, exp))
+        init_checks.extend(_checks(engine, exp))
     frames.append({
         "ply": 0,
         "action": None,
@@ -66,10 +71,10 @@ def get_scenario(name: str) -> Dict[str, Any]:
 
         checks = []
         for exp in ply_expectations.get(idx, []):
-            checks.extend(check_expectation(engine, exp))
+            checks.extend(_checks(engine, exp))
 
         if idx == len(script) and final_exp:
-            checks.extend(check_expectation(engine, final_exp))
+            checks.extend(_checks(engine, final_exp))
 
         frames.append({
             "ply": idx,
