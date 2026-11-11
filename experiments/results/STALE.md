@@ -38,4 +38,6 @@ uncommitted changes, so the exact code cannot be recovered from git.
 | `minimax/x7_equivalence.json`, `x8_node_reduction.json` | added in `f87cfad` (no source field) | stale | before the HOP change and the Minimax fix |
 | `features/x5_feature_study.json`, `x5_feature_study_4x4.json` | added in `e64b109` (no source field) | stale | before the HOP change and the Minimax fix |
 | `engine/benchmark_performance.json` | added in `4c57b01`, last `060b22c` (no source field) | stale | engine timing before the HOP change |
+| `final_eval/ablation_N5_K3_M10_open2/` (+ `logs/ablation_N5_K3_M10_open2/`) | `8944f16` | superseded | 30 seeds at 2 plies = only 9 distinct openings; its 480 matches replay the same 144 games as `final_eval/ablation_N5_K3_M10_open2_pilot_comparison/` (replicas identical). Use the pilot-comparison folder |
+| `final_eval/ablation_N5_K3_M10_open6/` (+ log) | `8944f16` | valid, sensitivity check only | was the primary in PR #2; the primary is now `final_eval/ablation_N5_K3_M10_open4/` (smallest opening length with >= 30 distinct openings) |
 | `dqn/*.json` (7 files) | added in `4034ae4` (no source field) | stale; owner Bot 2 | trained and measured under the old HOP rule (`docs/game_rules.md` 3.4) |
