@@ -1,0 +1,338 @@
+{
+  "provenance": {
+    "git": {
+      "commit": "c07c394358039d4501ff2259ed363e2469671ee1",
+      "dirty": false
+    },
+    "command": "python scripts/opening_values_dqn.py --evals release_dqn_3x3_eval.json final_dqn_3x3_s42_eval.json final_dqn_3x3_s43_eval.json final_dqn_3x3_s44_eval.json final_dqn_3x3_s45_eval.json final_dqn_3x3_s46_eval.json release_dqn_4x4_eval.json final_dqn_4x4_s42_eval.json",
+    "config": {
+      "opening_plies": 2,
+      "seeds": 50
+    },
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "checkpoints": [],
+    "python": "3.12.5",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.2.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date": "2026-11-11T07:27:08+05:30"
+  },
+  "note": "counts match by category; with deterministic exact play an equal count per category means each game reached its game value only if no win offset a loss, which the solver makes impossible (DQN cannot beat a lost position against exact).",
+  "results": {
+    "release_dqn_3x3_eval.json": {
+      "label": "N3_A1B1C1_K1_M1",
+      "game_values_total": {
+        "win": 28,
+        "draw": 44,
+        "loss": 28
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "win": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 18,
+          "draw": 0,
+          "loss": 32,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "loss": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 0,
+          "loss": 50,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": false
+    },
+    "final_dqn_3x3_s42_eval.json": {
+      "label": "N3_A1B1C1_K1_M1",
+      "game_values_total": {
+        "win": 28,
+        "draw": 44,
+        "loss": 28
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "win": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 28,
+          "draw": 22,
+          "loss": 0,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "loss": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 22,
+          "loss": 28,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": true
+    },
+    "final_dqn_3x3_s43_eval.json": {
+      "label": "N3_A1B1C1_K1_M1",
+      "game_values_total": {
+        "win": 28,
+        "draw": 44,
+        "loss": 28
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "win": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 28,
+          "draw": 22,
+          "loss": 0,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "loss": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 22,
+          "loss": 28,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": true
+    },
+    "final_dqn_3x3_s44_eval.json": {
+      "label": "N3_A1B1C1_K1_M1",
+      "game_values_total": {
+        "win": 28,
+        "draw": 44,
+        "loss": 28
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "win": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 28,
+          "draw": 22,
+          "loss": 0,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "loss": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 22,
+          "loss": 28,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": true
+    },
+    "final_dqn_3x3_s45_eval.json": {
+      "label": "N3_A1B1C1_K1_M1",
+      "game_values_total": {
+        "win": 28,
+        "draw": 44,
+        "loss": 28
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "win": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 28,
+          "draw": 22,
+          "loss": 0,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "loss": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 22,
+          "loss": 28,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": true
+    },
+    "final_dqn_3x3_s46_eval.json": {
+      "label": "N3_A1B1C1_K1_M1",
+      "game_values_total": {
+        "win": 28,
+        "draw": 44,
+        "loss": 28
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "win": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 28,
+          "draw": 22,
+          "loss": 0,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "loss": 28,
+          "draw": 22
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 22,
+          "loss": 28,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": true
+    },
+    "release_dqn_4x4_eval.json": {
+      "label": "N4_A1B1C1_K1_M0",
+      "game_values_total": {
+        "draw": 42,
+        "loss": 29,
+        "win": 29
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "draw": 21,
+          "loss": 29
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 0,
+          "loss": 50,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "draw": 21,
+          "win": 29
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 0,
+          "loss": 50,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": false
+    },
+    "final_dqn_4x4_s42_eval.json": {
+      "label": "N4_A1B1C1_K1_M0",
+      "game_values_total": {
+        "draw": 42,
+        "loss": 29,
+        "win": 29
+      },
+      "dqn_as_p0": {
+        "game_values": {
+          "draw": 21,
+          "loss": 29
+        },
+        "outcomes_vs_exact": {
+          "win": 0,
+          "draw": 6,
+          "loss": 44,
+          "truncated": 0
+        }
+      },
+      "dqn_as_p1": {
+        "game_values": {
+          "draw": 21,
+          "win": 29
+        },
+        "outcomes_vs_exact": {
+          "win": 29,
+          "draw": 21,
+          "loss": 0,
+          "truncated": 0
+        }
+      },
+      "value_achieved_in_every_game": false
+    }
+  }
+}
