@@ -53,7 +53,8 @@ pytest `test_minimax_hop_eval.py` (9) and `test_minimax_phase5.py` (6).
 
 `minimax:depth=2` vs `greedy` was rerun on PR #3's 50 openings with both seats
 (`vs_greedy_N5_default_repro*`) and compared with PR #3's `final_minimax/vs_greedy_N5_open4_distinct.jsonl`
-(`default_repro_diff.json`). It compares every ply's action, state id and legal-action count, plus the
+(`default_repro_diff.json`). It compares every ply's action, plus the state id and legal-action count logged for each agent
+ply (opening plies log only the action), and the
 outcome, length, final state, agent identities, mean nodes and mean depth. Timings are not compared.
 **100 of 100 matches are identical**, and none is missing on either side.
 
@@ -194,3 +195,27 @@ python scripts/run_experiments.py verify-replay experiments/results/final_minima
 
 `load_record.json` was written by a scratch script from the load snapshots taken around the
 depth-3 and N9 runs. It is not a committed script.
+
+## 7. Independent break attempt
+
+A fresh subagent saw only the diff, the code, the tests, this report and the results. It tried to
+break two claims: that the default is unchanged, and that the hop distance equals the engine brute force.
+**Verdict: HELD.**
+
+| Attack | Size | Result |
+|---|---|---|
+| `git diff origin/main -- agents/minimax.py wallz_engine.py` | - | empty |
+| Read `make_agent`: no `eval` leaves `evaluator=None`, which the constructor turns into `HEvaluator()`; identity has no `eval` key; `match_id` uses the spec string | - | same path as before |
+| Own comparison of the two N5 logs (identities, outcome, length, initial/final state, mean nodes, depth, legal actions, config, every ply's action) | 100 matches | 0 differ |
+| Bad specs `eval=` and `eval=HOP`; `extend_goal=true` still works | - | raise / works |
+| Own brute force (engine `pawn_actions`, other pawn fixed) on random play biased to WALL/REPLACE/BLOCK: N 3-6, A/B/C random, K 1-4, M 0-10, 0-30 plies | 5,072 player-positions (3,635 with a live hop, 674 shortened by it, 515 unreachable on both sides) | 0 mismatches |
+| Adversarial positions: pawns teleported to random free cells (60% adjacent), random hop flags, walls of both owners incl. REPLACEd ones, blocks, Rule B off, landing on the other pawn, dead-end landing, landing next to goal | 2,632 player-positions | 0 mismatches |
+| `python -m unittest tests.test_minimax_hop_eval` | 9 tests | OK |
+
+The reviewer also noted a design limit, not a break. The scorer ignores pawns, as documented, so
+without the test's step of blocking the other pawn's cell it differs from a pawn-aware brute force
+in 648 of the 2,632 adversarial positions. The claim is stated with that step.
+
+The reviewer said the logs hold no per-ply state ids or legal counts. That is true only for opening
+plies: every agent ply in both logs has `state_id` and `legal_count`, and `default_repro_diff.json`
+compares them. The reviewer did not run the other test files or any match.
