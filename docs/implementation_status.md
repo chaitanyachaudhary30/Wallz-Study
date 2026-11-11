@@ -59,18 +59,21 @@ Numbers in older tables below (Sections 1, 6 and the phase notes) were measured 
 
 ---
 
-## 2. Comprehensive Test Suite (325 Tests Passing)
+## 2. Test Suite (counted 2026-11-11, one file at a time)
 
-All tests execute cleanly via pytest:
-```bash
-.venv/bin/python -m pytest -q
-```
-*Result*: `325 passed in ~62s`. `tests/conftest.py` stops the run when torch is missing unless `WALLZ_SKIP_DQN=1` is set, so a green run always includes the DQN tests.
-Frontend Vitest tests:
-```bash
-npm --prefix web/frontend test -- --run
-```
-*Result*: `10 passed (3 test files)`.
+Each of the 52 files in `tests/` was run on its own with `python -m pytest <file> -q` (Windows, Python 3.12.5, pytest 9.2.0, torch 2.15.0+cpu, networkx installed, **hypothesis not installed**). Per-file results are in `docs/reports/stage3_greedy_demo_docs.md`.
+
+| Group | Files | Result |
+| :--- | ---: | :--- |
+| Engine, rules, agents, evaluation (no torch use) | 36 | 305 passed (+78 subtests) |
+| DQN or DQN checkpoints (need torch) | 9 | 56 passed |
+| Web API (`tests/web/`, excluding `test_explain.py`) | 4 | 44 passed |
+| Not run: need `hypothesis` (`test_strict_actions.py`, `test_greedy_final.py`, `test_invariants_stateful.py`) | 3 | collection error, 0 run |
+| **Total** | **52** | **405 passed, 0 failed; 3 files not run** |
+
+Every file needs pytest. `tests/conftest.py` stops any run when torch is missing unless `WALLZ_SKIP_DQN=1` is set, so a green run includes the DQN tests. `test_bfs_networkx.py` needs networkx.
+
+Frontend (Vitest, after `npm --prefix web/frontend ci`): `npm --prefix web/frontend test` -> 11 passed in 3 files. `npm --prefix web/frontend run build` (tsc + vite) succeeds.
 
 ---
 

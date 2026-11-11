@@ -58,15 +58,16 @@ Confirm that the environment is correctly set up by running the comprehensive te
 ```bash
 .venv/bin/python -m pytest -q
 ```
-*Expected Result*: All 325 unit, integration, property, and web tests pass cleanly.
+*Expected Result*: no failures. Counted on 2026-11-11, one file at a time: 405 tests passed in 49 of the 52 files; the other 3 files need `hypothesis` (in `requirements.txt`) and were not run on that machine. Per-file counts: `docs/implementation_status.md` Section 2.
 
 torch is required: without it `tests/conftest.py` stops the run, because every DQN test would skip and a green run would not cover the DQN agent. To run without DQN coverage on purpose, set `WALLZ_SKIP_DQN=1`; the summary then prints a red "DQN tests were NOT run" line.
 
 ### Run Frontend Vitest Suite
 ```bash
-npm --prefix web/frontend test -- --run
+npm --prefix web/frontend ci     # once
+npm --prefix web/frontend test
 ```
-*Expected Result*: 6 passed (geometry coordinate conversions and SVG board component rendering).
+*Expected Result*: 11 passed in 3 test files (geometry, board rendering, regressions).
 
 ### Run Engine Throughput Benchmark
 ```bash
