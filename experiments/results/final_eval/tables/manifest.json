@@ -1,0 +1,130 @@
+{
+  "run": {
+    "source": {
+      "commit": "2b5d9a09718f4a8b932c5b2d9c2059e695237d33",
+      "dirty": false
+    },
+    "command": "python scripts/make_tables.py",
+    "python": "3.12.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date_utc": "2026-11-11T05:39:00+00:00"
+  },
+  "include_stale": false,
+  "tables": [
+    {
+      "table": "solve_N3_K1_M0",
+      "inputs": [
+        "experiments/results/final_eval/solve_N3_K1_M0.json"
+      ]
+    },
+    {
+      "table": "solve_N3_K1_M1",
+      "inputs": [
+        "experiments/results/final_eval/solve_N3_K1_M1.json"
+      ]
+    },
+    {
+      "table": "solve_N4_K1_M0",
+      "inputs": [
+        "experiments/results/final_eval/solve_N4_K1_M0.json"
+      ]
+    },
+    {
+      "table": "solve_N4_K1_M1",
+      "inputs": [
+        "experiments/results/final_eval/solve_N4_K1_M1.json"
+      ]
+    },
+    {
+      "table": "ablation_primary_cells",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open4/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_primary_effects",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open4/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_primary_draws",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open4/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_sens_open2_cells",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open2_pilot_comparison/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_sens_open2_effects",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open2_pilot_comparison/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_sens_open2_draws",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open2_pilot_comparison/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_sens_open6_cells",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open6/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_sens_open6_effects",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open6/summary.json"
+      ]
+    },
+    {
+      "table": "ablation_sens_open6_draws",
+      "inputs": [
+        "experiments/results/final_eval/ablation_N5_K3_M10_open6/summary.json"
+      ]
+    },
+    {
+      "table": "agreement_N3_K1",
+      "inputs": [
+        "experiments/results/final_eval/agreement_N3_K1.json"
+      ]
+    },
+    {
+      "table": "multi_seed_3x3",
+      "inputs": [
+        "experiments/results/final_eval/multi_seed_3x3.json"
+      ]
+    },
+    {
+      "table": "minimax_vs_greedy",
+      "inputs": [
+        "experiments/results/final_minimax/vs_greedy_N5_depth1_diag_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N5_depth3_diag_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N5_open4_depth1_diag_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N5_open4_depth3_diag_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N5_open4_distinct_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N5_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N9_timed_r2_summary.json",
+        "experiments/results/final_minimax/vs_greedy_N9_timed_summary.json",
+        "experiments/results/final_minimax_hop/vs_greedy_N5_default_repro_summary.json",
+        "experiments/results/final_minimax_hop/vs_greedy_N5_hop_d1_summary.json",
+        "experiments/results/final_minimax_hop/vs_greedy_N5_hop_d2_summary.json",
+        "experiments/results/final_minimax_hop/vs_greedy_N5_hop_d3_summary.json",
+        "experiments/results/final_minimax_hop/vs_greedy_N9_hop_timed_summary.json",
+        "experiments/results/final_minimax_hop/vs_minimax_N5_hop_d2_vs_default_d2_summary.json"
+      ]
+    },
+    {
+      "table": "dqn_3x3_seeds",
+      "inputs": [
+        "experiments/results/final_dqn/aggregate_3x3_seeds.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+8 distinct 2-ply openings: seeds [0, 1, 2, 4, 5, 6, 7, 9]
+Solving N3 A1B1C1 K1 M1 exactly (about 1 minute, about 1 GB)...
+seed 42: sign agreement 0.9816, win vs greedy 0.625, vs random 0.988
+seed 43: sign agreement 0.98, win vs greedy 0.625, vs random 0.975
+seed 44: sign agreement 0.9866, win vs greedy 0.625, vs random 0.988
+seed 45: sign agreement 0.985, win vs greedy 0.750, vs random 0.975
+seed 46: sign agreement 0.985, win vs greedy 0.625, vs random 0.975
+wrote experiments/results/final_eval/multi_seed_3x3.json

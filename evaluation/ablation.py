@@ -84,19 +84,28 @@ def solver_sweep(board_size, K=1, M=0, caps=None, progress=None, keep_solutions=
     return rows, effects, solutions
 
 
-def agreement(solution, agent_spec, max_states=300, seed=0):
-    """
-    Fraction of sampled solved non-terminal states where ``agent_spec`` picks a
-    value-optimal action (any action preserving the exact value) and a rank-optimal one.
-    Sampling is uniform over the reachable non-terminal states of a complete graph.
-    """
+def sample_nonterminal(solution, max_states=300, seed=0):
+    """Uniform sample (without replacement) of reachable non-terminal nodes, sorted."""
     g = solution.graph
-    if not solution.exact:
-        raise ValueError("Agreement needs a complete (exact) solution.")
     nodes = [u for u in range(len(g.keys)) if g.terminal[u] is NONTERMINAL]
     rng = random.Random(seed)
     if len(nodes) > max_states:
         nodes = sorted(rng.sample(nodes, max_states))
+    return nodes
+
+
+def agreement(solution, agent_spec, max_states=300, seed=0, nodes=None):
+    """
+    Fraction of sampled solved non-terminal states where ``agent_spec`` picks a
+    value-optimal action (any action preserving the exact value) and a rank-optimal one.
+    Sampling is uniform over the reachable non-terminal states of a complete graph.
+    Pass ``nodes`` (from sample_nonterminal) to score several agents on the same states.
+    """
+    g = solution.graph
+    if not solution.exact:
+        raise ValueError("Agreement needs a complete (exact) solution.")
+    if nodes is None:
+        nodes = sample_nonterminal(solution, max_states, seed)
     cfg = MatchConfig(board_size=g.board_size, rules=g.rules)
     agents = {p: make_agent(agent_spec, p, cfg)[0] for p in (0, 1)}
     records = []

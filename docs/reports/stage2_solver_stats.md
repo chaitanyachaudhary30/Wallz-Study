@@ -403,6 +403,9 @@ bootstrap-based MDEs are estimated from the same data, so treat them as rough.
 
 ## 5. Task 5 inputs (not done here)
 
+> **Superseded:** `scripts/make_tables.py` now reads only the final result folders; see
+> `docs/reports/stage3_member3_multiseed_tables.md` Section 3. The list below is how it was.
+
 `scripts/make_tables.py` `generate_all_tables()` reads, first match wins where noted:
 - ablation (first existing): `experiments/results/person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json`
   (**stale**), then `experiments/results/ablation_5x5_k3/summary.json` (does not exist);
