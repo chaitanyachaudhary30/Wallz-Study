@@ -1,13 +1,13 @@
 {
   "run": {
     "source": {
-      "commit": "8eb8eca520f678ee1bee42723450686b6821db6c",
-      "dirty": true
+      "commit": "97338a1b4cb8651596eab2cd668e1925fdc16a29",
+      "dirty": false
     },
     "command": "python scripts/make_tables.py",
     "python": "3.12.5",
     "platform": "Windows-11-10.0.26200-SP0",
-    "date_utc": "2026-11-11T09:43:42+00:00"
+    "date_utc": "2026-11-11T09:43:56+00:00"
   },
   "include_stale": false,
   "tables": [
