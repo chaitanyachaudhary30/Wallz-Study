@@ -585,6 +585,8 @@ def make_dqn_aggregate_table(data: Dict[str, Any]) -> Tuple[str, str]:
 
 
 def generate_all_tables(output_dir: str = "experiments/results/final_eval/tables/", include_stale: bool = False):
+    from evaluation.match_runner import run_metadata
+    meta = run_metadata()  # before writing: rewriting tracked tables would mark the tree dirty
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
     generated, inputs = [], []
@@ -660,9 +662,8 @@ def generate_all_tables(output_dir: str = "experiments/results/final_eval/tables
         if s['greedy'].exists():
             write("stale_greedy_matches", *_label(*make_greedy_table(_load(s['greedy'])), lab), [s['greedy']])
 
-    from evaluation.match_runner import run_metadata
     with open(out_path / "manifest.json", 'w', encoding='utf-8') as f:
-        json.dump({'run': run_metadata(), 'include_stale': include_stale, 'tables': inputs}, f, indent=2)
+        json.dump({'run': meta, 'include_stale': include_stale, 'tables': inputs}, f, indent=2)
     print(f"Generated {len(generated)} tables in {out_path}: {', '.join(generated)}")
     return generated
 
