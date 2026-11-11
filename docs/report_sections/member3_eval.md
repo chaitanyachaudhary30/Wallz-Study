@@ -153,17 +153,66 @@ in each folder]. No game was truncated and none was forfeited.
 
 ## 6. Multi-seed analysis
 
-**Method.** Five DQN agents trained on 3x3 (N3 A1B1C1 K1 M1) with seeds 42-46 are each
-compared with the exact solve (share of decided positions where the network's value has the
-right sign, and mean absolute value error) and play 100 paired games against Greedy and against
-Random (`scripts/run_multi_seed_3x3.py`). Per seed: win, draw and truncation rates with Wilson 95%
-intervals and mean game length. Across seeds: mean, sample SD, a 95% t-interval
-(mean +/- 2.776 x SD / sqrt(5)), and leave-one-seed-out means, which show whether one seed drives
-the result. Truncated games (the study's 100-ply cap) are a separate column, never draws.
+**Method.** Five DQN agents trained on 3x3 (N3 A1B1C1 K1 M1, 200,000 steps each) with seeds
+42-46 are each compared with the exact solve (share of 1,000 sampled decided positions where the
+network's value has the right sign, and mean absolute value error) and play matches against
+Greedy and Random (`scripts/run_multi_seed_3x3.py`). Each checkpoint's SHA-256 matched its
+committed `checkpoints/final/3x3_s<seed>/manifest.json` before use.
 
-> **Results: pending Bot 2 checkpoints.** The five checkpoints
-> (`checkpoints/final/3x3_s<seed>/final.pt`) do not exist yet. This part will be filled from
-> `experiments/results/final_eval/multi_seed_3x3.json` in the later integration item.
+DQN and Greedy both always play the same move in the same position, so repeating an opening
+only replays a game. The study therefore plays each distinct 2-ply opening once per seating:
+3x3 has **8** such openings, so **16 distinct games** per seed against Greedy. Against Random,
+each opening and seating is also played with 5 Random seeds: 80 games per seed. Per seed: win,
+draw and truncation rates with Wilson 95% intervals and mean game length. Across the 5 seeds:
+mean, sample SD, a 95% t-interval (mean +/- 2.776 x SD / sqrt(5)), and leave-one-seed-out means.
+Truncated games (the study's 100-ply cap) are a separate column, never draws.
+
+**Results** [`multi_seed_3x3.json`; table `tables/multi_seed_3x3.md`]:
+
+| Measure | s42 | s43 | s44 | s45 | s46 | Mean | SD | 95% t-interval |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| sign agreement | 0.982 | 0.980 | 0.987 | 0.985 | 0.985 | 0.984 | 0.003 | 0.980-0.987 |
+| value MAE | 0.176 | 0.182 | 0.166 | 0.184 | 0.187 | 0.179 | 0.009 | 0.168-0.190 |
+| vs Greedy W-L-D-T (16) | 10-2-4-0 | 10-2-4-0 | 10-2-4-0 | 12-2-2-0 | 10-2-4-0 | | | |
+| vs Greedy win rate | 0.625 | 0.625 | 0.625 | 0.750 | 0.625 | 0.650 | 0.056 | 0.581-0.719 |
+| vs Greedy draw rate | 0.250 | 0.250 | 0.250 | 0.125 | 0.250 | 0.225 | 0.056 | 0.156-0.294 |
+| vs Random win rate (80) | 0.988 | 0.975 | 0.988 | 0.975 | 0.975 | 0.980 | 0.007 | 0.972-0.988 |
+
+Truncation rate was 0 in every seed against both opponents; loss rate against Greedy was 0.125
+in every seed. Mean game length: 9.9 plies against Greedy (seeds 7.4-11.9), 10.1 against Random
+(9.4-11.5). Pooled over seeds, the win rate against Greedy is 0.650 (95% Wilson 0.541-0.745,
+80 games) and against Random 0.980 (0.961-0.990, 400 games).
+
+**Is the performance consistent across seeds? Yes.** No single seed drives any mean: removing
+one seed moves the mean sign agreement by at most 0.0009 and the win rate against Greedy by at
+most 0.025. Four seeds play the 16 Greedy games to the same result; s45 turns two draws into
+wins. The limit is resolution: against Greedy each seed has only 16 distinct games, so a seed's
+win rate moves in steps of 0.0625, and the per-seed Wilson intervals are wide (0.625 -> 0.386-0.815).
+
+**Agent-vs-solver agreement** on the final rules [`agreement_N3_K1.json`; table
+`tables/agreement_N3_K1.md`]. In each cell, all agents are scored on the same 300 sampled
+non-terminal positions (all of them when a cell has fewer; the sample's SHA-256 is stored).
+Value-optimal rate / rank-optimal rate:
+
+| Cell (N3 K1) | Greedy | Minimax d2 | Minimax d2 hop-eval | DQN s42-s46 (range) |
+|---|---|---|---|---|
+| M0, C off (any A, B) | 0.879 / 0.879 | 1.000 / 1.000 | 1.000 / 1.000 | n/a |
+| M0, C on (any A, B) | 0.813 / 0.790 | 0.997 / 0.997 | 0.997 / 0.997 | n/a |
+| M1 A0B0C0 | 0.930 / 0.893 | 0.980 / 0.970 | 0.980 / 0.970 | n/a |
+| M1 A0B0C1 | 0.900 / 0.873 | 0.937 / 0.923 | 0.937 / 0.923 | n/a |
+| M1 A0B1C0 | 0.947 / 0.927 | 0.993 / 0.993 | 0.993 / 0.993 | n/a |
+| M1 A0B1C1 | 0.933 / 0.887 | 0.990 / 0.967 | 0.983 / 0.960 | n/a |
+| M1 A1B0C0 | 0.870 / 0.870 | 0.963 / 0.963 | 0.963 / 0.963 | n/a |
+| M1 A1B0C1 | 0.867 / 0.867 | 0.950 / 0.950 | 0.950 / 0.950 | n/a |
+| M1 A1B1C0 | 0.820 / 0.813 | 0.947 / 0.943 | 0.953 / 0.950 | n/a |
+| M1 A1B1C1 | 0.897 / 0.863 | 0.953 / 0.933 | 0.967 / 0.947 | 0.953-0.977 / 0.920-0.947 |
+
+With M = 0, A and B change nothing (no walls), so those cells repeat; the 45-position cells have
+33 non-terminal positions, all scored. The DQN checkpoints were trained only for A1B1C1 M1, so
+they are scored there only. In that cell all five DQN seeds, both Minimax variants and Greedy
+were scored on the same 300 positions. With 300 positions a Wilson interval near 0.96 is about
+0.93-0.98, so the DQN-vs-Minimax differences there (at most 0.024) are not resolved;
+Greedy is lower than both by 0.06-0.08 (Greedy 0.857-0.926 vs Minimax d2 0.923-0.972).
 
 ## 7. Factorial ablation results
 
