@@ -63,7 +63,7 @@ export const RulesPage: React.FC = () => {
             {showDoc ? 'Hide Official Rules Doc' : '📖 View Rules Spec (Markdown)'}
           </button>
 
-          <div className="card-title">Rule Scenarios (9)</div>
+          <div className="card-title">Rule Scenarios ({scenarios.length})</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {scenarios.map((s) => (
               <div

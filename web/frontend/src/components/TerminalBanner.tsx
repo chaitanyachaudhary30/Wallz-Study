@@ -15,14 +15,16 @@ export const TerminalBanner: React.FC<TerminalBannerProps> = ({ terminal }) => {
     bannerClass += terminal.winner === 0 ? ' win-p0' : ' win-p1';
     const reasonText = terminal.reason === 'goal' ? 'reached goal line' : terminal.reason;
     msg = `Player ${terminal.winner} Wins (${reasonText})!`;
+  } else if (terminal.reason === 'truncated') {
+    // The demo's ply cap stops the game; the team reports this apart from rule draws
+    bannerClass += ' draw';
+    msg = 'Stopped — ply cap reached (truncated, not a rule draw)';
   } else {
     bannerClass += ' draw';
     if (terminal.reason === 'no_legal_actions') {
-      msg = 'Draw — No legal moves available (Rule R3)';
+      msg = 'Draw — the player to move has no legal action';
     } else if (terminal.reason === 'repetition') {
-      msg = 'Draw — Fivefold state repetition reached';
-    } else if (terminal.reason === 'truncated') {
-      msg = 'Draw — Maximum ply cap reached';
+      msg = 'Draw — the same position repeated (repetition limit reached)';
     } else {
       msg = `Game Drawn (${terminal.reason || 'rules'})`;
     }

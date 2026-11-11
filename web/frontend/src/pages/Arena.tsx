@@ -279,7 +279,8 @@ export const ArenaPage: React.FC = () => {
               {Object.entries(batchResults.by_spec).map(([sp, st]: any) => (
                 <div key={sp} style={{ marginBottom: '0.5rem', fontSize: '0.85rem' }}>
                   <div>
-                    <strong>{sp}</strong>: {st.wins}W - {st.draws}D - {st.losses}L ({(st.win_rate * 100).toFixed(1)}%)
+                    <strong>{sp}</strong>: {st.wins}W - {st.draws}D - {st.losses}L
+                    {st.truncated ? ` - ${st.truncated} truncated` : ''} ({(st.win_rate * 100).toFixed(1)}%)
                   </div>
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                     95% Wilson CI: [{(st.ci[0] * 100).toFixed(1)}%, {(st.ci[1] * 100).toFixed(1)}%]

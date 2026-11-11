@@ -38,8 +38,8 @@ The platform strictly separates game simulation, state representation, decision 
 │   • One-Time Hop Mechanics (Modification B)                                 │
 │   • Temporary Cell Blocks & Decay (Modification C)                          │
 │   • BFS Shortest-Path & Path-Preservation Validation                        │
-│   • 5-Fold Repetition Hashable State History (O(1) ChainMap clone)          │
-│   • Chess-Clock Per-Player Timers & Rule R3 Stalemate Termination           │
+│   • N-fold repetition draw (default 5) on a canonical position key          │
+│   • Optional chess clock; no-legal-action draw; optional max_plies cap      │
 └─────────────────────────────────────────────────────────────────────────────┘
                                ▲
                                │ Ground-Truth Policy & Values
@@ -81,7 +81,7 @@ $$s = (p_0, p_1, W_0, W_1, m_0, m_1, r_0, r_1, h_0, h_1, b_0, b_1, B_{\text{cell
 
 - $p_0, p_1$: Pawn coordinates $(r, c) \in [0, N-1]^2$.
 - $W_0, W_1$: Active wall sets on the board (tuples of $(r, c, \text{orient})$).
-- $m_0, m_1$: Remaining unused wall inventory counts ($\in [0, 10]$).
+- $m_0, m_1$: Remaining unused wall inventory counts ($\in [0, M]$, $M$ = `rules['M']`, default 10).
 - $r_0, r_1$: Identity of the single most recently placed (repositionable) wall for each player.
 - $h_0, h_1$: Binary hop ability availability flags.
 - $b_0, b_1$: Binary temporary cell block availability flags.
@@ -94,7 +94,9 @@ An action is a tuple `(action_type, action_payload)`:
 - `('HOP', (r, c))`: one-time step into the adjacent cell across an opponent's wall.
 - `('WALL', (r, c, 'H' | 'V'))`: New wall placement (consumes 1 wall from inventory).
 - `('REPLACE', (r, c, 'H' | 'V'))`: Wall repositioning of the player's latest wall (does not consume inventory).
-- `('BLOCK', (r, c))`: Temporary cell blockage for $K=3$ turns (preserves path to goal).
+- `('BLOCK', (r, c))`: Temporary cell block for $K$ plies (`rules['K']`, default 3; both players must keep a path to goal).
+
+The full final rules are in `docs/game_rules.md`.
 
 ---
 
@@ -115,9 +117,11 @@ class BaseAgent:
 ### Agent Hierarchy
 
 1. **Tier-1 Greedy Baseline (`GreedyAgent`)**:
-   - 1-ply lookahead heuristic.
-   - Evaluates immediate winning moves, draw avoidance, and net spatial differential:
-     $$\text{Win} \succ \text{Avoid Draw} \succ \max(d_{\text{opp}} - d_{\text{self}}) \succ \max d_{\text{opp}} \succ \min d_{\text{self}} \succ \text{Tie-break}$$
+   - 1-ply lookahead over every legal action (`clone()` + `apply_action`).
+   - An immediate win is played at once. Otherwise actions are ranked by the tuple
+     $(H, \text{category}, -d_{\text{self}}, \text{tie key})$ with $H = d_{\text{opp}} - d_{\text{self}}$ after the action,
+     category MOVE > REPLACE > HOP > WALL > BLOCK, and tie key $-\text{index}$ (or a seeded random number for `greedy:seed=S`).
+     A rule draw scores $H = 0$, an immediate loss $-\infty$.
    - Exposes `score_actions(engine)` for transparent introspection and web visualization.
 
 2. **Tier-2 Adversarial Minimax (`MinimaxAgent`)**:
@@ -130,14 +134,14 @@ class BaseAgent:
 3. **Tier-3 Exact Retrograde Solver (`ExactSolverAgent`)**:
    - Complete retrograde backward induction with cyclic degree propagation on tractable configurations.
    - Computes provably optimal game-theoretic values $\{+1.0, 0.0, -1.0\}$ and minimum distance-to-terminal policies.
-   - Solves $3\times3$ with up to 1 wall / hop ($< 10$s) and $5\times5$ pawn races ($< 0.5$s) as ground truth.
+   - Final-rule solves (`experiments/results/final_eval/solve_*.json`): every mechanics cell of N3 K1 M0, N3 K1 M1 (up to 150,710 states, 50 s build) and N4 K1 M0 is exact; N4 K1 M1 is exact in 4 of 8 cells (the rest hit the 400k-state cap).
 
 4. **MARL Self-Play Agent (`DQNAgent`)**:
    - Double-DQN with Negamax target formulation and illegal action masking.
    - 14-plane spatial observation tensor ($14 \times N \times N$) under canonical mover perspective.
    - Uniform FIFO replay buffer with horizontal mirror data augmentation.
    - Self-play curriculum with historical snapshot pool and Greedy anchor.
-   - Released models in `checkpoints/release/dqn_3x3/` and `checkpoints/release/dqn_4x4/` (validated $>90\%$ sign agreement on Gate X-16).
+   - Release models in `checkpoints/release/dqn_3x3/` and `checkpoints/release/dqn_4x4/` were trained under the old 2-cell HOP rule. On the Gate X-16 protocol under the final rules the 3x3 release model scores 86.8% sign agreement (the old 96.47% no longer holds); the five final-rule 3x3 models score 97.6-98.6% on the same protocol (`experiments/results/final_dqn/tables.md`, `docs/reports/stage2_dqn.md`).
 
 ---
 
@@ -181,8 +185,9 @@ Browser (React 18 + TS) ──[HTTP REST]──> Flask Backend ──> WallzEngi
 To prevent divergent game rules or stealth bugs across agents and user interfaces, the project enforces four architectural safeguards:
 
 1. **AST & Regex Single-Source Guard (`tests/test_single_source.py`)**:
-   - Statically scans all Python files in `web/backend/` and TypeScript files in `web/frontend/src/`.
-   - Flags and fails if any banned graph algorithms (`bfs`, `shortest_path`, `is_legal`, `can_place`) or rule computations appear outside `wallz_engine.py` and `src/modified_wallz/`.
+   - Python files in `web/backend/` (AST): fails on direct assignment to engine state attributes, imports of the pathfinding module, or `deque` (a BFS re-implementation smell).
+   - TypeScript files in `web/frontend/src/` (regex): fails on `bfs`, `shortestPath(`, `isLegal`, `canPlace` or wall-edge blocking code.
+   - `tests/web/test_engine_sync.py` checks the other direction: what the API serves equals the engine, ply by ply (`docs/web_demo.md` Section 7).
 2. **Replay Verification Invariant**:
    - Replays are never stored as pre-rendered state blobs. Only action sequences are recorded. When loaded or viewed, every frame is re-executed through `WallzEngine.apply_action`. Any illegal move immediately flags the replay as corrupted.
 3. **Scenario Synchronization**:
@@ -198,7 +203,7 @@ To prevent divergent game rules or stealth bugs across agents and user interface
 |---|---|---|
 | `wallz_engine.py` | Canonical game engine (Rules, BFS, Validation, History) | Member 2 |
 | `src/modified_wallz/` | Board geometry and core engine package | Member 2 |
-| `agents/greedy_agent.py` | Heuristic greedy baseline with `score_actions` | Member 2 |
+| `agents/greedy.py` (wrapper: `greedy_agent.py`) | Heuristic greedy baseline with `score_actions` | Member 2 |
 | `agents/minimax.py` | Alpha-Beta minimax agent with move ordering | Member 1 |
 | `agents/evaluation_fn.py` | Minimax heuristic evaluation functions | Member 1 |
 | `evaluation/retrograde.py` | Exact retrograde solver and state graph | Member 3 |
