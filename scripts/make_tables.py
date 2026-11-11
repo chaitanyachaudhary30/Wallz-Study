@@ -396,11 +396,13 @@ def make_multi_seed_table(data: Dict[str, Any]) -> Tuple[str, str]:
     def line(opp, name, s, pooled=None):
         if not s or s.get('mean') is None:
             return
-        ci = format_ci(s.get('ci95_t'), pct=False) if s.get('ci95_t') else "-"
+        def ci3(c):  # format_ci rounds to 1 decimal, too coarse for rates near 1
+            return f"[{c[0]:.3f}, {c[1]:.3f}]"
+        ci = ci3(s['ci95_t']) if s.get('ci95_t') else "-"
         sd = f"{s['sd']:.3f}" if s.get('sd') is not None else "-"
         pl = "-"
         if pooled is not None:
-            pl = f"{pooled[0]:.3f} {format_ci(pooled[1], pct=False)}"
+            pl = f"{pooled[0]:.3f} {ci3(pooled[1])}"
         row = [opp, name, f"{s['mean']:.3f}", sd, ci, f"{s['min']:.3f}", f"{s['max']:.3f}", pl]
         md.append("| " + " | ".join(row) + " |")
         tex.append(" & ".join(x.replace('_', r'\_') for x in row) + r" \\")
