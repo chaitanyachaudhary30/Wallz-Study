@@ -197,6 +197,8 @@ def main():
     ap.add_argument('--skip-matches', action='store_true')
     ap.add_argument('--skip-truth', action='store_true')
     ap.add_argument('--solve-seconds', type=float, default=1800.0)
+    ap.add_argument('--distinct-openings', type=int, default=0,
+                    help='K > 0: use the distinct-opening rule (K openings) for random, greedy and minimax')
     args = ap.parse_args()
     torch.set_num_threads(2)
 
@@ -218,8 +220,30 @@ def main():
         out['ground_truth_legacy_protocol'] = legacy_truth(n, sol, agent, ckpt)
         print('truth done', time.time() - t0, flush=True)
 
+    opening_plies, seed_lists = 2, {}
+    if args.distinct_openings:
+        # distinct-opening rule: shortest opening_plies with >= K distinct openings,
+        # first seed of each, scanned upward from seed 0; same seeds for every opponent
+        from evaluation.ablation import first_distinct_openings
+        for opening_plies in range(1, 11):
+            found = first_distinct_openings(n, opening_plies, args.distinct_openings,
+                                            K=rules['K'], M=rules['M'])
+            if len(found) >= args.distinct_openings:
+                break
+        else:
+            raise SystemExit(f"fewer than {args.distinct_openings} distinct openings up to 10 plies")
+        distinct_seeds = [s for s, _ in found]
+        out['openings'] = {'rule': f'shortest opening_plies with >= {args.distinct_openings} distinct '
+                                   'openings, first seed of each, scanned from seed 0',
+                           'opening_plies': opening_plies, 'seeds': distinct_seeds,
+                           'seeds_scanned': distinct_seeds[-1] + 1,
+                           'seed_to_opening': {str(s): [[a[0], list(a[1])] for a in acts]
+                                               for s, acts in found}}
+        seed_lists = {'random': distinct_seeds, 'greedy': distinct_seeds,
+                      'minimax:depth=2': distinct_seeds}
+
     if not args.skip_matches:
-        base = {'board_size': n, 'rules': rules, 'max_plies': 200, 'opening_plies': 2}
+        base = {'board_size': n, 'rules': rules, 'max_plies': 200, 'opening_plies': opening_plies}
         plan = [('random', args.random_seeds), ('greedy', args.random_seeds),
                 ('minimax:depth=2', args.minimax_seeds)]
         if sol is not None and sol.exact and args.exact_seeds:
@@ -227,15 +251,17 @@ def main():
         solutions = {MatchConfig(board_size=n, rules=rules).label(): sol} if sol is not None else {}
         out['matches'] = {}
         for opp, k in plan:
-            out['matches'][opp] = play_series(base, ckpt, opp, list(range(k)), solutions)
+            out['matches'][opp] = play_series(base, ckpt, opp, seed_lists.get(opp, list(range(k))), solutions)
             print(opp, out['matches'][opp]['overall']['categories'], f"{time.time() - t0:.0f}s", flush=True)
 
     out['elapsed_seconds'] = round(time.time() - t0, 1)
-    cfg = {'gamma': GAMMA, 'max_plies': 200, 'opening_plies': 2,
+    cfg = {'gamma': GAMMA, 'max_plies': 200, 'opening_plies': opening_plies,
+           'distinct_openings': args.distinct_openings,
            'random_greedy_seeds': args.random_seeds, 'minimax_seeds': args.minimax_seeds,
            'exact_seeds': args.exact_seeds, 'value_class_threshold': 0.5,
            'tie_break': 'lowest action id among max Q (as DQNAgent)'}
-    seeds = {'opening_seeds_random_greedy': [0, args.random_seeds - 1],
+    seeds = {'distinct_opening_seeds': out['openings']['seeds']} if args.distinct_openings else \
+            {'opening_seeds_random_greedy': [0, args.random_seeds - 1],
              'opening_seeds_minimax_exact': [0, max(args.minimax_seeds, args.exact_seeds) - 1],
              'legacy_sample_seed': 42}
     payload = {'provenance': provenance(cfg, seeds=[seeds], checkpoints=[ckpt]), **out}

@@ -1,0 +1,3351 @@
+{
+  "provenance": {
+    "git": {
+      "commit": "04e4ae09fdefa329f764c5ebd8299555b2e49f86",
+      "dirty": false
+    },
+    "command": "python scripts/distinct_reanalysis_dqn.py",
+    "config": {
+      "files": [
+        "release_dqn_3x3_eval.json",
+        "final_dqn_3x3_s42_eval.json",
+        "final_dqn_3x3_s43_eval.json",
+        "final_dqn_3x3_s44_eval.json",
+        "final_dqn_3x3_s45_eval.json",
+        "final_dqn_3x3_s46_eval.json",
+        "release_dqn_4x4_eval.json",
+        "final_dqn_4x4_s42_eval.json",
+        "5x5/final_dqn_5x5_s42_500k_eval.json"
+      ],
+      "distinct_key": "(dqn seat, full action sequence incl. opening)",
+      "max_plies": 200
+    },
+    "seeds": null,
+    "checkpoints": [
+      {
+        "path": "checkpoints/release/dqn_3x3/model.pt",
+        "sha256": "63ff1130ba96f4c1f502519163fccf175e7943a419c2cc39d9503e79f7d18485"
+      },
+      {
+        "path": "checkpoints/final/3x3_s42/model.pt",
+        "sha256": "6a9beff2ff69698c0aced0f9fe8a36e15cc8a00466f3cd9c0c388e65a5208162"
+      },
+      {
+        "path": "checkpoints/final/3x3_s43/model.pt",
+        "sha256": "89d84e793d773cecc0b0390c94142fc0e79b4bf93425ebb4a4e5a24ff0c7047f"
+      },
+      {
+        "path": "checkpoints/final/3x3_s44/model.pt",
+        "sha256": "9bb8841d59c941220cfc57eb57500533a2c5774b3c7cb65a96db3079c0d0c3a3"
+      },
+      {
+        "path": "checkpoints/final/3x3_s45/model.pt",
+        "sha256": "22d9c1def3edb11547aae2acb0dcc4745eb6c97b292c2b11448c002b18f333b1"
+      },
+      {
+        "path": "checkpoints/final/3x3_s46/model.pt",
+        "sha256": "0dce5961a82873c04e00a0663355d360e230211f9f4e9fc28b33ea84665f7dbe"
+      },
+      {
+        "path": "checkpoints/release/dqn_4x4/model.pt",
+        "sha256": "9980e4c5b94b6753e70c7133ca549823da9cead321158e443f2ba27afc81c99d"
+      },
+      {
+        "path": "checkpoints/final/4x4_s42/model.pt",
+        "sha256": "3d44aebafc45b476b50deebb93202db7a8e5f12d951fe112657d2128feb1e440"
+      },
+      {
+        "path": "checkpoints/final/5x5_s42/model.pt",
+        "sha256": "cfee5c2daad79709e0d38db2b548e7f336202d45ff6b5002dcdf2c206aeac452"
+      }
+    ],
+    "python": "3.12.5",
+    "torch": "2.15.0+cpu",
+    "numpy": "2.2.0",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date": "2026-11-11T12:32:17+05:30"
+  },
+  "note": "Rates and Wilson 95% intervals over distinct games replace the all-games ones, which count each repeat of a deterministic game as new evidence. Each distinct game counts once.",
+  "all_reproduced": true,
+  "elapsed_seconds": 888.6,
+  "results": {
+    "release_dqn_3x3_eval.json": {
+      "source_file": "experiments/results/final_dqn/release_dqn_3x3_eval.json",
+      "checkpoint": "checkpoints/release/dqn_3x3/model.pt",
+      "checkpoint_sha256": "63ff1130ba96f4c1f502519163fccf175e7943a419c2cc39d9503e79f7d18485",
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 169,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.785,
+            "win_rate_ci95": [
+              0.723,
+              0.8363
+            ],
+            "draw_rate": 0.005,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.21,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 126,
+              "loss": 42,
+              "draw_repetition": 1
+            },
+            "n": 169,
+            "win_rate": 0.7456,
+            "win_ci95": [
+              0.6749,
+              0.8053
+            ],
+            "draw_rate": 0.0059,
+            "draw_ci95": [
+              0.001,
+              0.0328
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0222
+            ],
+            "loss_rate": 0.2485,
+            "loss_ci95": [
+              0.1894,
+              0.3188
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 73,
+            "win_rate": 0.726,
+            "win_ci95": [
+              0.6144,
+              0.8151
+            ],
+            "draw_rate": 0.0137,
+            "draw_ci95": [
+              0.0024,
+              0.0736
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.05
+            ],
+            "loss_rate": 0.2603,
+            "loss_ci95": [
+              0.1734,
+              0.3711
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 96,
+            "win_rate": 0.7604,
+            "win_ci95": [
+              0.6661,
+              0.8347
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0385
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0385
+            ],
+            "loss_rate": 0.2396,
+            "loss_ci95": [
+              0.1653,
+              0.3339
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.24,
+            "win_rate_ci95": [
+              0.1861,
+              0.3037
+            ],
+            "draw_rate": 0.165,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.595,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 9,
+              "win": 4,
+              "draw_repetition": 3
+            },
+            "n": 16,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.1018,
+              0.495
+            ],
+            "draw_rate": 0.1875,
+            "draw_ci95": [
+              0.0659,
+              0.4301
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.5625,
+            "loss_ci95": [
+              0.3318,
+              0.769
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "draw_rate": 0.125,
+            "draw_ci95": [
+              0.0224,
+              0.4709
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.625,
+            "loss_ci95": [
+              0.3057,
+              0.8632
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.5,
+            "loss_ci95": [
+              0.2152,
+              0.7848
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.18,
+            "win_rate_ci95": [
+              0.117,
+              0.2667
+            ],
+            "draw_rate": 0.1,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.72,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 12,
+              "draw_repetition": 2,
+              "win": 2
+            },
+            "n": 16,
+            "win_rate": 0.125,
+            "win_ci95": [
+              0.035,
+              0.3602
+            ],
+            "draw_rate": 0.125,
+            "draw_ci95": [
+              0.035,
+              0.3602
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.75,
+            "loss_ci95": [
+              0.505,
+              0.8982
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.75,
+            "loss_ci95": [
+              0.4093,
+              0.9285
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.75,
+            "loss_ci95": [
+              0.4093,
+              0.9285
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.18,
+            "win_rate_ci95": [
+              0.117,
+              0.2667
+            ],
+            "draw_rate": 0.0,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.82,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 14,
+              "win": 2
+            },
+            "n": 16,
+            "win_rate": 0.125,
+            "win_ci95": [
+              0.035,
+              0.3602
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.1936
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.875,
+            "loss_ci95": [
+              0.6398,
+              0.965
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.75,
+            "loss_ci95": [
+              0.4093,
+              0.9285
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 1.0,
+            "loss_ci95": [
+              0.6756,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "final_dqn_3x3_s42_eval.json": {
+      "source_file": "experiments/results/final_dqn/final_dqn_3x3_s42_eval.json",
+      "checkpoint": "checkpoints/final/3x3_s42/model.pt",
+      "checkpoint_sha256": "6a9beff2ff69698c0aced0f9fe8a36e15cc8a00466f3cd9c0c388e65a5208162",
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 162,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.99,
+            "win_rate_ci95": [
+              0.9643,
+              0.9973
+            ],
+            "draw_rate": 0.005,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.005,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 160,
+              "draw_no_legal_actions": 1,
+              "loss": 1
+            },
+            "n": 162,
+            "win_rate": 0.9877,
+            "win_ci95": [
+              0.9561,
+              0.9966
+            ],
+            "draw_rate": 0.0062,
+            "draw_ci95": [
+              0.0011,
+              0.0341
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0232
+            ],
+            "loss_rate": 0.0062,
+            "loss_ci95": [
+              0.0011,
+              0.0341
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 66,
+            "win_rate": 0.9848,
+            "win_ci95": [
+              0.919,
+              0.9973
+            ],
+            "draw_rate": 0.0152,
+            "draw_ci95": [
+              0.0027,
+              0.081
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.055
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.055
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 96,
+            "win_rate": 0.9896,
+            "win_ci95": [
+              0.9433,
+              0.9982
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0385
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0385
+            ],
+            "loss_rate": 0.0104,
+            "loss_ci95": [
+              0.0018,
+              0.0567
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.64,
+            "win_rate_ci95": [
+              0.5714,
+              0.7033
+            ],
+            "draw_rate": 0.215,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.145,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 4,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.1018,
+              0.495
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.7,
+            "win_rate_ci95": [
+              0.6041,
+              0.7811
+            ],
+            "draw_rate": 0.12,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.18,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 12,
+              "draw_repetition": 2,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.505,
+              0.8982
+            ],
+            "draw_rate": 0.125,
+            "draw_ci95": [
+              0.035,
+              0.3602
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 1.0,
+            "win_ci95": [
+              0.6756,
+              1.0
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.28,
+            "win_rate_ci95": [
+              0.2014,
+              0.3749
+            ],
+            "draw_rate": 0.44,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 4,
+              "loss": 4,
+              "draw_repetition": 8
+            },
+            "n": 16,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.1018,
+              0.495
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.28,
+              0.72
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.1018,
+              0.495
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.5,
+            "loss_ci95": [
+              0.2152,
+              0.7848
+            ]
+          }
+        }
+      }
+    },
+    "final_dqn_3x3_s43_eval.json": {
+      "source_file": "experiments/results/final_dqn/final_dqn_3x3_s43_eval.json",
+      "checkpoint": "checkpoints/final/3x3_s43/model.pt",
+      "checkpoint_sha256": "89d84e793d773cecc0b0390c94142fc0e79b4bf93425ebb4a4e5a24ff0c7047f",
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 161,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.99,
+            "win_rate_ci95": [
+              0.9643,
+              0.9973
+            ],
+            "draw_rate": 0.0,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.01,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 159,
+              "loss": 2
+            },
+            "n": 161,
+            "win_rate": 0.9876,
+            "win_ci95": [
+              0.9558,
+              0.9966
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0233
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0233
+            ],
+            "loss_rate": 0.0124,
+            "loss_ci95": [
+              0.0034,
+              0.0442
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 65,
+            "win_rate": 1.0,
+            "win_ci95": [
+              0.9442,
+              1.0
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0558
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0558
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.0558
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 96,
+            "win_rate": 0.9792,
+            "win_ci95": [
+              0.9272,
+              0.9943
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0385
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0385
+            ],
+            "loss_rate": 0.0208,
+            "loss_ci95": [
+              0.0057,
+              0.0728
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.64,
+            "win_rate_ci95": [
+              0.5714,
+              0.7033
+            ],
+            "draw_rate": 0.215,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.145,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 4,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.1018,
+              0.495
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.6,
+            "win_rate_ci95": [
+              0.502,
+              0.6906
+            ],
+            "draw_rate": 0.22,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.18,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 4,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.1018,
+              0.495
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.28,
+            "win_rate_ci95": [
+              0.2014,
+              0.3749
+            ],
+            "draw_rate": 0.44,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 4,
+              "loss": 4,
+              "draw_repetition": 8
+            },
+            "n": 16,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.1018,
+              0.495
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.28,
+              0.72
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.1018,
+              0.495
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.5,
+            "loss_ci95": [
+              0.2152,
+              0.7848
+            ]
+          }
+        }
+      }
+    },
+    "final_dqn_3x3_s44_eval.json": {
+      "source_file": "experiments/results/final_dqn/final_dqn_3x3_s44_eval.json",
+      "checkpoint": "checkpoints/final/3x3_s44/model.pt",
+      "checkpoint_sha256": "9bb8841d59c941220cfc57eb57500533a2c5774b3c7cb65a96db3079c0d0c3a3",
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 166,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.995,
+            "win_rate_ci95": [
+              0.9722,
+              0.9991
+            ],
+            "draw_rate": 0.0,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.005,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 165,
+              "loss": 1
+            },
+            "n": 166,
+            "win_rate": 0.994,
+            "win_ci95": [
+              0.9667,
+              0.9989
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0226
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0226
+            ],
+            "loss_rate": 0.006,
+            "loss_ci95": [
+              0.0011,
+              0.0333
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 68,
+            "win_rate": 1.0,
+            "win_ci95": [
+              0.9465,
+              1.0
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0535
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0535
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.0535
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 98,
+            "win_rate": 0.9898,
+            "win_ci95": [
+              0.9444,
+              0.9982
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0377
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0377
+            ],
+            "loss_rate": 0.0102,
+            "loss_ci95": [
+              0.0018,
+              0.0556
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.64,
+            "win_rate_ci95": [
+              0.5714,
+              0.7033
+            ],
+            "draw_rate": 0.215,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.145,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 4,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.1018,
+              0.495
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.6,
+            "win_rate_ci95": [
+              0.502,
+              0.6906
+            ],
+            "draw_rate": 0.18,
+            "truncation_rate": 0.04,
+            "loss_rate": 0.18,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 3,
+              "loss": 2,
+              "truncated": 1
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.1875,
+            "draw_ci95": [
+              0.0659,
+              0.4301
+            ],
+            "truncated_rate": 0.0625,
+            "truncated_ci95": [
+              0.0111,
+              0.2833
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.875,
+            "win_ci95": [
+              0.5291,
+              0.9776
+            ],
+            "draw_rate": 0.125,
+            "draw_ci95": [
+              0.0224,
+              0.4709
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.375,
+            "win_ci95": [
+              0.1368,
+              0.6943
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.125,
+            "truncated_ci95": [
+              0.0224,
+              0.4709
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.28,
+            "win_rate_ci95": [
+              0.2014,
+              0.3749
+            ],
+            "draw_rate": 0.44,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 4,
+              "loss": 4,
+              "draw_repetition": 8
+            },
+            "n": 16,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.1018,
+              0.495
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.28,
+              0.72
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.1018,
+              0.495
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.5,
+            "loss_ci95": [
+              0.2152,
+              0.7848
+            ]
+          }
+        }
+      }
+    },
+    "final_dqn_3x3_s45_eval.json": {
+      "source_file": "experiments/results/final_dqn/final_dqn_3x3_s45_eval.json",
+      "checkpoint": "checkpoints/final/3x3_s45/model.pt",
+      "checkpoint_sha256": "22d9c1def3edb11547aae2acb0dcc4745eb6c97b292c2b11448c002b18f333b1",
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 162,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.99,
+            "win_rate_ci95": [
+              0.9643,
+              0.9973
+            ],
+            "draw_rate": 0.0,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.01,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 160,
+              "loss": 2
+            },
+            "n": 162,
+            "win_rate": 0.9877,
+            "win_ci95": [
+              0.9561,
+              0.9966
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0232
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0232
+            ],
+            "loss_rate": 0.0123,
+            "loss_ci95": [
+              0.0034,
+              0.0439
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 66,
+            "win_rate": 1.0,
+            "win_ci95": [
+              0.945,
+              1.0
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.055
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.055
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.055
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 96,
+            "win_rate": 0.9792,
+            "win_ci95": [
+              0.9272,
+              0.9943
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0385
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0385
+            ],
+            "loss_rate": 0.0208,
+            "loss_ci95": [
+              0.0057,
+              0.0728
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.76,
+            "win_rate_ci95": [
+              0.6963,
+              0.8139
+            ],
+            "draw_rate": 0.095,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.145,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 12,
+              "draw_repetition": 2,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.505,
+              0.8982
+            ],
+            "draw_rate": 0.125,
+            "draw_ci95": [
+              0.035,
+              0.3602
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.6,
+            "win_rate_ci95": [
+              0.502,
+              0.6906
+            ],
+            "draw_rate": 0.22,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.18,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 4,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.1018,
+              0.495
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.28,
+            "win_rate_ci95": [
+              0.2014,
+              0.3749
+            ],
+            "draw_rate": 0.44,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 4,
+              "loss": 4,
+              "draw_repetition": 8
+            },
+            "n": 16,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.1018,
+              0.495
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.28,
+              0.72
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.1018,
+              0.495
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.5,
+            "loss_ci95": [
+              0.2152,
+              0.7848
+            ]
+          }
+        }
+      }
+    },
+    "final_dqn_3x3_s46_eval.json": {
+      "source_file": "experiments/results/final_dqn/final_dqn_3x3_s46_eval.json",
+      "checkpoint": "checkpoints/final/3x3_s46/model.pt",
+      "checkpoint_sha256": "0dce5961a82873c04e00a0663355d360e230211f9f4e9fc28b33ea84665f7dbe",
+      "board_size": 3,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 1
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 162,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.985,
+            "win_rate_ci95": [
+              0.9568,
+              0.9949
+            ],
+            "draw_rate": 0.005,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.01,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 159,
+              "loss": 2,
+              "draw_repetition": 1
+            },
+            "n": 162,
+            "win_rate": 0.9815,
+            "win_ci95": [
+              0.947,
+              0.9937
+            ],
+            "draw_rate": 0.0062,
+            "draw_ci95": [
+              0.0011,
+              0.0341
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0232
+            ],
+            "loss_rate": 0.0123,
+            "loss_ci95": [
+              0.0034,
+              0.0439
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 66,
+            "win_rate": 0.9848,
+            "win_ci95": [
+              0.919,
+              0.9973
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.055
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.055
+            ],
+            "loss_rate": 0.0152,
+            "loss_ci95": [
+              0.0027,
+              0.081
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 96,
+            "win_rate": 0.9792,
+            "win_ci95": [
+              0.9272,
+              0.9943
+            ],
+            "draw_rate": 0.0104,
+            "draw_ci95": [
+              0.0018,
+              0.0567
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0385
+            ],
+            "loss_rate": 0.0104,
+            "loss_ci95": [
+              0.0018,
+              0.0567
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.64,
+            "win_rate_ci95": [
+              0.5714,
+              0.7033
+            ],
+            "draw_rate": 0.215,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.145,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 10,
+              "draw_repetition": 4,
+              "loss": 2
+            },
+            "n": 16,
+            "win_rate": 0.625,
+            "win_ci95": [
+              0.3864,
+              0.8152
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.1018,
+              0.495
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.125,
+            "loss_ci95": [
+              0.035,
+              0.3602
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.25,
+            "draw_ci95": [
+              0.0715,
+              0.5907
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.72,
+            "win_rate_ci95": [
+              0.6251,
+              0.7986
+            ],
+            "draw_rate": 0.0,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 12,
+              "loss": 4
+            },
+            "n": 16,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.505,
+              0.8982
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.1936
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.1018,
+              0.495
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.75,
+            "win_ci95": [
+              0.4093,
+              0.9285
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.3244
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.0715,
+              0.5907
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 16,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.28,
+            "win_rate_ci95": [
+              0.2014,
+              0.3749
+            ],
+            "draw_rate": 0.44,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 4,
+              "loss": 4,
+              "draw_repetition": 8
+            },
+            "n": 16,
+            "win_rate": 0.25,
+            "win_ci95": [
+              0.1018,
+              0.495
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.28,
+              0.72
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1936
+            ],
+            "loss_rate": 0.25,
+            "loss_ci95": [
+              0.1018,
+              0.495
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 8,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.3244
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 8,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.3244
+            ],
+            "draw_rate": 0.5,
+            "draw_ci95": [
+              0.2152,
+              0.7848
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.3244
+            ],
+            "loss_rate": 0.5,
+            "loss_ci95": [
+              0.2152,
+              0.7848
+            ]
+          }
+        }
+      }
+    },
+    "release_dqn_4x4_eval.json": {
+      "source_file": "experiments/results/final_dqn/release_dqn_4x4_eval.json",
+      "checkpoint": "checkpoints/release/dqn_4x4/model.pt",
+      "checkpoint_sha256": "9980e4c5b94b6753e70c7133ca549823da9cead321158e443f2ba27afc81c99d",
+      "board_size": 4,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 0
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 198,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.535,
+            "win_rate_ci95": [
+              0.4659,
+              0.6028
+            ],
+            "draw_rate": 0.21,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.255,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 51,
+              "win": 105,
+              "draw_repetition": 42
+            },
+            "n": 198,
+            "win_rate": 0.5303,
+            "win_ci95": [
+              0.4609,
+              0.5986
+            ],
+            "draw_rate": 0.2121,
+            "draw_ci95": [
+              0.1609,
+              0.2743
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.019
+            ],
+            "loss_rate": 0.2576,
+            "loss_ci95": [
+              0.2017,
+              0.3227
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 99,
+            "win_rate": 0.3636,
+            "win_ci95": [
+              0.2756,
+              0.4618
+            ],
+            "draw_rate": 0.1717,
+            "draw_ci95": [
+              0.1101,
+              0.2579
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0374
+            ],
+            "loss_rate": 0.4646,
+            "loss_ci95": [
+              0.3696,
+              0.5624
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 99,
+            "win_rate": 0.697,
+            "win_ci95": [
+              0.6005,
+              0.7787
+            ],
+            "draw_rate": 0.2525,
+            "draw_ci95": [
+              0.1773,
+              0.3462
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0374
+            ],
+            "loss_rate": 0.0505,
+            "loss_ci95": [
+              0.0218,
+              0.1128
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 18,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.0,
+            "win_rate_ci95": [
+              0.0,
+              0.0188
+            ],
+            "draw_rate": 0.065,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.935,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 17,
+              "draw_repetition": 1
+            },
+            "n": 18,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.1759
+            ],
+            "draw_rate": 0.0556,
+            "draw_ci95": [
+              0.0099,
+              0.2576
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1759
+            ],
+            "loss_rate": 0.9444,
+            "loss_ci95": [
+              0.7424,
+              0.9901
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.2992
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 1.0,
+            "loss_ci95": [
+              0.7008,
+              1.0
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.1111,
+            "draw_ci95": [
+              0.0199,
+              0.435
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.8889,
+            "loss_ci95": [
+              0.565,
+              0.9801
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 18,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.0,
+            "win_rate_ci95": [
+              0.0,
+              0.037
+            ],
+            "draw_rate": 0.13,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.87,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 16,
+              "draw_repetition": 2
+            },
+            "n": 18,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.1759
+            ],
+            "draw_rate": 0.1111,
+            "draw_ci95": [
+              0.031,
+              0.328
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1759
+            ],
+            "loss_rate": 0.8889,
+            "loss_ci95": [
+              0.672,
+              0.969
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.2992
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 1.0,
+            "loss_ci95": [
+              0.7008,
+              1.0
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.2222,
+            "draw_ci95": [
+              0.0632,
+              0.5474
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.7778,
+            "loss_ci95": [
+              0.4526,
+              0.9368
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 18,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.0,
+            "win_rate_ci95": [
+              0.0,
+              0.037
+            ],
+            "draw_rate": 0.0,
+            "truncation_rate": 0.0,
+            "loss_rate": 1.0,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "loss": 18
+            },
+            "n": 18,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.1759
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.1759
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1759
+            ],
+            "loss_rate": 1.0,
+            "loss_ci95": [
+              0.8241,
+              1.0
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.2992
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 1.0,
+            "loss_ci95": [
+              0.7008,
+              1.0
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.2992
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 1.0,
+            "loss_ci95": [
+              0.7008,
+              1.0
+            ]
+          }
+        }
+      }
+    },
+    "final_dqn_4x4_s42_eval.json": {
+      "source_file": "experiments/results/final_dqn/final_dqn_4x4_s42_eval.json",
+      "checkpoint": "checkpoints/final/4x4_s42/model.pt",
+      "checkpoint_sha256": "3d44aebafc45b476b50deebb93202db7a8e5f12d951fe112657d2128feb1e440",
+      "board_size": 4,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 1,
+        "M": 0
+      },
+      "by_opponent": {
+        "random": {
+          "games": 200,
+          "distinct_games": 191,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.95,
+            "win_rate_ci95": [
+              0.9104,
+              0.9726
+            ],
+            "draw_rate": 0.01,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.04,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 181,
+              "draw_repetition": 2,
+              "loss": 8
+            },
+            "n": 191,
+            "win_rate": 0.9476,
+            "win_ci95": [
+              0.9063,
+              0.9713
+            ],
+            "draw_rate": 0.0105,
+            "draw_ci95": [
+              0.0029,
+              0.0374
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0197
+            ],
+            "loss_rate": 0.0419,
+            "loss_ci95": [
+              0.0214,
+              0.0805
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 93,
+            "win_rate": 0.8925,
+            "win_ci95": [
+              0.8133,
+              0.9405
+            ],
+            "draw_rate": 0.0215,
+            "draw_ci95": [
+              0.0059,
+              0.0751
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0397
+            ],
+            "loss_rate": 0.086,
+            "loss_ci95": [
+              0.0442,
+              0.1607
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 98,
+            "win_rate": 1.0,
+            "win_ci95": [
+              0.9623,
+              1.0
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.0377
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0377
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.0377
+            ]
+          }
+        },
+        "greedy": {
+          "games": 200,
+          "distinct_games": 18,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.5,
+            "win_rate_ci95": [
+              0.4314,
+              0.5686
+            ],
+            "draw_rate": 0.22,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.28,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 9,
+              "draw_repetition": 4,
+              "loss": 5
+            },
+            "n": 18,
+            "win_rate": 0.5,
+            "win_ci95": [
+              0.2903,
+              0.7097
+            ],
+            "draw_rate": 0.2222,
+            "draw_ci95": [
+              0.09,
+              0.4522
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1759
+            ],
+            "loss_rate": 0.2778,
+            "loss_ci95": [
+              0.125,
+              0.5087
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 9,
+            "win_rate": 0.4444,
+            "win_ci95": [
+              0.1888,
+              0.7334
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.2992
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.5556,
+            "loss_ci95": [
+              0.2666,
+              0.8112
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 9,
+            "win_rate": 0.5556,
+            "win_ci95": [
+              0.2666,
+              0.8112
+            ],
+            "draw_rate": 0.4444,
+            "draw_ci95": [
+              0.1888,
+              0.7334
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.2992
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 18,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.39,
+            "win_rate_ci95": [
+              0.3002,
+              0.488
+            ],
+            "draw_rate": 0.21,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.4,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 7,
+              "draw_repetition": 4,
+              "loss": 7
+            },
+            "n": 18,
+            "win_rate": 0.3889,
+            "win_ci95": [
+              0.203,
+              0.6138
+            ],
+            "draw_rate": 0.2222,
+            "draw_ci95": [
+              0.09,
+              0.4522
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1759
+            ],
+            "loss_rate": 0.3889,
+            "loss_ci95": [
+              0.203,
+              0.6138
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 9,
+            "win_rate": 0.2222,
+            "win_ci95": [
+              0.0632,
+              0.5474
+            ],
+            "draw_rate": 0.0,
+            "draw_ci95": [
+              0.0,
+              0.2992
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.7778,
+            "loss_ci95": [
+              0.4526,
+              0.9368
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 9,
+            "win_rate": 0.5556,
+            "win_ci95": [
+              0.2666,
+              0.8112
+            ],
+            "draw_rate": 0.4444,
+            "draw_ci95": [
+              0.1888,
+              0.7334
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.2992
+            ]
+          }
+        },
+        "exact": {
+          "games": 100,
+          "distinct_games": 18,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.29,
+            "win_rate_ci95": [
+              0.2101,
+              0.3854
+            ],
+            "draw_rate": 0.27,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.44,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "draw_repetition": 5,
+              "loss": 8,
+              "win": 5
+            },
+            "n": 18,
+            "win_rate": 0.2778,
+            "win_ci95": [
+              0.125,
+              0.5087
+            ],
+            "draw_rate": 0.2778,
+            "draw_ci95": [
+              0.125,
+              0.5087
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.1759
+            ],
+            "loss_rate": 0.4444,
+            "loss_ci95": [
+              0.2456,
+              0.6628
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 9,
+            "win_rate": 0.0,
+            "win_ci95": [
+              0.0,
+              0.2992
+            ],
+            "draw_rate": 0.1111,
+            "draw_ci95": [
+              0.0199,
+              0.435
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.8889,
+            "loss_ci95": [
+              0.565,
+              0.9801
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 9,
+            "win_rate": 0.5556,
+            "win_ci95": [
+              0.2666,
+              0.8112
+            ],
+            "draw_rate": 0.4444,
+            "draw_ci95": [
+              0.1888,
+              0.7334
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.2992
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.2992
+            ]
+          }
+        }
+      }
+    },
+    "5x5/final_dqn_5x5_s42_500k_eval.json": {
+      "source_file": "experiments/results/final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json",
+      "checkpoint": "checkpoints/final/5x5_s42/model.pt",
+      "checkpoint_sha256": "cfee5c2daad79709e0d38db2b548e7f336202d45ff6b5002dcdf2c206aeac452",
+      "board_size": 5,
+      "rules": {
+        "A": true,
+        "B": true,
+        "C": true,
+        "K": 3,
+        "M": 10
+      },
+      "by_opponent": {
+        "random": {
+          "games": 100,
+          "distinct_games": 100,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.98,
+            "win_rate_ci95": [
+              0.93,
+              0.9945
+            ],
+            "draw_rate": 0.02,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.0,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 98,
+              "draw_repetition": 1,
+              "draw_no_legal_actions": 1
+            },
+            "n": 100,
+            "win_rate": 0.98,
+            "win_ci95": [
+              0.93,
+              0.9945
+            ],
+            "draw_rate": 0.02,
+            "draw_ci95": [
+              0.0055,
+              0.07
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.037
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.037
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 50,
+            "win_rate": 0.98,
+            "win_ci95": [
+              0.895,
+              0.9965
+            ],
+            "draw_rate": 0.02,
+            "draw_ci95": [
+              0.0035,
+              0.105
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0714
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.0714
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 50,
+            "win_rate": 0.98,
+            "win_ci95": [
+              0.895,
+              0.9965
+            ],
+            "draw_rate": 0.02,
+            "draw_ci95": [
+              0.0035,
+              0.105
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0714
+            ],
+            "loss_rate": 0.0,
+            "loss_ci95": [
+              0.0,
+              0.0714
+            ]
+          }
+        },
+        "greedy": {
+          "games": 100,
+          "distinct_games": 100,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.66,
+            "win_rate_ci95": [
+              0.5628,
+              0.7454
+            ],
+            "draw_rate": 0.28,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.06,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "draw_repetition": 25,
+              "loss": 6,
+              "win": 66,
+              "draw_no_legal_actions": 3
+            },
+            "n": 100,
+            "win_rate": 0.66,
+            "win_ci95": [
+              0.5628,
+              0.7454
+            ],
+            "draw_rate": 0.28,
+            "draw_ci95": [
+              0.2014,
+              0.3749
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.037
+            ],
+            "loss_rate": 0.06,
+            "loss_ci95": [
+              0.0278,
+              0.1248
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 50,
+            "win_rate": 0.72,
+            "win_ci95": [
+              0.5833,
+              0.8253
+            ],
+            "draw_rate": 0.18,
+            "draw_ci95": [
+              0.0977,
+              0.308
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0714
+            ],
+            "loss_rate": 0.1,
+            "loss_ci95": [
+              0.0435,
+              0.2136
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 50,
+            "win_rate": 0.6,
+            "win_ci95": [
+              0.4618,
+              0.7239
+            ],
+            "draw_rate": 0.38,
+            "draw_ci95": [
+              0.2586,
+              0.5185
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0714
+            ],
+            "loss_rate": 0.02,
+            "loss_ci95": [
+              0.0035,
+              0.105
+            ]
+          }
+        },
+        "minimax:depth=2": {
+          "games": 100,
+          "distinct_games": 100,
+          "replay_reproduces_stored_counts": true,
+          "old_all_games": {
+            "win_rate": 0.73,
+            "win_rate_ci95": [
+              0.6357,
+              0.8073
+            ],
+            "draw_rate": 0.1,
+            "truncation_rate": 0.0,
+            "loss_rate": 0.17,
+            "status": "superseded: Wilson interval counts repeated games as independent"
+          },
+          "distinct": {
+            "categories": {
+              "win": 73,
+              "loss": 17,
+              "draw_repetition": 10
+            },
+            "n": 100,
+            "win_rate": 0.73,
+            "win_ci95": [
+              0.6357,
+              0.8073
+            ],
+            "draw_rate": 0.1,
+            "draw_ci95": [
+              0.0552,
+              0.1744
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.037
+            ],
+            "loss_rate": 0.17,
+            "loss_ci95": [
+              0.1089,
+              0.2555
+            ]
+          },
+          "distinct_as_p0": {
+            "n": 50,
+            "win_rate": 0.74,
+            "win_ci95": [
+              0.6045,
+              0.8413
+            ],
+            "draw_rate": 0.16,
+            "draw_ci95": [
+              0.0834,
+              0.2851
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0714
+            ],
+            "loss_rate": 0.1,
+            "loss_ci95": [
+              0.0435,
+              0.2136
+            ]
+          },
+          "distinct_as_p1": {
+            "n": 50,
+            "win_rate": 0.72,
+            "win_ci95": [
+              0.5833,
+              0.8253
+            ],
+            "draw_rate": 0.04,
+            "draw_ci95": [
+              0.011,
+              0.1346
+            ],
+            "truncated_rate": 0.0,
+            "truncated_ci95": [
+              0.0,
+              0.0714
+            ],
+            "loss_rate": 0.24,
+            "loss_ci95": [
+              0.143,
+              0.3741
+            ]
+          }
+        }
+      }
+    }
+  }
+}

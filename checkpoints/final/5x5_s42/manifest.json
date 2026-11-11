@@ -1,0 +1,88 @@
+{
+  "checkpoint": "checkpoints/final/5x5_s42/final.pt",
+  "sha256": "00e44c922062a4b2ef6287076fb15cb6996848a162246fd8bdecc55fd6cf480a",
+  "size_bytes": 2218843,
+  "model_pt_sha256": "cfee5c2daad79709e0d38db2b548e7f336202d45ff6b5002dcdf2c206aeac452",
+  "model_pt_same_weights": true,
+  "train_commit": "d91549c7aaf120393631cc6459f1cd79dc430bc8",
+  "train_dirty": false,
+  "train_git_source": "run_config.json",
+  "seed": 42,
+  "steps": 500040,
+  "command": "python D:\\SEM V\\Wallz-Study-wt\\bot2-5x5\\scripts\\train_dqn.py --board-size 5 --seed 42 --steps 2000000 --threads 2 --resume --max-minutes 23 --output-dir checkpoints/final/5x5_s42",
+  "config": {
+    "lr": 0.0001,
+    "batch_size": 128,
+    "gamma": 0.99,
+    "target_update_freq": 1000,
+    "train_freq": 4,
+    "grad_clip": 10.0,
+    "huber_delta": 1.0,
+    "double_dqn": true,
+    "dueling": false,
+    "channels": 64,
+    "blocks": 3,
+    "hidden": 256,
+    "snapshot_interval": 20000,
+    "snapshot_pool_size": 10,
+    "mixture": [
+      0.5,
+      0.4,
+      0.1
+    ],
+    "eval_freq": 50000,
+    "eval_matches": 20,
+    "seed": 42,
+    "device": "cpu",
+    "board_size": 5,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "total_steps": 2000000,
+    "buffer_capacity": 100000,
+    "min_buffer_size": 1000,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.05,
+    "epsilon_decay_steps": 200000,
+    "mirror_prob": 0.5
+  },
+  "started": "2026-11-11T10:12:11+0530",
+  "wall_seconds": 5222.6,
+  "torch": "2.15.0+cpu",
+  "python": "3.12.5",
+  "meta": {
+    "N": 5,
+    "blocks": 3,
+    "channels": 64,
+    "codec_version": 1,
+    "commit": "d736668",
+    "double": true,
+    "dueling": false,
+    "gamma": 0.99,
+    "hidden": 256,
+    "obs_version": 1,
+    "rules": {
+      "A": true,
+      "B": true,
+      "C": true,
+      "K": 3,
+      "M": 10
+    },
+    "seed": 42,
+    "step": 500040
+  },
+  "manifest_written_at_commit": {
+    "commit": "352f54656069fa6f8fa3b8d04ab6b2f41beee35a",
+    "dirty": true
+  },
+  "resume_state": {
+    "path": "checkpoints/final/5x5_s42/resume.pt",
+    "sha256": "4cf60734572c9060dacdcb12cf1404a1a7b2c56bb5a0a3656be6ec196a963c89",
+    "size_bytes": 185376922
+  },
+  "note": "500k steps, short of the plan's 2M target, by user decision for compute. configs/training.yaml board_5 values otherwise unchanged (K=3, M=10, buffer 100k, epsilon decay 200,000 steps: 40% of this run instead of the planned 10%, kept so the run can be extended to 2M unchanged). 5 lock chunks via --max-minutes/--resume. Chunk 1 (to 131,060) ran at d91549c with --steps 2000000 (the command recorded here); chunks 2-5 ran at d736668 with --steps 500000 --keep-resume after the user's change (d736668 only adds --keep-resume, which acts at the end of a run). git commit/dirty recorded live at run start. resume.pt kept: extend with python -m scripts.train_dqn --board-size 5 --seed 42 --steps 2000000 --threads 2 --resume --max-minutes <chunk> --output-dir checkpoints/final/5x5_s42"
+}

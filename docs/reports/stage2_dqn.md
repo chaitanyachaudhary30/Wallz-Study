@@ -11,8 +11,8 @@
   one at a time. Training ran in lock chunks of at most 27 minutes with the new
   `--max-minutes` / `--resume`.
 
-Exact small-board ground truth (3x3, 4x4) is in Sections 4-5. There are no larger-board
-claims in this report; see Section 6 for why 5x5 and 9x9 were not trained.
+Exact small-board ground truth (3x3, 4x4) is in Sections 4-5. The only larger-board result is
+the 5x5 run in Section 6, which has no exact ground truth and is kept apart from Sections 4-5.
 
 ## 1. Compatibility with the frozen engine (Task 1)
 
@@ -100,9 +100,13 @@ unchanged (3x3: Gate X-16, 1000 states, seed 42; 4x4: `evaluation.ablation.agree
 | Board | Measure | Old file | Old | Final rules | Change | Material? |
 |---|---|---|---:|---:|---:|---|
 | 3x3 | value-sign agreement (Gate X-16) | `dqn/gate_x16.json` | 96.47% | 86.80% | -9.7 | yes (> 5) |
-| 3x3 | win rate vs greedy | `dqn/benchmark_N3.json` | 62.0% | 24.0% | -38.0 | yes (> 10) |
+| 3x3 | win rate vs greedy | `dqn/benchmark_N3.json` | 62.0% | 24.0% (25.0% over 16 distinct games) | -38.0 | yes (> 10) |
 | 4x4 | value-optimal agreement | `dqn/agreement_N4.json` | 93.3% | 75.7% | -17.6 | yes |
-| 4x4 | win rate vs greedy | `dqn/benchmark_N4.json` | 50.0% | 0.0% | -50.0 | yes |
+| 4x4 | win rate vs greedy | `dqn/benchmark_N4.json` | 50.0% | 0.0% (0.0% over 18 distinct games) | -50.0 | yes |
+
+The old benchmark files also replay repeated deterministic games, so their rates carry the same
+caveat; the drops are large enough that the verdict does not depend on it
+(`distinct_reanalysis.json`).
 
 **The 96.47% value-sign agreement does not hold under the final rules: it is 86.80%**
 (`release_dqn_3x3_eval.json`, `ground_truth_legacy_protocol`). Over all 3x3 states it is 82.9%.
@@ -147,7 +151,37 @@ the three training commits (d251df3, 9ee24ec, fa79c06): only the `run_config.jso
 rank-optimal 91.1-93.3% (92.5), sign agreement 97.7-97.9% (97.8).
 Per-status rates (WIN / LOSS / DRAW) are in each `*_eval.json` under `ground_truth_population`.
 
-### Matches (win / rule draw / truncated / loss, %)
+### Matches over distinct games (win / rule draw / truncated / loss, %)
+
+The agents are deterministic, so a repeated opening in the same seats replays the same game.
+On 3x3, opening_plies 2 gives only 8 distinct openings and so 16 distinct games against Greedy,
+Minimax and the exact solver; on 4x4 it gives 18. Random is seeded per match, so most of its
+games differ. `distinct_reanalysis.json` replays every match (all outcome counts reproduce the
+files exactly), keys each game by DQN seat and full action sequence, and counts each distinct
+game once. **These numbers replace the all-games table below for every claim.** Number of
+distinct games in brackets.
+
+| Model | vs random | vs greedy | vs minimax d2 | vs exact |
+|---|---|---|---|---|
+| release 3x3 | 74.6 / 0.6 / 0 / 24.9 (169) | 25.0 / 18.8 / 0 / 56.3 (16) | 12.5 / 12.5 / 0 / 75.0 (16) | 12.5 / 0 / 0 / 87.5 (16) |
+| final 3x3 s42 | 98.8 / 0.6 / 0 / 0.6 (162) | 62.5 / 25.0 / 0 / 12.5 (16) | 75.0 / 12.5 / 0 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s43 | 98.8 / 0 / 0 / 1.2 (161) | 62.5 / 25.0 / 0 / 12.5 (16) | 62.5 / 25.0 / 0 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s44 | 99.4 / 0 / 0 / 0.6 (166) | 62.5 / 25.0 / 0 / 12.5 (16) | 62.5 / 18.8 / 6.3 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s45 | 98.8 / 0 / 0 / 1.2 (162) | 75.0 / 12.5 / 0 / 12.5 (16) | 62.5 / 25.0 / 0 / 12.5 (16) | 25 / 50 / 0 / 25 (16) |
+| final 3x3 s46 | 98.1 / 0.6 / 0 / 1.2 (162) | 62.5 / 25.0 / 0 / 12.5 (16) | 75.0 / 0 / 0 / 25.0 (16) | 25 / 50 / 0 / 25 (16) |
+| release 4x4 | 53.0 / 21.2 / 0 / 25.8 (198) | 0 / 5.6 / 0 / 94.4 (18) | 0 / 11.1 / 0 / 88.9 (18) | 0 / 0 / 0 / 100 (18) |
+| final 4x4 s42 | 94.8 / 1.0 / 0 / 4.2 (191) | 50.0 / 22.2 / 0 / 27.8 (18) | 38.9 / 22.2 / 0 / 38.9 (18) | 27.8 / 27.8 / 0 / 44.4 (18) |
+
+Wilson 95% win intervals over distinct games (same file): 3x3 retrained vs greedy 38.6-81.5%
+(62.5%) or 50.5-89.8% (75%); release 3x3 vs greedy 10.2-49.5%; 4x4 retrained vs greedy
+29.0-71.0%; 4x4 release vs greedy 0-17.6%. The old intervals were about four times narrower
+(for example 57.1-70.3% for 64% over 200 games).
+
+### Matches over all games (superseded)
+
+Kept for reference only: these count each repeat of a deterministic game as a new game, so
+their Wilson intervals (in the `*_eval.json` files, `tables.md` and `aggregate_3x3_seeds.json`)
+are too narrow. Use the distinct-game table above.
 
 | Model | vs random | vs greedy | vs minimax d2 | vs exact | Mean plies vs greedy |
 |---|---|---|---|---|---:|
@@ -164,21 +198,68 @@ Per-seating rates and mean lengths for every opponent are in the files and in
 `experiments/results/final_dqn/tables.md`. The only truncations: 4 of 100 games, 3x3 s44 vs
 minimax.
 
-**Against the exact solver** (`opening_values_vs_exact.json`): the 100 post-opening positions
-are worth 28 wins / 44 draws / 28 losses for the DQN side on 3x3, and 29 / 42 / 29 on 4x4.
-All five retrained 3x3 models reach exactly that value in every game. The release 3x3 model
-does not. The retrained 4x4 model loses 15 positions that are draws (as player 0: 6 draws,
-44 losses where the value is 21 draws, 29 losses).
+**Against the exact solver.** Over distinct games, the 16 distinct post-opening 3x3 positions
+(8 openings x 2 seats) are worth 4 wins / 8 draws / 4 losses for the DQN side, and the 18 on
+4x4 are worth 5 / 8 / 5. All five retrained 3x3 models reach the game value in all 16 distinct
+games (25 / 50 / 25%); the release 3x3 model does not. The retrained 4x4 model loses 3 of the 8
+drawn positions (all as player 0). The earlier wording, "100 positions, 28 / 44 / 28, loses 15
+drawn positions" (`opening_values_vs_exact.json`), counted repeated openings and is superseded.
 
 ## 6. 5x5 and 9x9 (Task 5)
 
 | Board | Timing run | Measured | Estimate | Status |
 |---|---|---|---|---|
-| 5x5 (K3 M10, `board_5`) | 10,052 steps | 74.6 s | 2M steps: about 4.1 h per seed (lower bound; games lengthen as play improves) | waiting for the user's decision; not started |
+| 5x5 (K3 M10, `board_5`) | 10,052 steps | 74.6 s | 2M steps: about 4.1 h per seed (lower bound; games lengthen as play improves) | trained to 500k steps, seed 42 (Section 6.1) |
 | 9x9 | 2,056-step smoke (batch 32, buffer 5000) | 34.4 s | 5M steps: at least 23 h | skipped: the plan trains 9x9 only if compute permits |
 
 Source: `training_timing_5x5_9x9.json` (built from the timing runs'
 `checkpoints/final/timing5|timing9/train_log.jsonl`).
+
+### 6.1 Larger board: 5x5, seed 42 (no exact ground truth)
+
+**500k steps, short of the plan's 2M target, by user decision for compute.** Nothing in this
+subsection is an exact-solver claim; it is match play only.
+
+| Item | Value | Source |
+|---|---|---|
+| Rules | N=5, A B C on, K=3, M=10 | `checkpoints/final/5x5_s42/manifest.json` |
+| Config | `configs/training.yaml` `board_5`, `--steps 500000`, seed 42, torch threads 2 | same |
+| Steps / gradient steps / episodes | 500,040 / 124,757 / 15,524 | `final_dqn/5x5/training_curves_5x5_s42.json` |
+| Training wall time | 87.0 min in 5 lock chunks (`--max-minutes` / `--resume`) | same |
+| Training commit | d91549c, clean (recorded live at the start); chunks 2-5 at d736668, which only adds `--keep-resume` | manifest |
+| `final.pt` SHA-256 | `00e44c922062a4b2ef6287076fb15cb6996848a162246fd8bdecc55fd6cf480a` | manifest |
+| `model.pt` SHA-256 (same weights) | `cfee5c2daad79709e0d38db2b548e7f336202d45ff6b5002dcdf2c206aeac452` | manifest |
+| `resume.pt` kept for an extension to 2M | SHA-256 `4cf60734572c9060dacdcb12cf1404a1a7b2c56bb5a0a3656be6ec196a963c89`, 185 MB, git-ignored | manifest |
+
+One value differs from the plan: epsilon still decays over 200,000 steps (`board_5`), which is
+40% of this shorter run instead of 10%. I kept it so the run can be extended to 2M without a
+change in schedule.
+
+Training (same file): loss per 5k steps peaked at 0.0111 near 90k steps and was 0.0049 at the
+end; episodes after the first snapshot were 49.8% online, 40.0% snapshot, 10.2% Greedy; mean
+episode length was 66.7 plies in the first 5k steps and 33.6 at the end.
+
+**Openings:** the shortest `opening_plies` with at least 50 distinct openings, scanning from
+seed 0, is 4 (seeds 0..79 hold the first 50; plies 2 gives only 9, plies 3 gives 30). The
+seed->opening map is in the result file. Each opening is played in both seats.
+
+| Opponent | Games | Win % | Draw % | Trunc % | Loss % | Win % as P0 | Win % as P1 | Mean plies |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| random | 100 | 98.0 | 2.0 | 0.0 | 0.0 | 98.0 | 98.0 | 19.6 |
+| greedy | 100 | 66.0 | 28.0 | 0.0 | 6.0 | 72.0 | 60.0 | 27.6 |
+| minimax:depth=2 | 100 | 73.0 | 10.0 | 0.0 | 17.0 | 74.0 | 72.0 | 24.4 |
+
+Source: `final_dqn/5x5/final_dqn_5x5_s42_500k_eval.json` (commit 352f546, clean; Wilson 95%
+win intervals there: greedy 56.3-74.5%, minimax 63.6-80.7%). No game was forfeited. All 100
+games per opponent are distinct (`distinct_reanalysis.json`), so these intervals stand.
+
+**Known limit.** On 5x5 with M=10, observation v1 cannot see who owns walls that are no longer
+anyone's latest wall, but HOP may only cross an opponent's wall. So the network can misjudge
+whether a HOP is legal or useful: in the encoding audit, 3,971 of 27,277 owner-swapped 5x5
+positions (14.6%) have a different legal set under the same observation
+(`final_dqn/encoding_alias_audit.json`). The legal mask itself is always correct, because it
+comes from the engine; the error is only in the Q-values. This is one seed and one board, with
+no ground truth, so it says how the agent plays these opponents, not whether it plays well.
 
 ## 7. Self-play and training machinery (Task 6)
 
@@ -237,6 +318,11 @@ python scripts/make_dqn_manifest.py --run checkpoints/final/<run> --train-commit
 python scripts/opening_values_dqn.py --evals <eval json names>
 python scripts/make_stage2_dqn_tables.py > experiments/results/final_dqn/tables.md
 python -m scripts.train_dqn --board-size 5 --steps 10000 --eval-freq 10000 --threads 2 --output-dir checkpoints/final/timing5
+python -m scripts.train_dqn --board-size 5 --seed 42 --steps 2000000 --threads 2 --resume --max-minutes 23 --output-dir checkpoints/final/5x5_s42   # chunk 1, before the user's change
+python -m scripts.train_dqn --board-size 5 --seed 42 --steps 500000 --threads 2 --resume --keep-resume --max-minutes <chunk> --output-dir checkpoints/final/5x5_s42   # chunks 2-5
+python scripts/summarize_dqn_training.py --run checkpoints/final/5x5_s42   # output moved into final_dqn/5x5/
+python scripts/eval_dqn_final.py --checkpoint checkpoints/final/5x5_s42/model.pt --out 5x5/final_dqn_5x5_s42_500k_eval.json --skip-truth --exact-seeds 0 --distinct-openings 50
+python scripts/make_dqn_manifest.py --run checkpoints/final/5x5_s42 --kept-resume --note "..."
 python -m scripts.train_dqn --board-size 9 --smoke --threads 2 --output-dir checkpoints/final/timing9
 ```
 
