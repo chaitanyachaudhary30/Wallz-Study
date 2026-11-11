@@ -71,7 +71,7 @@ Any illegal action raises `ValueError` with descriptive reason text, leaving the
 | **Tier-1 Greedy Baseline**                                                                                                                                               | `agents/greedy.py` / `greedy_agent.py`             | **Production Ready** | 4-tier lexicographical tie order `(H, cat, -d_self, tie_key)`, draw scoring, seeded tie-break          |
 | **Tier-2 Minimax Agent**                                                                                                                                                 | `agents/minimax.py`                                  | **Production Ready** | Negamax, Alpha-Beta pruning, PV-first ordering, history heuristic, goal extension, Contract C7           |
 | **Tier-3 Exact Solver**                                                                                                                                                  | `agents/exact_solver.py` / `evaluation.retrograde` | **Production Ready** | Backward induction on cyclic graphs, cycle/stalemate draw separation, $K \in \{1,2,3\}$ solved         |
-| **MARL Deep Q-Network**                                                                                                                                                  | `agents/dqn/`                                        | **Production Ready** | Negamax Double-DQN, 14-plane spatial tensor, ActionCodec, self-play pool, released checkpoints           |
+| **MARL Deep Q-Network**                                                                                                                                                  | `agents/dqn/`                                        | **Validated (3x3, 4x4)** | Negamax Double-DQN, 14-plane tensor, ActionCodec, self-play pool; release checkpoints predate the HOP rule, see docs/reports/stage2_dqn.md |
 | **Evaluation Framework**                                                                                                                                                 | `evaluation/` / `scripts/run_experiments.py`       | **Production Ready** | Paired 2³ factorial ablations, Holm-Bonferroni correction, Wilson CIs, replay verification              |
 | **Report Table Generator**                                                                                                                                               | `scripts/make_tables.py`                             | **Production Ready** | Generates 13 publication-ready Markdown and LaTeX tables across all experimental gates                   |
 | **Test Suite**                                                                                                                                                           | `tests/`                                             | **100% Passing**     | **160/160 tests passing**, Hypothesis stateful testing, NetworkX BFS validation, conformance suite |
@@ -104,8 +104,8 @@ FAI_project/
 │
 ├── checkpoints/                  # Trained neural network weights
 │   └── release/                  # Production models
-│       ├── dqn_3x3/model.pt      # 3x3 release model (Gate X-16 validated: >90% solver agreement)
-│       └── dqn_4x4/model.pt      # 4x4 release model
+│       ├── dqn_3x3/model.pt      # 3x3 release model (old 2-cell HOP rule; 86.8% sign agreement under final rules)
+│       └── dqn_4x4/model.pt      # 4x4 release model (old 2-cell HOP rule; superseded, see stage2_dqn.md)
 │
 ├── configs/                      # Experiment and training configurations
 │   ├── default.yaml              # Default 9x9 match configuration
@@ -231,7 +231,7 @@ Run the full test suite (160 tests):
 | **Tier-1 Greedy Baseline** | `agents/greedy.py` / `greedy_agent.py`             | **Production Ready** | 4-tier lexicographical tie order `(H, cat, -d_self, tie_key)`, `score_actions` API |
 | **Tier-2 Minimax Agent**   | `agents/minimax.py`                                  | **Production Ready** | Negamax, Alpha-Beta pruning, PV-first ordering, goal extension, Contract C7            |
 | **Tier-3 Exact Solver**    | `agents/exact_solver.py` / `evaluation.retrograde` | **Production Ready** | Backward induction on cyclic graphs, cycle/stalemate draw separation                   |
-| **MARL Deep Q-Network**    | `agents/dqn/`                                        | **Production Ready** | Negamax Double-DQN, 14-plane spatial tensor, ActionCodec, released checkpoints         |
+| **MARL Deep Q-Network**    | `agents/dqn/`                                        | **Validated (3x3, 4x4)** | Negamax Double-DQN, 14-plane tensor, ActionCodec; retrained under the final rules (docs/reports/stage2_dqn.md) |
 | **Interactive Web Demo**   | `web/backend/` + `web/frontend/`                   | **Production Ready** | React 18 + Flask, zero frontend rules, Contract C-STATE / C-EXPL, 5 views              |
 | **Evaluation Framework**   | `evaluation/` / `scripts/run_experiments.py`       | **Production Ready** | Paired $2^3$ factorial ablations, Holm-Bonferroni correction, Wilson CIs             |
 | **Greedy Match Campaign**  | `scripts/run_greedy_matches.py`                      | **Production Ready** | 720 matches verified, summary tables generated                                         |
