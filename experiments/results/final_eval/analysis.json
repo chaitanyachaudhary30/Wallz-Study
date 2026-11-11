@@ -1,13 +1,13 @@
 {
   "run": {
     "source": {
-      "commit": "d1de97beb685f7a87a8d1cfab058828f15ca7e69",
+      "commit": "87fd485ef52870b440c1154e0549a87c8df5540f",
       "dirty": false
     },
     "command": "python scripts/stage2_analysis.py",
     "python": "3.12.5",
     "platform": "Windows-11-10.0.26200-SP0",
-    "date_utc": "2026-11-11T00:18:50+00:00"
+    "date_utc": "2026-11-11T00:26:41+00:00"
   },
   "solve_tables": {
     "solve_N3_K1_M0": [
@@ -1129,6 +1129,127 @@
     "smallest_opening_plies_with_at_least_30_distinct": 4
   },
   "ablations": {
+    "ablation_N5_K3_M10_open2": {
+      "file": "experiments/results/final_eval/ablation_N5_K3_M10_open2/summary.json",
+      "n_matches": 480,
+      "opening_seeds": 30,
+      "opening_plies": 2,
+      "distinct_openings": 9,
+      "replica_groups_that_differ": 0,
+      "independent_units_per_cell": 9,
+      "games_per_cell": 60,
+      "outcome_totals_x": {
+        "win": 307,
+        "loss": 165,
+        "draw": 8,
+        "truncated": 0,
+        "forfeit_win": 0,
+        "forfeit_loss": 0
+      },
+      "replays_verified": 480,
+      "replays_failed": 0,
+      "win_rate_effects": {
+        "A": {
+          "estimate": -0.01388888888888895,
+          "ci95": [
+            -0.18055555555555558,
+            0.09722222222222232
+          ],
+          "p_value": 0.9556,
+          "holm_adjusted_p": 1.0,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.07086297956946605,
+          "mde_80pct_from_bootstrap_se": 0.19852866061712257
+        },
+        "B": {
+          "estimate": -0.4027777777777778,
+          "ci95": [
+            -0.47222222222222227,
+            -0.3055555555555556
+          ],
+          "p_value": 0.0,
+          "holm_adjusted_p": 0.0,
+          "survives_holm": true,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.042517787741679615,
+          "mde_80pct_from_bootstrap_se": 0.11911719637027349
+        },
+        "C": {
+          "estimate": -0.06944444444444442,
+          "ci95": [
+            -0.19444444444444442,
+            0.01388888888888895
+          ],
+          "p_value": 0.2432,
+          "holm_adjusted_p": 0.9728,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.05314723467709952,
+          "mde_80pct_from_bootstrap_se": 0.14889649546284187
+        },
+        "AB": {
+          "estimate": -0.04166666666666663,
+          "ci95": [
+            -0.11111111111111105,
+            0.02777777777777768
+          ],
+          "p_value": 0.2992,
+          "holm_adjusted_p": 0.9728,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.03543148978473296,
+          "mde_80pct_from_bootstrap_se": 0.0992643303085611
+        },
+        "AC": {
+          "estimate": -0.04166666666666663,
+          "ci95": [
+            -0.08333333333333337,
+            0.0
+          ],
+          "p_value": 0.0512,
+          "holm_adjusted_p": 0.30720000000000003,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.021258893870839814,
+          "mde_80pct_from_bootstrap_se": 0.059558598185136764
+        },
+        "BC": {
+          "estimate": 0.01388888888888895,
+          "ci95": [
+            -0.02777777777777779,
+            0.05555555555555558
+          ],
+          "p_value": 0.7504,
+          "holm_adjusted_p": 1.0,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.021258893870839814,
+          "mde_80pct_from_bootstrap_se": 0.059558598185136764
+        },
+        "ABC": {
+          "estimate": 0.04166666666666663,
+          "ci95": [
+            0.0,
+            0.08333333333333337
+          ],
+          "p_value": 0.0512,
+          "holm_adjusted_p": 0.30720000000000003,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.021258893870839814,
+          "mde_80pct_from_bootstrap_se": 0.059558598185136764
+        }
+      },
+      "holm_survivors": [
+        "B"
+      ],
+      "mde_win_rate_80pct_power": {
+        "alpha_0.05": 0.3301699567731136,
+        "alpha_0.05_over_7 (Holm first step)": 0.416218434179595,
+        "assumption": "worst-case sd 0.5 per unit, cells independent (pairing ignored)"
+      }
+    },
     "ablation_N5_K3_M10_open2_pilot_comparison": {
       "file": "experiments/results/final_eval/ablation_N5_K3_M10_open2_pilot_comparison/summary.json",
       "n_matches": 144,
