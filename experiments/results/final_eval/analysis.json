@@ -1,0 +1,1185 @@
+{
+  "run": {
+    "source": {
+      "commit": "0f7825b672c686af6852038fe44d09da2ef9b365",
+      "dirty": false
+    },
+    "command": "python scripts/stage2_analysis.py",
+    "python": "3.12.5",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "date_utc": "2026-11-10T22:45:18+00:00"
+  },
+  "solve_tables": {
+    "solve_N3_K1_M0": [
+      {
+        "cell": "N3_A0B0C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 45,
+        "edges": 82,
+        "root_status": "WIN",
+        "root_rank": 3,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.0
+      },
+      {
+        "cell": "N3_A0B0C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 642,
+        "edges": 3120,
+        "root_status": "WIN",
+        "root_rank": 5,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.16
+      },
+      {
+        "cell": "N3_A0B1C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 45,
+        "edges": 82,
+        "root_status": "WIN",
+        "root_rank": 3,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.01
+      },
+      {
+        "cell": "N3_A0B1C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 642,
+        "edges": 3120,
+        "root_status": "WIN",
+        "root_rank": 5,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.17
+      },
+      {
+        "cell": "N3_A1B0C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 45,
+        "edges": 82,
+        "root_status": "WIN",
+        "root_rank": 3,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.0
+      },
+      {
+        "cell": "N3_A1B0C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 642,
+        "edges": 3120,
+        "root_status": "WIN",
+        "root_rank": 5,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.17
+      },
+      {
+        "cell": "N3_A1B1C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 45,
+        "edges": 82,
+        "root_status": "WIN",
+        "root_rank": 3,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.01
+      },
+      {
+        "cell": "N3_A1B1C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 642,
+        "edges": 3120,
+        "root_status": "WIN",
+        "root_rank": 5,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.17
+      }
+    ],
+    "solve_N3_K1_M1": [
+      {
+        "cell": "N3_A0B0C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 1341,
+        "edges": 3180,
+        "root_status": "WIN",
+        "root_rank": 7,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.14
+      },
+      {
+        "cell": "N3_A0B0C1_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 16696,
+        "edges": 79710,
+        "root_status": "WIN",
+        "root_rank": 9,
+        "root_rank_is_upper_bound": false,
+        "seconds": 3.5
+      },
+      {
+        "cell": "N3_A0B1C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 4893,
+        "edges": 9140,
+        "root_status": "WIN",
+        "root_rank": 5,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.49
+      },
+      {
+        "cell": "N3_A0B1C1_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 59240,
+        "edges": 242204,
+        "root_status": "WIN",
+        "root_rank": 7,
+        "root_rank_is_upper_bound": false,
+        "seconds": 11.48
+      },
+      {
+        "cell": "N3_A1B0C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 3861,
+        "edges": 16598,
+        "root_status": "DRAW",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.77
+      },
+      {
+        "cell": "N3_A1B0C1_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 46886,
+        "edges": 314980,
+        "root_status": "DRAW",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 14.6
+      },
+      {
+        "cell": "N3_A1B1C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 12821,
+        "edges": 51510,
+        "root_status": "DRAW",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 2.51
+      },
+      {
+        "cell": "N3_A1B1C1_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 150710,
+        "edges": 956644,
+        "root_status": "DRAW",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 50.61
+      }
+    ],
+    "solve_N4_K1_M0": [
+      {
+        "cell": "N4_A0B0C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 176,
+        "edges": 400,
+        "root_status": "LOSS",
+        "root_rank": 6,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.02
+      },
+      {
+        "cell": "N4_A0B0C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 4512,
+        "edges": 40472,
+        "root_status": "LOSS",
+        "root_rank": 8,
+        "root_rank_is_upper_bound": false,
+        "seconds": 1.83
+      },
+      {
+        "cell": "N4_A0B1C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 176,
+        "edges": 400,
+        "root_status": "LOSS",
+        "root_rank": 6,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.02
+      },
+      {
+        "cell": "N4_A0B1C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 4512,
+        "edges": 40472,
+        "root_status": "LOSS",
+        "root_rank": 8,
+        "root_rank_is_upper_bound": false,
+        "seconds": 1.8
+      },
+      {
+        "cell": "N4_A1B0C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 176,
+        "edges": 400,
+        "root_status": "LOSS",
+        "root_rank": 6,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.02
+      },
+      {
+        "cell": "N4_A1B0C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 4512,
+        "edges": 40472,
+        "root_status": "LOSS",
+        "root_rank": 8,
+        "root_rank_is_upper_bound": false,
+        "seconds": 1.82
+      },
+      {
+        "cell": "N4_A1B1C0_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 176,
+        "edges": 400,
+        "root_status": "LOSS",
+        "root_rank": 6,
+        "root_rank_is_upper_bound": false,
+        "seconds": 0.02
+      },
+      {
+        "cell": "N4_A1B1C1_K1_M0",
+        "complete": true,
+        "stop_reason": null,
+        "states": 4512,
+        "edges": 40472,
+        "root_status": "LOSS",
+        "root_rank": 8,
+        "root_rank_is_upper_bound": false,
+        "seconds": 1.71
+      }
+    ],
+    "solve_N4_K1_M1": [
+      {
+        "cell": "N4_A0B0C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 27860,
+        "edges": 92308,
+        "root_status": "LOSS",
+        "root_rank": 10,
+        "root_rank_is_upper_bound": false,
+        "seconds": 4.72
+      },
+      {
+        "cell": "N4_A0B0C1_K1_M1",
+        "complete": false,
+        "stop_reason": "max_states",
+        "states": 400004,
+        "edges": 3197444,
+        "root_status": "UNKNOWN",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 154.39
+      },
+      {
+        "cell": "N4_A0B1C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 149360,
+        "edges": 371404,
+        "root_status": "LOSS",
+        "root_rank": 8,
+        "root_rank_is_upper_bound": false,
+        "seconds": 18.56
+      },
+      {
+        "cell": "N4_A0B1C1_K1_M1",
+        "complete": false,
+        "stop_reason": "max_states",
+        "states": 400010,
+        "edges": 2266293,
+        "root_status": "UNKNOWN",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 107.45
+      },
+      {
+        "cell": "N4_A1B0C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 98504,
+        "edges": 1248040,
+        "root_status": "DRAW",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 55.18
+      },
+      {
+        "cell": "N4_A1B0C1_K1_M1",
+        "complete": false,
+        "stop_reason": "max_states",
+        "states": 400005,
+        "edges": 3713862,
+        "root_status": "UNKNOWN",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 174.0
+      },
+      {
+        "cell": "N4_A1B1C0_K1_M1",
+        "complete": true,
+        "stop_reason": null,
+        "states": 372160,
+        "edges": 4662904,
+        "root_status": "DRAW",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 211.45
+      },
+      {
+        "cell": "N4_A1B1C1_K1_M1",
+        "complete": false,
+        "stop_reason": "max_states",
+        "states": 400003,
+        "edges": 2770373,
+        "root_status": "UNKNOWN",
+        "root_rank": null,
+        "root_rank_is_upper_bound": false,
+        "seconds": 139.36
+      }
+    ]
+  },
+  "pilot_comparison": {
+    "solve_N3_K1_M0": [
+      {
+        "cell": "N3_A0B0C0_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A0B0C1_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A0B1C0_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            186,
+            45
+          ],
+          "edges": [
+            398,
+            82
+          ],
+          "root_status": [
+            "LOSS",
+            "WIN"
+          ],
+          "root_rank": [
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "cell": "N3_A0B1C1_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            2592,
+            642
+          ],
+          "edges": [
+            13600,
+            3120
+          ],
+          "root_status": [
+            "LOSS",
+            "WIN"
+          ],
+          "root_rank": [
+            4,
+            5
+          ]
+        }
+      },
+      {
+        "cell": "N3_A1B0C0_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A1B0C1_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A1B1C0_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            186,
+            45
+          ],
+          "edges": [
+            398,
+            82
+          ],
+          "root_status": [
+            "LOSS",
+            "WIN"
+          ],
+          "root_rank": [
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "cell": "N3_A1B1C1_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            2592,
+            642
+          ],
+          "edges": [
+            13600,
+            3120
+          ],
+          "root_status": [
+            "LOSS",
+            "WIN"
+          ],
+          "root_rank": [
+            4,
+            5
+          ]
+        }
+      }
+    ],
+    "solve_N3_K1_M1": [
+      {
+        "cell": "N3_A0B0C0_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A0B0C1_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A0B1C0_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            5730,
+            4893
+          ],
+          "edges": [
+            14824,
+            9140
+          ],
+          "root_status": [
+            "LOSS",
+            "WIN"
+          ],
+          "root_rank": [
+            4,
+            5
+          ]
+        }
+      },
+      {
+        "cell": "N3_A0B1C1_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            68292,
+            59240
+          ],
+          "edges": [
+            346500,
+            242204
+          ],
+          "root_status": [
+            "LOSS",
+            "WIN"
+          ],
+          "root_rank": [
+            6,
+            7
+          ]
+        }
+      },
+      {
+        "cell": "N3_A1B0C0_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A1B0C1_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N3_A1B1C0_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            16554,
+            12821
+          ],
+          "edges": [
+            72450,
+            51510
+          ]
+        }
+      },
+      {
+        "cell": "N3_A1B1C1_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            192072,
+            150710
+          ],
+          "edges": [
+            1335672,
+            956644
+          ]
+        }
+      }
+    ],
+    "solve_N4_K1_M0": [
+      {
+        "cell": "N4_A0B0C0_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A0B0C1_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A0B1C0_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            712,
+            176
+          ],
+          "edges": [
+            2112,
+            400
+          ],
+          "root_status": [
+            "WIN",
+            "LOSS"
+          ],
+          "root_rank": [
+            3,
+            6
+          ]
+        }
+      },
+      {
+        "cell": "N4_A0B1C1_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            18080,
+            4512
+          ],
+          "edges": [
+            177248,
+            40472
+          ],
+          "root_status": [
+            "WIN",
+            "LOSS"
+          ],
+          "root_rank": [
+            5,
+            8
+          ]
+        }
+      },
+      {
+        "cell": "N4_A1B0C0_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A1B0C1_K1_M0",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A1B1C0_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            712,
+            176
+          ],
+          "edges": [
+            2112,
+            400
+          ],
+          "root_status": [
+            "WIN",
+            "LOSS"
+          ],
+          "root_rank": [
+            3,
+            6
+          ]
+        }
+      },
+      {
+        "cell": "N4_A1B1C1_K1_M0",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            18080,
+            4512
+          ],
+          "edges": [
+            177248,
+            40472
+          ],
+          "root_status": [
+            "WIN",
+            "LOSS"
+          ],
+          "root_rank": [
+            5,
+            8
+          ]
+        }
+      }
+    ],
+    "solve_N4_K1_M1": [
+      {
+        "cell": "N4_A0B0C0_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A0B0C1_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A0B1C0_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            114488,
+            149360
+          ],
+          "edges": [
+            452284,
+            371404
+          ],
+          "root_status": [
+            "WIN",
+            "LOSS"
+          ],
+          "root_rank": [
+            5,
+            8
+          ]
+        }
+      },
+      {
+        "cell": "N4_A0B1C1_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            400007,
+            400010
+          ],
+          "edges": [
+            2364837,
+            2266293
+          ]
+        }
+      },
+      {
+        "cell": "N4_A1B0C0_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A1B0C1_K1_M1",
+        "B_on": false,
+        "same_as_pilot": true,
+        "differences_pilot_vs_final": {}
+      },
+      {
+        "cell": "N4_A1B1C0_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "complete": [
+            false,
+            true
+          ],
+          "states": [
+            400000,
+            372160
+          ],
+          "edges": [
+            5165610,
+            4662904
+          ],
+          "root_status": [
+            "UNKNOWN",
+            "DRAW"
+          ]
+        }
+      },
+      {
+        "cell": "N4_A1B1C1_K1_M1",
+        "B_on": true,
+        "same_as_pilot": false,
+        "differences_pilot_vs_final": {
+          "states": [
+            400001,
+            400003
+          ],
+          "edges": [
+            2332450,
+            2770373
+          ]
+        }
+      }
+    ]
+  },
+  "exact_effects": {
+    "solve_N3_K1_M0": {
+      "root_value_p0": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.0,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "log10_states": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 1.1543225142935094,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "mean_branching": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 2.7854217854217853,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "draw_fraction": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.01256490134994806,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      }
+    },
+    "solve_N3_K1_M1": {
+      "root_value_p0": {
+        "A": -1.0,
+        "B": 0.0,
+        "C": 0.0,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "log10_states": {
+        "A": 0.43289386883701786,
+        "B": 0.5351175092204956,
+        "C": 1.083196760885138,
+        "AB": -0.020957016629560954,
+        "AC": -0.005914985262378103,
+        "BC": -0.006566759014789092,
+        "ABC": -0.0004948469565055902
+      },
+      "mean_branching": {
+        "A": 2.402696513662103,
+        "B": -0.48397981346001195,
+        "C": 1.870482015358638,
+        "AB": 0.16606896827267992,
+        "AC": -0.18349087817145016,
+        "BC": -0.039344146313227135,
+        "ABC": 0.005235885419464736
+      },
+      "draw_fraction": {
+        "A": 0.3109652601497358,
+        "B": -0.05797234754713182,
+        "C": 0.03778009588898806,
+        "AB": -0.06379445061870809,
+        "AC": 0.002602166735326039,
+        "BC": -0.01786258175906863,
+        "ABC": -0.01465201203094152
+      }
+    },
+    "solve_N4_K1_M0": {
+      "root_value_p0": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.0,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "log10_states": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 1.408856423161136,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "mean_branching": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 6.362731575388777,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      },
+      "draw_fraction": {
+        "A": 0.0,
+        "B": 0.0,
+        "C": 0.01877820760799484,
+        "AB": 0.0,
+        "AC": 0.0,
+        "BC": 0.0,
+        "ABC": 0.0
+      }
+    },
+    "solve_N4_K1_M1": null
+  },
+  "opening_counts_N5": {
+    "plies2_seeds0-9 (pilot)": 8,
+    "plies2_seeds0-29 (final_eval open2)": 9,
+    "plies2_seeds0-1999 (all that exist)": 9,
+    "plies6_seeds10-49 (final_eval open6)": 40
+  },
+  "ablations": {
+    "ablation_N5_K3_M10_open2": {
+      "file": "experiments/results/final_eval/ablation_N5_K3_M10_open2/summary.json",
+      "n_matches": 480,
+      "opening_seeds": 30,
+      "opening_plies": 2,
+      "distinct_openings": 9,
+      "replica_groups_that_differ": 0,
+      "independent_units_per_cell": 9,
+      "games_per_cell": 60,
+      "outcome_totals_x": {
+        "win": 307,
+        "loss": 165,
+        "draw": 8,
+        "truncated": 0,
+        "forfeit_win": 0,
+        "forfeit_loss": 0
+      },
+      "replays_verified": 480,
+      "replays_failed": 0,
+      "win_rate_effects": {
+        "A": {
+          "estimate": -0.01388888888888895,
+          "ci95": [
+            -0.18055555555555558,
+            0.09722222222222232
+          ],
+          "p_value": 0.9556,
+          "holm_adjusted_p": 1.0,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.07086297956946605,
+          "mde_80pct_from_bootstrap_se": 0.19852866061712257
+        },
+        "B": {
+          "estimate": -0.4027777777777778,
+          "ci95": [
+            -0.47222222222222227,
+            -0.3055555555555556
+          ],
+          "p_value": 0.0,
+          "holm_adjusted_p": 0.0,
+          "survives_holm": true,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.042517787741679615,
+          "mde_80pct_from_bootstrap_se": 0.11911719637027349
+        },
+        "C": {
+          "estimate": -0.06944444444444442,
+          "ci95": [
+            -0.19444444444444442,
+            0.01388888888888895
+          ],
+          "p_value": 0.2432,
+          "holm_adjusted_p": 0.9728,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.05314723467709952,
+          "mde_80pct_from_bootstrap_se": 0.14889649546284187
+        },
+        "AB": {
+          "estimate": -0.04166666666666663,
+          "ci95": [
+            -0.11111111111111105,
+            0.02777777777777768
+          ],
+          "p_value": 0.2992,
+          "holm_adjusted_p": 0.9728,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.03543148978473296,
+          "mde_80pct_from_bootstrap_se": 0.0992643303085611
+        },
+        "AC": {
+          "estimate": -0.04166666666666663,
+          "ci95": [
+            -0.08333333333333337,
+            0.0
+          ],
+          "p_value": 0.0512,
+          "holm_adjusted_p": 0.30720000000000003,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.021258893870839814,
+          "mde_80pct_from_bootstrap_se": 0.059558598185136764
+        },
+        "BC": {
+          "estimate": 0.01388888888888895,
+          "ci95": [
+            -0.02777777777777779,
+            0.05555555555555558
+          ],
+          "p_value": 0.7504,
+          "holm_adjusted_p": 1.0,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.021258893870839814,
+          "mde_80pct_from_bootstrap_se": 0.059558598185136764
+        },
+        "ABC": {
+          "estimate": 0.04166666666666663,
+          "ci95": [
+            0.0,
+            0.08333333333333337
+          ],
+          "p_value": 0.0512,
+          "holm_adjusted_p": 0.30720000000000003,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.021258893870839814,
+          "mde_80pct_from_bootstrap_se": 0.059558598185136764
+        }
+      },
+      "holm_survivors": [
+        "B"
+      ],
+      "mde_win_rate_80pct_power": {
+        "alpha_0.05": 0.3301699567731136,
+        "alpha_0.05_over_7 (Holm first step)": 0.416218434179595,
+        "assumption": "worst-case sd 0.5 per unit, cells independent (pairing ignored)"
+      }
+    },
+    "ablation_N5_K3_M10_open6": {
+      "file": "experiments/results/final_eval/ablation_N5_K3_M10_open6/summary.json",
+      "n_matches": 640,
+      "opening_seeds": 40,
+      "opening_plies": 6,
+      "distinct_openings": 40,
+      "replica_groups_that_differ": 0,
+      "independent_units_per_cell": 40,
+      "games_per_cell": 80,
+      "outcome_totals_x": {
+        "win": 354,
+        "loss": 248,
+        "draw": 38,
+        "truncated": 0,
+        "forfeit_win": 0,
+        "forfeit_loss": 0
+      },
+      "replays_verified": 640,
+      "replays_failed": 0,
+      "win_rate_effects": {
+        "A": {
+          "estimate": -0.03749999999999998,
+          "ci95": [
+            -0.10312499999999997,
+            0.025000000000000022
+          ],
+          "p_value": 0.2622,
+          "holm_adjusted_p": 0.7866,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.032685549326416194,
+          "mde_80pct_from_bootstrap_se": 0.09157134470964771
+        },
+        "B": {
+          "estimate": -0.41250000000000003,
+          "ci95": [
+            -0.49687499999999996,
+            -0.328125
+          ],
+          "p_value": 0.0,
+          "holm_adjusted_p": 0.0,
+          "survives_holm": true,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.04304926008845059,
+          "mde_80pct_from_bootstrap_se": 0.12060616132490186
+        },
+        "C": {
+          "estimate": -0.08750000000000002,
+          "ci95": [
+            -0.15000000000000002,
+            -0.028125000000000067
+          ],
+          "p_value": 0.002,
+          "holm_adjusted_p": 0.01,
+          "survives_holm": true,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.0310911322861032,
+          "mde_80pct_from_bootstrap_se": 0.08710444984576245
+        },
+        "AB": {
+          "estimate": 0.04375000000000007,
+          "ci95": [
+            -1.1102230246251565e-16,
+            0.09062499999999996
+          ],
+          "p_value": 0.0656,
+          "holm_adjusted_p": 0.2624,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.023119047084538304,
+          "mde_80pct_from_bootstrap_se": 0.06476997552633625
+        },
+        "AC": {
+          "estimate": -0.006249999999999978,
+          "ci95": [
+            -0.028124999999999956,
+            0.012500000000000067
+          ],
+          "p_value": 0.6616,
+          "holm_adjusted_p": 0.7866,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.01036371076203441,
+          "mde_80pct_from_bootstrap_se": 0.029034816615254172
+        },
+        "BC": {
+          "estimate": 0.05625000000000002,
+          "ci95": [
+            0.015625,
+            0.10937499999999994
+          ],
+          "p_value": 0.0012,
+          "holm_adjusted_p": 0.0072,
+          "survives_holm": true,
+          "ci_excludes_0": true,
+          "bootstrap_se": 0.023916255604694764,
+          "mde_80pct_from_bootstrap_se": 0.06700342295827878
+        },
+        "ABC": {
+          "estimate": 0.012500000000000067,
+          "ci95": [
+            -0.012499999999999956,
+            0.03749999999999998
+          ],
+          "p_value": 0.3662,
+          "holm_adjusted_p": 0.7866,
+          "survives_holm": false,
+          "ci_excludes_0": false,
+          "bootstrap_se": 0.012755336322503865,
+          "mde_80pct_from_bootstrap_se": 0.03573515891108199
+        }
+      },
+      "holm_survivors": [
+        "B",
+        "C",
+        "BC"
+      ],
+      "mde_win_rate_80pct_power": {
+        "alpha_0.05": 0.15661336175435647,
+        "alpha_0.05_over_7 (Holm first step)": 0.1974297384234594,
+        "assumption": "worst-case sd 0.5 per unit, cells independent (pairing ignored)"
+      }
+    }
+  }
+}

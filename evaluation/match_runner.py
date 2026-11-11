@@ -46,6 +46,20 @@ def source_commit():
         return {'commit': None, 'dirty': None}
 
 
+def run_metadata():
+    """Provenance block for result files: commit, dirty flag, command, Python, date."""
+    import datetime
+    import platform
+    import sys
+    return {
+        'source': source_commit(),
+        'command': ' '.join(['python'] + sys.argv),
+        'python': sys.version.split()[0],
+        'platform': platform.platform(),
+        'date_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Agents
 # ---------------------------------------------------------------------------

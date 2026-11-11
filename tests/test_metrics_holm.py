@@ -87,6 +87,25 @@ class TestMetricsAndHolm(unittest.TestCase):
         self.assertAlmostEqual(c['repetition_rate'], 1 / 3)
         self.assertIsNotNone(c['stalemate_rate_ci95'])
 
+    def test_replica_seeds_count_once_by_opening(self):
+        """unit='opening' merges seeds that drew the same opening; unit='seed' does not."""
+        def game(seed, opening, label, win):
+            return {'match_id': f'{label}-{seed}', 'config_label': label,
+                    'config': {'opening_seed': seed}, 'opening': {'actions': opening},
+                    'agents': {'0': {'spec': 'x'}, '1': {'spec': 'y'}},
+                    'outcome': {'category': 'goal', 'winner': 0 if win else 1},
+                    'length_plies': 5, 'mean_legal_actions': {'0': 1.0, '1': 1.0},
+                    'decision_seconds': {'0': {'mean': 0.01}, '1': {'mean': 0.01}}}
+        labels = [f'N3_A{a}B{b}C{c}_K1_M0' for a in (0, 1) for b in (0, 1) for c in (0, 1)]
+        # seeds 0-2 share opening 'o1', seed 3 has 'o2'; X wins only with A on and opening o1
+        results = [game(s, ['o1'] if s < 3 else ['o2'], lab, lab[4] == '1' and s < 3)
+                   for s in range(4) for lab in labels]
+        by_seed = effects_with_ci(results, 'x', 'x_goal_win', n_boot=200, unit='seed')
+        by_open = effects_with_ci(results, 'x', 'x_goal_win', n_boot=200, unit='opening')
+        self.assertEqual((by_seed['n_units'], by_open['n_units']), (4, 2))
+        self.assertAlmostEqual(by_seed['effects']['A']['estimate'], 0.75)
+        self.assertAlmostEqual(by_open['effects']['A']['estimate'], 0.5)
+
     def test_run_match_wrapper(self):
         """run_match.py acts as a thin wrapper over match_runner and returns expected types."""
         winner, plies, metrics = run_match(
