@@ -6,9 +6,16 @@ Generates markdown and LaTeX publication tables for:
 3. Table X-10: 2^3 Factorial Mechanic Ablation (A/B/C cell rates & Holm-corrected effects)
 4. Table X-17: Rule R3 Stalemate vs Repetition Draw Breakdown
 
+Reads only the final result folders (experiments/results/final_eval, final_minimax,
+final_minimax_hop, final_dqn). Older folders are read only with --include-stale, and
+those tables are titled "STALE baseline". The 4-ply factorial ablation is the primary
+result; the 2- and 6-ply runs are labelled sensitivity checks. Writes .md and .tex files
+plus manifest.json (inputs per table, commit) to the output directory.
+
 Usage:
-    python scripts/make_tables.py --output-dir experiments/tables/
-    python scripts/make_tables.py --ablation experiments/results/person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json
+    python scripts/make_tables.py                      # -> experiments/results/final_eval/tables/
+    python scripts/make_tables.py --include-stale
+    python scripts/make_tables.py --ablation experiments/results/final_eval/ablation_N5_K3_M10_open4/summary.json
 """
 from __future__ import annotations
 
@@ -57,6 +64,8 @@ def make_agreement_table(agreement_data: Dict[str, Any]) -> Tuple[str, str]:
     ]
 
     for row in rows:
+        if row.get('applicable') is False:
+            continue  # e.g. a DQN checkpoint outside the rules it was trained for
         cfg = row.get('config_label', '-')
         agent = row.get('agent', '-')
         rates = row.get('rates', {}).get('all', {})
@@ -84,17 +93,17 @@ def make_ablation_cell_table(ablation_data: Dict[str, Any]) -> Tuple[str, str]:
 
     md = [
         f"### Table X-10a: 2^3 Factorial Ablation Cell Performance ({agent_x} vs {agent_y})\n",
-        "| Cell | Games | Win Rate (95% Wilson CI) | Truncation Rate | Mean Plies | Mean Actions | Mean Latency (ms) |",
-        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: |",
+        "| Cell | Games | Win Rate (95% Wilson CI) | Draw Rate | Truncation Rate | Mean Plies | Mean Actions | Mean Latency (ms) |",
+        "| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |",
     ]
     tex = [
         r"\begin{table}[htbp]",
         r"\centering",
         f"\\caption{{Factorial Mechanic Cell Performance: {agent_x} vs {agent_y}}}",
         r"\label{tab:ablation_cells}",
-        r"\begin{tabular}{lcccccc}",
+        r"\begin{tabular}{lccccccc}",
         r"\toprule",
-        r"Cell & Games & Win Rate (95\% CI) & Trunc. & Length (plies) & Legal Actions & Latency (ms) \\",
+        r"Cell & Games & Win Rate (95\% CI) & Draw & Trunc. & Length (plies) & Legal Actions & Latency (ms) \\",
         r"\midrule",
     ]
 
@@ -109,12 +118,14 @@ def make_ablation_cell_table(ablation_data: Dict[str, Any]) -> Tuple[str, str]:
 
         win_str = f"{win_rate * 100:.1f}% {format_ci(win_ci)}"
         trunc_str = f"{trunc_rate * 100:.1f}%"
+        draw_rate = c.get('draw_rate')
+        draw_str = f"{draw_rate * 100:.1f}%" if draw_rate is not None else "-"
         len_str = f"{length:.1f}" if length is not None else "-"
         act_str = f"{actions:.1f}" if actions is not None else "-"
         lat_str = f"{latency:.1f}" if latency is not None else "-"
 
-        md.append(f"| `{label}` | {n} | {win_str} | {trunc_str} | {len_str} | {act_str} | {lat_str} |")
-        tex.append(f"{label.replace('_', r'\_')} & {n} & {win_str} & {trunc_str} & {len_str} & {act_str} & {lat_str} \\\\")
+        md.append(f"| `{label}` | {n} | {win_str} | {draw_str} | {trunc_str} | {len_str} | {act_str} | {lat_str} |")
+        tex.append(f"{label.replace('_', r'\_')} & {n} & {win_str} & {draw_str} & {trunc_str} & {len_str} & {act_str} & {lat_str} \\\\")
 
     tex.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
     return "\n".join(md), "\n".join(tex)
@@ -335,134 +346,200 @@ def make_greedy_table(summary_data: dict) -> tuple[str, str]:
     return _make(summary_data)
 
 
-def generate_all_tables(output_dir: str = "experiments/tables/"):
+
+# ---------------------------------------------------------------------------
+# Inputs. Only the final result folders are read by default. Older folders are
+# read only with --include-stale, and every table made from them is titled
+# "STALE baseline" (see experiments/results/STALE.md for why each one is stale).
+# ---------------------------------------------------------------------------
+
+R = Path("experiments/results")
+FINAL_EVAL, FINAL_MINIMAX, FINAL_MINIMAX_HOP, FINAL_DQN = (
+    R / "final_eval", R / "final_minimax", R / "final_minimax_hop", R / "final_dqn")
+# The 4-ply ablation is the primary result, fixed beforehand (shortest opening length
+# with at least 30 distinct openings); 2- and 6-ply runs are sensitivity checks only.
+ABLATIONS = [
+    ("primary (4-ply openings, 40 distinct)", FINAL_EVAL / "ablation_N5_K3_M10_open4" / "summary.json", "primary"),
+    ("sensitivity (2-ply openings, 9 distinct; pilot comparison)",
+     FINAL_EVAL / "ablation_N5_K3_M10_open2_pilot_comparison" / "summary.json", "sens_open2"),
+    ("sensitivity (6-ply openings, 40 distinct)", FINAL_EVAL / "ablation_N5_K3_M10_open6" / "summary.json",
+     "sens_open6"),
+]
+STALE_INPUTS = {
+    "ablation": R / "person3_pilot" / "ablation_N5_minimax2_vs_greedy" / "summary.json",
+    "agreement": R / "person3_pilot" / "agreement_N3_K1_M1.json",
+    "greedy": R / "greedy" / "summary.json",
+}
+
+
+def _label(md: str, tex: str, label: str) -> Tuple[str, str]:
+    """Put a label in front of a table's markdown heading and LaTeX caption."""
+    return (md.replace("### ", f"### {label}: ", 1),
+            tex.replace("\\caption{", "\\caption{" + label.replace('_', r'\_') + ": ", 1))
+
+
+def _load(p: Path):
+    with open(p, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+
+def make_multi_seed_table(data: Dict[str, Any]) -> Tuple[str, str]:
+    """DQN 3x3 across seeds: mean, SD, 95% t-interval per opponent and rate."""
+    agg = data.get('aggregate', {})
+    md = ["### DQN 3x3 multi-seed study (seeds " + ", ".join(map(str, agg.get('seeds', []))) + ")\n",
+          "| Opponent | Metric | Mean | SD | 95% t-interval | Min | Max | Pooled (95% Wilson) |",
+          "| :--- | :--- | ---: | ---: | :---: | ---: | ---: | :---: |"]
+    tex = [r"\begin{table}[htbp]", r"\centering", r"\caption{DQN 3x3 Multi-Seed Study}",
+           r"\label{tab:multi_seed}", r"\begin{tabular}{llrrcrrc}", r"\toprule",
+           r"Opponent & Metric & Mean & SD & 95\% t-interval & Min & Max & Pooled (Wilson) \\", r"\midrule"]
+
+    def line(opp, name, s, pooled=None):
+        if not s or s.get('mean') is None:
+            return
+        ci = format_ci(s.get('ci95_t'), pct=False) if s.get('ci95_t') else "-"
+        sd = f"{s['sd']:.3f}" if s.get('sd') is not None else "-"
+        pl = "-"
+        if pooled is not None:
+            pl = f"{pooled[0]:.3f} {format_ci(pooled[1], pct=False)}"
+        row = [opp, name, f"{s['mean']:.3f}", sd, ci, f"{s['min']:.3f}", f"{s['max']:.3f}", pl]
+        md.append("| " + " | ".join(row) + " |")
+        tex.append(" & ".join(x.replace('_', r'\_') for x in row) + r" \\")
+
+    line('-', 'sign agreement', agg.get('sign_agreement'))
+    line('-', 'value MAE', agg.get('mae'))
+    for opp, b in agg.get('vs', {}).items():
+        p = b.get('pooled', {})
+        for m in ('win_rate', 'draw_rate', 'truncation_rate'):
+            line(opp, m.replace('_', ' '), b.get(m), (p.get(m), p.get(m + '_ci95')))
+        line(opp, 'mean length (plies)', b.get('mean_length_plies'))
+    tex.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+    return "\n".join(md), "\n".join(tex)
+
+
+def make_vs_greedy_table(paths: List[Path]) -> Tuple[str, str]:
+    """Minimax-vs-Greedy match summaries from final_minimax/ and final_minimax_hop/."""
+    md = ["### Minimax vs Greedy (final engine)\n",
+          "| Run | Minimax spec | N | Opening plies | Games | Win rate (95% Wilson) | Draw rate | Truncation rate | Mean plies |",
+          "| :--- | :--- | :---: | :---: | ---: | :---: | ---: | ---: | ---: |"]
+    tex = [r"\begin{table}[htbp]", r"\centering", r"\caption{Minimax vs Greedy (final engine)}",
+           r"\label{tab:minimax_vs_greedy}", r"\begin{tabular}{llccrcrrr}", r"\toprule",
+           r"Run & Spec & N & Open. & Games & Win (95\% CI) & Draw & Trunc. & Plies \\", r"\midrule"]
+    for p in paths:
+        d = _load(p)
+        o = d.get('results', {}).get('overall', {})
+        if 'minimax_win_rate' not in o:
+            continue
+        c = d.get('config', {})
+        row = [f"{p.parent.name}/{p.stem}", c.get('minimax_spec', '-'), str(c.get('board_size', '-')),
+               str(c.get('opening_plies', '-')), str(o.get('matches', '-')),
+               f"{o['minimax_win_rate'] * 100:.1f}% {format_ci(o.get('minimax_win_rate_wilson95'))}",
+               f"{o.get('draw_rate', 0) * 100:.1f}%", f"{o.get('truncation_rate', 0) * 100:.1f}%",
+               f"{o.get('mean_length_plies_incl_opening', 0):.1f}"]
+        md.append("| " + " | ".join(f"`{x}`" if i < 2 else x for i, x in enumerate(row)) + " |")
+        tex.append(" & ".join(x.replace('_', r'\_').replace('%', r'\%') for x in row) + r" \\")
+    tex.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+    return "\n".join(md), "\n".join(tex)
+
+
+def make_dqn_aggregate_table(data: Dict[str, Any]) -> Tuple[str, str]:
+    """final_dqn/aggregate_3x3_seeds.json: mean / min / max over the five 3x3 seeds."""
+    md = ["### DQN 3x3, five seeds (Member 2 evaluation)\n",
+          "| Metric | Mean | Min | Max |", "| :--- | ---: | ---: | ---: |"]
+    tex = [r"\begin{table}[htbp]", r"\centering", r"\caption{DQN 3x3, five seeds}", r"\label{tab:dqn_seeds}",
+           r"\begin{tabular}{lrrr}", r"\toprule", r"Metric & Mean & Min & Max \\", r"\midrule"]
+    for k, v in data.items():
+        if isinstance(v, dict) and {'mean', 'min', 'max'} <= set(v):
+            row = [k, f"{v['mean']:.4f}", f"{v['min']:.4f}", f"{v['max']:.4f}"]
+            md.append(f"| `{k}` | {row[1]} | {row[2]} | {row[3]} |")
+            tex.append(" & ".join(x.replace('_', r'\_') for x in row) + r" \\")
+    tex.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+    return "\n".join(md), "\n".join(tex)
+
+
+def generate_all_tables(output_dir: str = "experiments/results/final_eval/tables/", include_stale: bool = False):
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
+    generated, inputs = [], []
 
-    generated = []
-
-    # 1. Ablation tables
-    ablation_summary_paths = [
-        Path("experiments/results/person3_pilot/ablation_N5_minimax2_vs_greedy/summary.json"),
-        Path("experiments/results/ablation_5x5_k3/summary.json"),
-    ]
-    for p in ablation_summary_paths:
-        if p.exists():
-            with open(p, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            md_cells, tex_cells = make_ablation_cell_table(data)
-            md_eff, tex_eff = make_ablation_effects_table(data)
-            md_draw, tex_draw = make_stalemate_table(data)
-
-            (out_path / "table_x10a_ablation_cells.md").write_text(md_cells, encoding='utf-8')
-            (out_path / "table_x10a_ablation_cells.tex").write_text(tex_cells, encoding='utf-8')
-            (out_path / "table_x10b_factorial_effects.md").write_text(md_eff, encoding='utf-8')
-            (out_path / "table_x10b_factorial_effects.tex").write_text(tex_eff, encoding='utf-8')
-            (out_path / "table_x17_draw_breakdown.md").write_text(md_draw, encoding='utf-8')
-            (out_path / "table_x17_draw_breakdown.tex").write_text(tex_draw, encoding='utf-8')
-            generated.extend([
-                "table_x10a_ablation_cells",
-                "table_x10b_factorial_effects",
-                "table_x17_draw_breakdown"
-            ])
-            break
-
-    # 2. Agreement table
-    agreement_paths = [
-        Path("experiments/results/person3_pilot/agreement_N3_K1_M1.json"),
-        Path("experiments/results/agreement/agreement_3x3.json"),
-        Path("experiments/results/dqn/agreement_N4.json"),
-    ]
-    for p in agreement_paths:
-        if p.exists():
-            with open(p, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            md_agr, tex_agr = make_agreement_table(data)
-            stem = f"table_x6_agreement_{p.stem}"
-            (out_path / f"{stem}.md").write_text(md_agr, encoding='utf-8')
-            (out_path / f"{stem}.tex").write_text(tex_agr, encoding='utf-8')
-            generated.append(stem)
-
-    # 3. Benchmark table
-    bench_paths = [
-        Path("experiments/results/dqn/benchmark_N3.json"),
-        Path("experiments/results/dqn/benchmark_N4.json"),
-    ]
-    for p in bench_paths:
-        if p.exists():
-            with open(p, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            md_bench, tex_bench = make_benchmark_table(data)
-            stem = f"table_x9_benchmark_{p.stem}"
-            (out_path / f"{stem}.md").write_text(md_bench, encoding='utf-8')
-            (out_path / f"{stem}.tex").write_text(tex_bench, encoding='utf-8')
-            generated.append(stem)
-
-    # 4. Solves tables (P8.2 / P8.3)
-    solves_dir = Path("experiments/results/solves")
-    if solves_dir.exists():
-        for p in sorted(solves_dir.glob("solve_*.json")):
-            with open(p, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            md_sol, tex_sol = make_solve_table(data)
-            stem = f"table_x4_{p.stem}"
-            (out_path / f"{stem}.md").write_text(md_sol, encoding='utf-8')
-            (out_path / f"{stem}.tex").write_text(tex_sol, encoding='utf-8')
-            generated.append(stem)
-
-    # 5. Greedy matches table (P07)
-    greedy_summary_path = Path("experiments/results/greedy/summary.json")
-    if greedy_summary_path.exists():
-        with open(greedy_summary_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        md_greedy, tex_greedy = make_greedy_table(data)
-        stem = "table_greedy_matches"
-        (out_path / f"{stem}.md").write_text(md_greedy, encoding='utf-8')
-        (out_path / f"{stem}.tex").write_text(tex_greedy, encoding='utf-8')
+    def write(stem, md, tex, src):
+        if not md:
+            return
+        (out_path / f"{stem}.md").write_text(md + "\n", encoding='utf-8')
+        (out_path / f"{stem}.tex").write_text(tex + "\n", encoding='utf-8')
         generated.append(stem)
+        inputs.append({'table': stem, 'inputs': [str(s).replace('\\', '/') for s in src]})
 
-    print("============================================================")
-    print(f"Generated {len(generated)} report tables in {out_path}:")
-    for g in generated:
-        print(f"  - {g}.md / {g}.tex")
-    print("============================================================")
+    # 1. Exact solves
+    for p in sorted(FINAL_EVAL.glob("solve_*.json")):
+        md, tex = make_solve_table(_load(p))
+        write(f"solve_{p.stem[6:]}", *_label(md, tex, p.stem), [p])
+
+    # 2. Factorial ablation: primary first, sensitivity checks labelled as such
+    for label, p, tag in ABLATIONS:
+        if not p.exists():
+            continue
+        d = _load(p)
+        write(f"ablation_{tag}_cells", *_label(*make_ablation_cell_table(d), label), [p])
+        write(f"ablation_{tag}_effects", *_label(*make_ablation_effects_table(d), label), [p])
+        write(f"ablation_{tag}_draws", *_label(*make_stalemate_table(d), label), [p])
+
+    # 3. Agent-vs-exact agreement (all agents on the same sampled states)
+    p = FINAL_EVAL / "agreement_N3_K1.json"
+    if p.exists():
+        write("agreement_N3_K1", *make_agreement_table(_load(p)), [p])
+
+    # 4. DQN multi-seed study
+    p = FINAL_EVAL / "multi_seed_3x3.json"
+    if p.exists():
+        write("multi_seed_3x3", *make_multi_seed_table(_load(p)), [p])
+
+    # 5. Minimax vs Greedy
+    mm = sorted(FINAL_MINIMAX.glob("*_summary.json")) + sorted(FINAL_MINIMAX_HOP.glob("*_summary.json"))
+    if mm:
+        write("minimax_vs_greedy", *make_vs_greedy_table(mm), mm)
+
+    # 6. DQN evaluation by Member 2
+    p = FINAL_DQN / "aggregate_3x3_seeds.json"
+    if p.exists():
+        write("dqn_3x3_seeds", *make_dqn_aggregate_table(_load(p)), [p])
+
+    # 7. Stale baselines, only on request
+    if include_stale:
+        lab = "STALE baseline (pre-freeze rules or agents; see experiments/results/STALE.md)"
+        s = STALE_INPUTS
+        if s['ablation'].exists():
+            write("stale_pilot_ablation_effects", *_label(*make_ablation_effects_table(_load(s['ablation'])), lab),
+                  [s['ablation']])
+        if s['agreement'].exists():
+            write("stale_pilot_agreement", *_label(*make_agreement_table(_load(s['agreement'])), lab),
+                  [s['agreement']])
+        if s['greedy'].exists():
+            write("stale_greedy_matches", *_label(*make_greedy_table(_load(s['greedy'])), lab), [s['greedy']])
+
+    from evaluation.match_runner import run_metadata
+    with open(out_path / "manifest.json", 'w', encoding='utf-8') as f:
+        json.dump({'run': run_metadata(), 'include_stale': include_stale, 'tables': inputs}, f, indent=2)
+    print(f"Generated {len(generated)} tables in {out_path}: {', '.join(generated)}")
     return generated
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Generate Report Tables from Experiment Data.")
-    parser.add_argument("--output-dir", type=str, default="experiments/tables/")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed for bootstrap resampling (default: 42)")
+    parser = argparse.ArgumentParser(description="Generate report tables from the final result folders.")
+    parser.add_argument("--output-dir", type=str, default="experiments/results/final_eval/tables/")
+    parser.add_argument("--seed", type=int, default=42, help="kept for old commands; tables use no randomness")
+    parser.add_argument("--include-stale", action="store_true",
+                        help="also render old (pre-freeze) results, each table titled 'STALE baseline'")
     parser.add_argument("--ablation", type=str, default=None)
     parser.add_argument("--agreement", type=str, default=None)
     parser.add_argument("--benchmark", type=str, default=None)
     args = parser.parse_args()
 
-    import random
-    random.seed(args.seed)
-    try:
-        import numpy as np
-        np.random.seed(args.seed)
-    except ImportError:
-        pass
-
     if args.ablation or args.agreement or args.benchmark:
-        out = Path(args.output_dir)
-        out.mkdir(parents=True, exist_ok=True)
         if args.ablation:
-            with open(args.ablation, 'r', encoding='utf-8') as f:
-                d = json.load(f)
-            md, tex = make_ablation_cell_table(d)
-            print(md)
+            print(make_ablation_cell_table(_load(Path(args.ablation)))[0])
         if args.agreement:
-            with open(args.agreement, 'r', encoding='utf-8') as f:
-                d = json.load(f)
-            md, tex = make_agreement_table(d)
-            print(md)
+            print(make_agreement_table(_load(Path(args.agreement)))[0])
         if args.benchmark:
-            with open(args.benchmark, 'r', encoding='utf-8') as f:
-                d = json.load(f)
-            md, tex = make_benchmark_table(d)
-            print(md)
+            print(make_benchmark_table(_load(Path(args.benchmark)))[0])
     else:
-        generate_all_tables(args.output_dir)
+        generate_all_tables(args.output_dir, include_stale=args.include_stale)
